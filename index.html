@@ -713,11 +713,13 @@
             </div>
             
             <div class="pt-2">
-              <span class="text-xs text-muted line-through block" id="origPrice1">Rp 49.000</span>
-              <div class="flex items-baseline gap-1">
-                <span class="text-3xl sm:text-4xl font-extrabold text-heading" id="price1">Rp 25.000</span>
-                <span class="text-xs text-muted" id="period1">/bulan</span>
+              <span class="text-xs text-muted line-through block min-h-[16px]" id="origPrice1">Rp 49.000</span>
+              <div class="flex items-baseline gap-1 whitespace-nowrap">
+                <span class="text-sm font-bold text-muted">Rp</span>
+                <span class="text-3xl sm:text-4xl font-black text-heading font-mono tracking-tight" id="price1">25.000</span>
+                <span class="text-xs text-muted font-medium" id="period1">/bulan</span>
               </div>
+              <span class="text-[11px] font-semibold text-emerald-700 dark:text-emerald-400 block mt-1 min-h-[16px]" id="subPrice1">Ditagih bulanan fleksibel</span>
             </div>
 
             <ul class="text-xs text-body space-y-3 pt-3 border-t border-[rgba(255,255,255,0.06)]">
@@ -756,11 +758,13 @@
             </div>
             
             <div class="pt-2">
-              <span class="text-xs text-muted line-through block" id="origPrice2">Rp 99.000</span>
-              <div class="flex items-baseline gap-1">
-                <span class="text-3xl sm:text-4xl font-extrabold text-mint" id="price2">Rp 49.000</span>
-                <span class="text-xs text-muted" id="period2">/bulan</span>
+              <span class="text-xs text-muted line-through block min-h-[16px]" id="origPrice2">Rp 99.000</span>
+              <div class="flex items-baseline gap-1 whitespace-nowrap">
+                <span class="text-sm font-bold text-mint">Rp</span>
+                <span class="text-3xl sm:text-4xl font-black text-mint font-mono tracking-tight" id="price2">49.000</span>
+                <span class="text-xs text-muted font-medium" id="period2">/bulan</span>
               </div>
+              <span class="text-[11px] font-semibold text-emerald-700 dark:text-emerald-300 block mt-1 min-h-[16px]" id="subPrice2">Hemat Rp 120.000 bila bayar tahunan</span>
             </div>
 
             <ul class="text-xs text-body space-y-3 pt-3 border-t border-[rgba(255,255,255,0.06)]">
@@ -796,11 +800,13 @@
             </div>
             
             <div class="pt-2">
-              <span class="text-xs text-muted line-through block" id="origPrice3">Rp 179.000</span>
-              <div class="flex items-baseline gap-1">
-                <span class="text-3xl sm:text-4xl font-extrabold text-heading" id="price3">Rp 99.000</span>
-                <span class="text-xs text-muted" id="period3">/bulan</span>
+              <span class="text-xs text-muted line-through block min-h-[16px]" id="origPrice3">Rp 179.000</span>
+              <div class="flex items-baseline gap-1 whitespace-nowrap">
+                <span class="text-sm font-bold text-muted">Rp</span>
+                <span class="text-3xl sm:text-4xl font-black text-heading font-mono tracking-tight" id="price3">99.000</span>
+                <span class="text-xs text-muted font-medium" id="period3">/bulan</span>
               </div>
+              <span class="text-[11px] font-semibold text-emerald-700 dark:text-emerald-400 block mt-1 min-h-[16px]" id="subPrice3">Multi-admin & akses tak terbatas</span>
             </div>
 
             <ul class="text-xs text-body space-y-3 pt-3 border-t border-[rgba(255,255,255,0.06)]">
@@ -918,32 +924,38 @@
         knob.classList.add('translate-x-6');
         knob.classList.remove('translate-x-0');
         // Annual prices (Hemat 20%)
-        document.getElementById('origPrice1').innerText = "Rp 300.000 / thn";
-        document.getElementById('price1').innerText = "Rp 240.000";
-        document.getElementById('period1').innerText = "/tahun (Rp 20rb/bln)";
+        document.getElementById('origPrice1').innerText = "Rp 25.000 / bln";
+        document.getElementById('price1').innerText = "20.000";
+        document.getElementById('period1').innerText = "/bulan";
+        document.getElementById('subPrice1').innerText = "Ditagih Rp 240.000/thn · Hemat Rp 60.000!";
 
-        document.getElementById('origPrice2').innerText = "Rp 588.000 / thn";
-        document.getElementById('price2').innerText = "Rp 468.000";
-        document.getElementById('period2').innerText = "/tahun (Rp 39rb/bln)";
+        document.getElementById('origPrice2').innerText = "Rp 49.000 / bln";
+        document.getElementById('price2').innerText = "39.000";
+        document.getElementById('period2').innerText = "/bulan";
+        document.getElementById('subPrice2').innerText = "Ditagih Rp 468.000/thn · Hemat Rp 120.000!";
 
-        document.getElementById('origPrice3').innerText = "Rp 1.188.000 / thn";
-        document.getElementById('price3').innerText = "Rp 948.000";
-        document.getElementById('period3').innerText = "/tahun (Rp 79rb/bln)";
+        document.getElementById('origPrice3').innerText = "Rp 99.000 / bln";
+        document.getElementById('price3').innerText = "79.000";
+        document.getElementById('period3').innerText = "/bulan";
+        document.getElementById('subPrice3').innerText = "Ditagih Rp 948.000/thn · Hemat Rp 240.000!";
       } else {
         knob.classList.remove('translate-x-6');
         knob.classList.add('translate-x-0');
         // Monthly prices
         document.getElementById('origPrice1').innerText = "Rp 49.000";
-        document.getElementById('price1').innerText = "Rp 25.000";
+        document.getElementById('price1').innerText = "25.000";
         document.getElementById('period1').innerText = "/bulan";
+        document.getElementById('subPrice1').innerText = "Ditagih bulanan fleksibel";
 
         document.getElementById('origPrice2').innerText = "Rp 99.000";
-        document.getElementById('price2').innerText = "Rp 49.000";
+        document.getElementById('price2').innerText = "49.000";
         document.getElementById('period2').innerText = "/bulan";
+        document.getElementById('subPrice2').innerText = "Hemat Rp 120.000 bila bayar tahunan";
 
         document.getElementById('origPrice3').innerText = "Rp 179.000";
-        document.getElementById('price3').innerText = "Rp 99.000";
+        document.getElementById('price3').innerText = "99.000";
         document.getElementById('period3').innerText = "/bulan";
+        document.getElementById('subPrice3').innerText = "Multi-admin & akses tak terbatas";
       }
     }
 
