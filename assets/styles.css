@@ -1,0 +1,735 @@
+/* ==========================================================================
+   TERANIVO KOS — Shared Brand Design System & Themes
+   Aligned with https://teranivo.app/ (Software for clarity)
+   Supports: Dark Mode (Default) & Light Mode (Senior-Friendly Cream)
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  /* DARK MODE TOKENS (Default) */
+  --bg-body: #08141F;
+  --bg-surface: #0D1C2A;
+  --bg-card: #122435;
+  --bg-card-hover: #172D42;
+  --bg-subcard: #0A1825;
+  --bg-nav: rgba(8, 20, 31, 0.88);
+  
+  --border-main: rgba(255, 255, 255, 0.08);
+  --border-subtle: rgba(255, 255, 255, 0.05);
+  --border-hover: rgba(173, 247, 216, 0.4);
+  
+  --text-heading: #FFFFFF;
+  --text-body: #D1DDD7;
+  --text-muted: #8AA094;
+  --text-inverted: #08141F;
+  
+  --mint: #ADF7D8;
+  --mint-light: #C8FBE6;
+  --mint-dark: #2BD9AF;
+  --mint-glow: rgba(173, 247, 216, 0.28);
+  
+  --teal: #10B981;
+  --teal-dark: #059669;
+  
+  --danger: #F87171;
+  --danger-bg: rgba(239, 68, 68, 0.15);
+  --warning: #FBBF24;
+  --warning-bg: rgba(245, 158, 11, 0.15);
+  --success: #34D399;
+  --success-bg: rgba(16, 185, 129, 0.18);
+
+  --font-sans: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  
+  --hero-glow: radial-gradient(ellipse at 80% 30%, rgba(45, 212, 191, 0.14) 0%, transparent 60%),
+               radial-gradient(ellipse at 20% 80%, rgba(16, 185, 129, 0.09) 0%, transparent 50%),
+               #08141F;
+}
+
+/* ==========================================================================
+   LIGHT MODE TOKENS (Sesuai Selera Juragan/Senior, Enak Dilihat, Tidak Silau)
+   Warna Cream Lembut (#F4F7F4), Teks Gelap Kontras Tinggi, Aksen Hijau Zamrud
+   ========================================================================== */
+body.light-mode {
+  --bg-body: #F4F7F4;
+  --bg-surface: #FFFFFF;
+  --bg-card: #FFFFFF;
+  --bg-card-hover: #F8FAF8;
+  --bg-subcard: #EFF5F1;
+  --bg-nav: rgba(244, 247, 244, 0.94);
+  
+  --border-main: #D1DFD6;
+  --border-subtle: #E2EBE5;
+  --border-hover: #059669;
+  
+  --text-heading: #0A151F;
+  --text-body: #334155;
+  --text-muted: #566E61;
+  --text-inverted: #FFFFFF;
+  
+  --mint: #059669;
+  --mint-light: #10B981;
+  --mint-dark: #047857;
+  --mint-glow: rgba(5, 150, 105, 0.22);
+  
+  --danger-bg: rgba(239, 68, 68, 0.1);
+  --warning-bg: rgba(245, 158, 11, 0.12);
+  --success-bg: rgba(16, 185, 129, 0.12);
+  
+  --hero-glow: radial-gradient(ellipse at 80% 30%, rgba(16, 185, 129, 0.12) 0%, transparent 60%),
+               radial-gradient(ellipse at 20% 80%, rgba(45, 212, 191, 0.09) 0%, transparent 50%),
+               #F4F7F4;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 100px;
+}
+
+body {
+  background-color: var(--bg-body);
+  color: var(--text-body);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.6;
+  min-height: 100vh;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+/* Links & Focus */
+a {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+a:hover {
+  color: var(--mint);
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+button:focus-visible, a:focus-visible {
+  outline: 2px solid var(--mint);
+  outline-offset: 4px;
+}
+
+::selection {
+  background: var(--mint);
+  color: var(--text-inverted);
+}
+
+/* Container */
+.container {
+  width: min(1280px, 100% - 64px);
+  margin-inline: auto;
+}
+
+@media (max-width: 768px) {
+  .container {
+    width: min(1280px, 100% - 32px);
+  }
+}
+
+/* Typography Helpers */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+  color: var(--text-heading);
+  letter-spacing: -0.035em;
+  line-height: 1.15;
+}
+
+.text-mint {
+  color: var(--mint);
+}
+
+.text-heading {
+  color: var(--text-heading);
+}
+
+.text-body {
+  color: var(--text-body);
+}
+
+.text-muted {
+  color: var(--text-muted);
+}
+
+.eyebrow {
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--mint);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--mint);
+  display: inline-block;
+  box-shadow: 0 0 8px var(--mint);
+}
+
+/* Buttons */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: var(--mint);
+  color: var(--text-inverted);
+  font-weight: 700;
+  font-size: 14px;
+  padding: 13px 24px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--mint);
+  box-shadow: 0 4px 18px var(--mint-glow);
+  transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.btn-primary:hover {
+  background: var(--mint-light);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 26px var(--mint-glow);
+  color: var(--text-inverted);
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: var(--bg-card);
+  color: var(--text-heading);
+  font-weight: 600;
+  font-size: 14px;
+  padding: 13px 22px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-main);
+  transition: all 0.2s ease;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.btn-secondary:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--border-hover);
+  transform: translateY(-1px);
+}
+
+.btn-outline-mint {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: transparent;
+  color: var(--mint);
+  font-weight: 600;
+  font-size: 13px;
+  padding: 8px 16px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-hover);
+  transition: all 0.2s ease;
+}
+
+.btn-outline-mint:hover {
+  background: var(--mint-glow);
+  border-color: var(--mint);
+}
+
+/* Badges */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 5px 10px;
+  border-radius: 9999px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.badge-mint {
+  background: var(--mint-glow);
+  color: var(--mint);
+  border: 1px solid var(--border-hover);
+}
+
+.badge-success {
+  background: var(--success-bg);
+  color: #10B981;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.badge-danger {
+  background: var(--danger-bg);
+  color: #EF4444;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.badge-warning {
+  background: var(--warning-bg);
+  color: #F59E0B;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+/* Cards & Surfaces */
+.card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-main);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  transition: border-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease;
+}
+
+/* ==========================================================================
+   HOVER ANIMATIONS (MENYALA / GLOW SPOTLIGHT)
+   Sesuai Permintaan: Mouse di hover ada animasi warnanya menyala si tab/card
+   ========================================================================== */
+.card-glow {
+  position: relative;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.card-glow:hover {
+  transform: translateY(-6px);
+  border-color: var(--mint);
+  box-shadow: 0 16px 40px -10px var(--mint-glow), 0 0 24px rgba(173, 247, 216, 0.2);
+}
+
+body.light-mode .card-glow:hover {
+  box-shadow: 0 16px 35px -8px rgba(5, 150, 105, 0.22), 0 2px 10px rgba(0, 0, 0, 0.04);
+}
+
+/* Featured / Popular Glow Card */
+.card-featured-glow {
+  position: relative;
+  background: var(--bg-surface);
+  border: 2px solid var(--mint);
+  box-shadow: 0 12px 36px -8px var(--mint-glow);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.card-featured-glow:hover {
+  transform: translateY(-8px) scale(1.015);
+  box-shadow: 0 22px 55px -10px var(--mint-glow), 0 0 32px rgba(173, 247, 216, 0.35);
+}
+
+body.light-mode .card-featured-glow:hover {
+  box-shadow: 0 22px 50px -10px rgba(5, 150, 105, 0.3), 0 0 20px rgba(5, 150, 105, 0.15);
+}
+
+/* Pulse animation for popular badge - PRESERVES DEAD-CENTER HORIZONTAL ALIGNMENT */
+@keyframes badgePulse {
+  0%, 100% { transform: translateX(-50%) scale(1); filter: brightness(1); }
+  50% { transform: translateX(-50%) scale(1.03); filter: brightness(1.15); }
+}
+
+.badge-pulse {
+  animation: badgePulse 2.8s infinite ease-in-out;
+}
+
+/* ==========================================================================
+   POPULAR BADGE PILL (SOLID, OPAQUE, CENTERED HORIZONTALLY)
+   Sesuai Request: "ini tulisan promomnya terhlang, taruh di tengah saja jangan di pinggir"
+   ========================================================================== */
+.popular-badge-pill {
+  position: absolute;
+  top: -16px;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  z-index: 50 !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 6px 18px;
+  border-radius: 9999px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  background: linear-gradient(135deg, #059669 0%, #10B981 100%) !important;
+  color: #FFFFFF !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.5) !important;
+  box-shadow: 0 4px 18px rgba(5, 150, 105, 0.45);
+}
+
+body:not(.light-mode) .popular-badge-pill {
+  background: linear-gradient(135deg, #0B9F91 0%, #2BD9AF 100%) !important;
+  color: #08141F !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.5) !important;
+  box-shadow: 0 4px 20px rgba(43, 217, 175, 0.5);
+}
+
+/* Standalone Mint Background & Text Utilities */
+.bg-mint {
+  background-color: var(--mint) !important;
+}
+
+.text-mint {
+  color: var(--mint) !important;
+}
+
+/* Promo Flash Deal Banner Glow */
+.promo-banner-glow {
+  background: linear-gradient(135deg, rgba(173, 247, 216, 0.12) 0%, rgba(16, 185, 129, 0.18) 100%);
+  border: 1px solid var(--mint);
+  box-shadow: 0 8px 30px var(--mint-glow);
+}
+
+body.light-mode .promo-banner-glow {
+  background: linear-gradient(135deg, #ECFDF5 0%, #D1FAE5 100%);
+  border: 1px solid #059669;
+  box-shadow: 0 8px 25px rgba(5, 150, 105, 0.15);
+}
+
+/* Navigation Bar */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--bg-nav);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border-main);
+  transition: background-color 0.25s ease, border-color 0.25s ease;
+}
+
+.nav-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 76px;
+  gap: 16px;
+}
+
+.brand-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.brand-logo-img {
+  height: 36px;
+  width: auto;
+  display: block;
+  flex-shrink: 0;
+}
+
+/* Invert wordmark in light mode so 'teranivo' text is dark */
+body.light-mode .brand-logo-img {
+  filter: invert(0.9) hue-rotate(180deg) brightness(0.2);
+}
+
+.brand-tag {
+  font-size: 11px;
+  font-weight: 800;
+  background: var(--mint-glow);
+  color: var(--mint);
+  border: 1px solid var(--border-hover);
+  padding: 3px 8px;
+  border-radius: 6px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* Theme Toggle Button */
+.theme-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-main);
+  color: var(--text-heading);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 8px 14px;
+  border-radius: 9999px;
+  transition: all 0.2s ease;
+}
+
+.theme-toggle-btn:hover {
+  border-color: var(--mint);
+  color: var(--mint);
+  box-shadow: 0 2px 10px var(--mint-glow);
+  transform: translateY(-1px);
+}
+
+/* Switcher Banner (Top Notification Pill) */
+.page-switch-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--mint-glow);
+  border: 1px solid var(--border-hover);
+  color: var(--text-heading);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 7px 15px;
+  border-radius: 9999px;
+  transition: all 0.2s ease;
+}
+
+.page-switch-pill:hover {
+  border-color: var(--mint);
+  color: var(--mint);
+  transform: translateY(-1px);
+}
+
+/* Modals */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(4, 11, 18, 0.82);
+  backdrop-filter: blur(8px);
+  z-index: 1000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+body.light-mode .modal-backdrop {
+  background: rgba(15, 23, 42, 0.6);
+}
+
+.modal-backdrop.active {
+  display: flex;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.modal-content {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-main);
+  border-radius: var(--radius-xl);
+  max-width: 580px;
+  width: 100%;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  animation: popIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Toast Notifications */
+.toast-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  pointer-events: none;
+}
+
+.toast {
+  pointer-events: auto;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-hover);
+  color: var(--text-heading);
+  padding: 14px 20px;
+  border-radius: var(--radius-md);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
+  font-weight: 600;
+  animation: slideInRight 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes popIn {
+  from { transform: scale(0.96) translateY(10px); opacity: 0; }
+  to { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+@keyframes slideInRight {
+  from { transform: translateX(40px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+/* ==========================================================================
+   BUTTON NOWRAP & SENIOR ACCESSIBILITY FIXES
+   Sesuai Request: "makesure button tagih wa tetap 1 baris jangan double baris"
+   ========================================================================== */
+.btn-action {
+  white-space: nowrap !important;
+  flex-shrink: 0 !important;
+}
+
+body.senior-mode .btn-action {
+  padding: 10px 14px !important;
+  font-size: 14px !important;
+  white-space: nowrap !important;
+}
+
+/* Filter pills hover glow & active styling */
+.filter-pill {
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+  cursor: pointer;
+  border: 1px solid var(--border-main);
+  background-color: var(--bg-card);
+  color: var(--text-body);
+}
+
+.filter-pill:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px var(--mint-glow);
+  border-color: var(--mint);
+}
+
+/* ACTIVE FILTER PILL - 100% HIGH CONTRAST & CRYSTAL CLEAR (SOLVES INVISIBLE TEXT) */
+body.light-mode .filter-pill.active {
+  background-color: #047857 !important;
+  color: #FFFFFF !important;
+  border-color: #065F46 !important;
+  box-shadow: 0 4px 14px rgba(4, 120, 87, 0.35) !important;
+  font-weight: 800 !important;
+}
+
+body:not(.light-mode) .filter-pill.active {
+  background-color: #2BD9AF !important;
+  color: #08141F !important;
+  border-color: #ADF7D8 !important;
+  box-shadow: 0 4px 18px rgba(43, 217, 175, 0.45) !important;
+  font-weight: 800 !important;
+}
+
+/* ==========================================================================
+   ROOM CARD SINGLE-LINE HEADERS (Guarantees Lt 1 / Lt 2 never wrap)
+   Sesuai Request: "makesure tulisan Lt1 atau Lt2 atau lt berapa aja tulisannya itu tetap 1 baris"
+   ========================================================================== */
+.room-title-nowrap {
+  white-space: nowrap !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  flex-shrink: 0 !important;
+  word-break: keep-all !important;
+}
+
+.floor-tag-pill {
+  white-space: nowrap !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  flex-shrink: 0 !important;
+  word-break: keep-all !important;
+  font-variant-numeric: tabular-nums;
+}
+
+.status-badge-clean {
+  white-space: nowrap !important;
+  flex-shrink: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  word-break: keep-all !important;
+}
+
+/* ==========================================================================
+   DEDICATED PDF & PRINT SYSTEM
+   Sesuai Request: "untuk desain pdfnya buat lebih menarik dan jangan asal,
+   tambahkan logo footer, tabel yang proper total dan lainnya"
+   ========================================================================== */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 10mm 12mm;
+  }
+
+  body {
+    background: #FFFFFF !important;
+    color: #0F172A !important;
+    font-size: 9.5pt !important;
+    line-height: 1.35 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Hide screen elements */
+  main, nav, header, aside, .navbar, .btn-action, #toastContainer, #dingSound, button,
+  .modal, .modal-backdrop, .no-print, footer:not(.print-footer) {
+    display: none !important;
+  }
+
+  /* Make print area visible and clean */
+  #printReportArea, .print-only {
+    display: block !important;
+    visibility: visible !important;
+    position: static !important;
+    width: 100% !important;
+    background: #FFFFFF !important;
+    color: #0F172A !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .avoid-break {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  .print-page-break {
+    page-break-before: always !important;
+    break-before: page !important;
+  }
+
+  .print-table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  .print-table th, .print-table td {
+    border: 1px solid #CBD5E1 !important;
+    padding: 6px 10px !important;
+    font-size: 8.5pt !important;
+  }
+
+  .print-table th {
+    background-color: #F1F5F9 !important;
+    color: #0F172A !important;
+    font-weight: 700 !important;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .print-table tfoot td {
+    background-color: #F8FAFC !important;
+    font-weight: 700 !important;
+  }
+}

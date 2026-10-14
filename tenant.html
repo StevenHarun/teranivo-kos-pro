@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portal Tagihan Anak Kos — Teranivo</title>
+  <link rel="icon" href="assets/logo-icon.svg" type="image/svg+xml">
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Shared Teranivo Design System -->
+  <link rel="stylesheet" href="assets/styles.css">
+  <style>
+    /* Mobile-first card container */
+    .tenant-container {
+      max-width: 520px;
+      margin-inline: auto;
+    }
+    /* QRIS frame styling */
+    .qris-box {
+      background: #FFFFFF;
+      padding: 16px;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    }
+  </style>
+</head>
+<body id="appBody" class="selection:bg-[#ADF7D8] selection:text-[#08141F] min-h-screen flex flex-col">
+
+  <!-- ========================================================================= -->
+  <!-- 1. NAVBAR -->
+  <!-- ========================================================================= -->
+  <header class="navbar">
+    <div class="container nav-inner">
+      <div class="flex items-center gap-4">
+        <a href="index.html" class="brand-link" title="Kembali ke Beranda">
+          <img src="assets/logo.svg" alt="Teranivo" class="brand-logo-img">
+        </a>
+        <span class="badge text-[10px] bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">
+          PORTAL PENGHUNI
+        </span>
+      </div>
+
+      <!-- Quick Switcher to Dashboard & Home -->
+      <div class="flex items-center gap-3">
+        <!-- Theme Toggle -->
+        <button onclick="toggleTheme()" class="theme-toggle-btn" id="btnThemeToggle" title="Ganti Mode Siang / Malam">
+          <span id="themeIcon">☀️</span>
+          <span id="themeLabel" class="hidden sm:inline">Mode Siang</span>
+        </button>
+
+        <a href="dashboard.html" class="btn-outline-mint text-xs" title="Beralih kembali ke tampilan Juragan Kos">
+          <span>← Kembali ke Dasbor Juragan</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ========================================================================= -->
+  <!-- 2. MAIN CONTENT (MOBILE FIRST INVOICE) -->
+  <!-- ========================================================================= -->
+  <main class="container py-8 flex-1">
+    <div class="tenant-container space-y-6">
+
+      <!-- Breadcrumb info -->
+      <div class="flex items-center justify-between text-xs text-slate-400">
+        <div>
+          <span>Properti: </span>
+          <strong class="text-white" id="tenantPropertyName">Kost Griya Harmoni</strong>
+        </div>
+        <span class="text-emerald-400">● Sistem Online</span>
+      </div>
+
+      <!-- INVOICE CARD -->
+      <div class="card p-6 border-[rgba(255,255,255,0.12)] bg-[#0E1E2B] space-y-6 relative overflow-hidden shadow-2xl">
+        
+        <!-- Header Invoice -->
+        <div class="flex items-start justify-between pb-5 border-b border-[rgba(255,255,255,0.08)]">
+          <div>
+            <span class="text-[11px] text-slate-400 block uppercase tracking-wider font-semibold">Tagihan Sewa Kamar</span>
+            <h1 class="text-xl sm:text-2xl font-extrabold text-white mt-1" id="invoiceRoomTitle">
+              Kamar 102 · Deluxe AC
+            </h1>
+            <p class="text-xs text-slate-300 mt-0.5" id="invoiceTenantName">
+              Penghuni: Andi Pratama
+            </p>
+          </div>
+          <div class="text-right">
+            <span id="invoiceStatusBadge" class="badge badge-danger text-[10px]">
+              BELUM LUNAS
+            </span>
+            <span class="text-[10px] text-slate-400 block mt-1" id="invoiceDueDate">
+              Jatuh Tempo: 15 Okt 2026
+            </span>
+          </div>
+        </div>
+
+        <!-- Rincian Biaya Transparan -->
+        <div class="space-y-3">
+          <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider">
+            Rincian Pembayaran (Oktober 2026):
+          </h2>
+
+          <div class="space-y-2 text-xs sm:text-sm">
+            <!-- Sewa Pokok -->
+            <div class="flex justify-between items-center text-slate-300">
+              <span>Sewa Pokok Kamar:</span>
+              <strong class="text-white font-mono" id="invoiceRent">Rp 1.800.000</strong>
+            </div>
+
+            <!-- Listrik Submeter -->
+            <div class="flex justify-between items-center text-slate-300">
+              <div>
+                <span>Pemakaian Listrik AC</span>
+                <span class="text-[11px] text-slate-400 block" id="invoiceKwhDetail">(42 kWh × Rp 2.000)</span>
+              </div>
+              <strong class="text-white font-mono" id="invoiceKwhCost">Rp 84.000</strong>
+            </div>
+
+            <!-- Iuran Sampah & Air -->
+            <div class="flex justify-between items-center text-slate-300">
+              <span>Iuran Sampah & Air Bersih:</span>
+              <strong class="text-white font-mono">Rp 50.000</strong>
+            </div>
+
+            <!-- Biaya Transaksi -->
+            <div class="flex justify-between items-center text-slate-400 text-xs">
+              <span>Biaya Layanan Aplikasi:</span>
+              <span class="text-emerald-400 font-semibold">Gratis (Rp 0)</span>
+            </div>
+
+            <!-- Total -->
+            <div class="pt-3 border-t border-[rgba(255,255,255,0.1)] flex justify-between items-center">
+              <div>
+                <span class="text-xs text-slate-400 uppercase tracking-wider block font-semibold">Total Harus Dibayar</span>
+                <span class="text-[10px] text-slate-400">Kode Invoice: #TRN-202610-102</span>
+              </div>
+              <strong class="text-2xl font-extrabold text-[#ADF7D8] font-mono" id="invoiceTotal">
+                Rp 1.934.000
+              </strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- =================================================================== -->
+        <!-- PAYMENT SECTION: QRIS DINAMIS & VA -->
+        <!-- =================================================================== -->
+        <div id="paymentSection" class="pt-4 border-t border-[rgba(255,255,255,0.08)] space-y-6">
+          
+          <!-- Tab Switcher: QRIS vs Transfer VA -->
+          <div class="flex rounded-xl bg-[#122435] p-1 border border-slate-700">
+            <button onclick="switchPayTab('qris')" id="tabQris"
+                    class="flex-1 py-2 text-xs font-bold rounded-lg bg-[#ADF7D8] text-[#08141F] transition">
+              QRIS Instan (Semua Bank/E-Wallet)
+            </button>
+            <button onclick="switchPayTab('va')" id="tabVa"
+                    class="flex-1 py-2 text-xs font-bold rounded-lg text-slate-300 hover:text-white transition">
+              Transfer Virtual Account
+            </button>
+          </div>
+
+          <!-- PANEL 1: QRIS DINAMIS -->
+          <div id="panelQris" class="space-y-4 text-center">
+            <div class="qris-box inline-block">
+              <!-- Top Header QRIS -->
+              <div class="flex items-center justify-between pb-2 border-b border-slate-200 mb-2">
+                <span class="text-[10px] font-bold text-slate-800 tracking-wider">QRIS STANDAR PEMBAYARAN</span>
+                <span class="text-[10px] font-extrabold text-rose-600">GPN</span>
+              </div>
+
+              <!-- SVG Crisp QR Code Mockup -->
+              <div class="w-56 h-56 mx-auto bg-white flex items-center justify-center p-2 border border-slate-200 rounded-lg">
+                <svg viewBox="0 0 100 100" class="w-full h-full text-slate-900" fill="currentColor">
+                  <!-- Pattern mimicking QR -->
+                  <rect x="0" y="0" width="30" height="30" rx="3" fill="#000"/>
+                  <rect x="5" y="5" width="20" height="20" rx="2" fill="#fff"/>
+                  <rect x="10" y="10" width="10" height="10" fill="#000"/>
+
+                  <rect x="70" y="0" width="30" height="30" rx="3" fill="#000"/>
+                  <rect x="75" y="5" width="20" height="20" rx="2" fill="#fff"/>
+                  <rect x="80" y="10" width="10" height="10" fill="#000"/>
+
+                  <rect x="0" y="70" width="30" height="30" rx="3" fill="#000"/>
+                  <rect x="5" y="75" width="20" height="20" rx="2" fill="#fff"/>
+                  <rect x="10" y="80" width="10" height="10" fill="#000"/>
+
+                  <!-- Data Dots -->
+                  <circle cx="45" cy="15" r="3" fill="#000"/>
+                  <circle cx="55" cy="20" r="2.5" fill="#000"/>
+                  <circle cx="40" cy="35" r="3" fill="#000"/>
+                  <circle cx="60" cy="40" r="3" fill="#000"/>
+                  <circle cx="50" cy="50" r="4" fill="#000"/>
+                  <circle cx="35" cy="55" r="2" fill="#000"/>
+                  <circle cx="65" cy="65" r="3" fill="#000"/>
+                  <circle cx="45" cy="75" r="2.5" fill="#000"/>
+                  <circle cx="55" cy="85" r="3" fill="#000"/>
+                  <circle cx="85" cy="45" r="3" fill="#000"/>
+                  <circle cx="15" cy="45" r="3" fill="#000"/>
+                  <circle cx="85" cy="60" r="2" fill="#000"/>
+                  <circle cx="75" cy="80" r="3" fill="#000"/>
+                </svg>
+              </div>
+
+              <!-- Footer Logos in QRIS -->
+              <div class="pt-2 text-[9px] text-slate-500 font-semibold flex justify-center gap-2">
+                <span>BCA</span> · <span>Mandiri</span> · <span>Gopay</span> · <span>ShopeePay</span> · <span>OVO</span> · <span>DANA</span>
+              </div>
+            </div>
+
+            <!-- Countdown Timer -->
+            <div class="text-xs text-slate-300 flex items-center justify-center gap-2">
+              <span>Berlaku hingga:</span>
+              <strong class="text-amber-300 font-mono" id="qrisCountdown">14:59</strong>
+            </div>
+
+            <!-- Simulator Button -->
+            <div class="pt-2">
+              <button onclick="simulateTenantPay()"
+                      class="btn-primary w-full justify-center shadow-lg text-sm py-3.5">
+                <span>⚡ Simulasi Bayar QRIS Sekarang (Tes Berhasil)</span>
+              </button>
+              <p class="text-[11px] text-slate-400 mt-2">
+                Klik tombol di atas untuk menguji alur pembayaran anak kos tanpa keluar uang sungguhan.
+              </p>
+            </div>
+          </div>
+
+          <!-- PANEL 2: VIRTUAL ACCOUNT -->
+          <div id="panelVa" class="space-y-3 hidden">
+            
+            <!-- BCA VA -->
+            <div class="p-3.5 rounded-xl bg-[#122435] border border-slate-700 flex items-center justify-between">
+              <div>
+                <span class="text-[10px] text-slate-400 block font-semibold">BCA Virtual Account</span>
+                <strong class="text-sm font-mono text-white tracking-wider">8801 2026 1020 0193</strong>
+              </div>
+              <button onclick="copyToClipboard('8801202610200193', 'Nomor BCA VA tersalin!')"
+                      class="btn-outline-mint text-xs py-1.5 px-3">
+                Salin
+              </button>
+            </div>
+
+            <!-- Mandiri VA -->
+            <div class="p-3.5 rounded-xl bg-[#122435] border border-slate-700 flex items-center justify-between">
+              <div>
+                <span class="text-[10px] text-slate-400 block font-semibold">Mandiri Virtual Account</span>
+                <strong class="text-sm font-mono text-white tracking-wider">8930 2026 1020 0193</strong>
+              </div>
+              <button onclick="copyToClipboard('8930202610200193', 'Nomor Mandiri VA tersalin!')"
+                      class="btn-outline-mint text-xs py-1.5 px-3">
+                Salin
+              </button>
+            </div>
+
+            <!-- BRI VA -->
+            <div class="p-3.5 rounded-xl bg-[#122435] border border-slate-700 flex items-center justify-between">
+              <div>
+                <span class="text-[10px] text-slate-400 block font-semibold">BRI BRIVA</span>
+                <strong class="text-sm font-mono text-white tracking-wider">1289 2026 1020 0193</strong>
+              </div>
+              <button onclick="copyToClipboard('1289202610200193', 'Nomor BRIVA tersalin!')"
+                      class="btn-outline-mint text-xs py-1.5 px-3">
+                Salin
+              </button>
+            </div>
+
+            <div class="pt-2">
+              <button onclick="simulateTenantPay()" class="btn-primary w-full justify-center text-sm py-3">
+                <span>⚡ Simulasi Transfer VA Berhasil</span>
+              </button>
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- =================================================================== -->
+        <!-- SUCCESS STATE (LUNAS & DOWNLOAD RECEIPT) -->
+        <!-- =================================================================== -->
+        <div id="paidSuccessBox" class="hidden pt-6 border-t border-[rgba(255,255,255,0.1)] text-center space-y-4">
+          <div class="w-16 h-16 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center justify-center text-3xl font-bold mx-auto shadow-lg shadow-emerald-500/20">
+            ✓
+          </div>
+          <div>
+            <h3 class="text-xl font-extrabold text-white">Pembayaran Berhasil!</h3>
+            <p class="text-xs text-slate-300 mt-1" id="paidSuccessTimestamp">
+              Lunas terverifikasi via QRIS BCA pada 05 Okt 2026.
+            </p>
+          </div>
+
+          <div class="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-xs text-left space-y-1.5">
+            <div class="flex justify-between">
+              <span class="text-slate-400">ID Transaksi:</span>
+              <strong class="font-mono text-white">#TRX-QRIS-992182</strong>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-400">Total Dibayar:</span>
+              <strong class="text-[#ADF7D8] font-bold" id="paidSuccessNominal">Rp 1.934.000</strong>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-400">Penerima:</span>
+              <span class="text-white">Kost Griya Harmoni (Juragan)</span>
+            </div>
+          </div>
+
+          <div class="flex gap-3">
+            <button onclick="window.print()" class="btn-primary w-full justify-center text-xs py-3">
+              <span>📄 Unduh / Cetak Bukti Pembayaran</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ===================================================================== -->
+      <!-- 3. FITUR ANAK KOS: LAPOR KERUSAKAN & FASILITAS (TIKET) -->
+      <!-- ===================================================================== -->
+      <div class="card p-6 border-[rgba(255,255,255,0.08)] bg-[#0C1B28] space-y-5">
+        <div class="flex items-center justify-between pb-3 border-b border-[rgba(255,255,255,0.06)]">
+          <div class="flex items-center gap-2.5">
+            <span class="text-xl">🛠️</span>
+            <div>
+              <h3 class="text-sm font-bold text-white">Lapor Fasilitas & Komplain</h3>
+              <p class="text-[11px] text-slate-400">Kirim laporan langsung ke pengelola kos</p>
+            </div>
+          </div>
+          <span class="badge badge-mint text-[9px]">Layanan Penghuni</span>
+        </div>
+
+        <!-- Form Lapor -->
+        <form onsubmit="submitDamageReport(event)" class="space-y-3">
+          <div>
+            <label class="block text-xs text-slate-300 font-semibold mb-1">Jenis Masalah:</label>
+            <select id="reportCategory" class="w-full bg-[#122435] border border-slate-700 rounded-xl p-2.5 text-xs text-white">
+              <option value="AC Kurang Dingin">❄️ AC Kurang Dingin / Bocor Air</option>
+              <option value="Kran Air / Saluran Bocor">🚿 Kran Air Kamar Mandi / Saluran Mampet</option>
+              <option value="Lampu Kamar Putus">💡 Lampu Kamar / Saklar Mati</option>
+              <option value="Koneksi WiFi Lemot">📶 Koneksi WiFi Lemot di Kamar</option>
+              <option value="Lainnya">📝 Masalah Lainnya</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-xs text-slate-300 font-semibold mb-1">Keterangan Detail:</label>
+            <input type="text" id="reportDesc" placeholder="Contoh: AC kamar keluar air menetes sejak semalam..."
+                   class="w-full bg-[#122435] border border-slate-700 rounded-xl p-2.5 text-xs text-white placeholder-slate-500" required>
+          </div>
+
+          <button type="submit" class="btn-secondary w-full justify-center text-xs py-2.5">
+            <span>Kirim Laporan Kerusakan</span>
+          </button>
+        </form>
+
+        <!-- Daftar Tiket Aktif -->
+        <div class="pt-2 border-t border-[rgba(255,255,255,0.06)] space-y-2.5">
+          <span class="text-[11px] text-slate-400 font-semibold uppercase tracking-wider block">Riwayat Laporan Anda:</span>
+          
+          <div id="ticketList" class="space-y-2">
+            <!-- Ticket Item 1 -->
+            <div class="p-3 rounded-xl bg-[#122435] border border-slate-700 text-xs space-y-1">
+              <div class="flex justify-between items-center">
+                <span class="font-bold text-white">Tiket #TK-102A · AC Kurang Dingin</span>
+                <span class="badge badge-warning text-[9px]">Sedang Dikerjakan</span>
+              </div>
+              <p class="text-slate-300 text-[11px]">Teknisi servis AC dijadwalkan tiba pk 14:00 WIB.</p>
+              <span class="text-[10px] text-slate-400 block">Dilaporkan: 04 Okt 2026, 10:15 WIB</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ===================================================================== -->
+      <!-- 4. INFO PENTING KOS (WIFI, JAM MALAM, KONTAK PENJAGA) -->
+      <!-- ===================================================================== -->
+      <div class="card p-6 border-[rgba(255,255,255,0.08)] bg-[#0C1B28] space-y-4">
+        <h3 class="text-sm font-bold text-white flex items-center gap-2">
+          <span>ℹ️</span> Informasi Penting Kos
+        </h3>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+          <!-- Wi-Fi -->
+          <div class="p-3 rounded-xl bg-[#122435] border border-slate-700 space-y-1">
+            <span class="text-[10px] text-slate-400 block font-semibold">Akses WiFi Bersama:</span>
+            <div class="font-bold text-white">SSID: GRIYA_HARMONI_LT1</div>
+            <div class="flex items-center justify-between pt-1">
+              <span class="text-[11px] text-[#ADF7D8] font-mono">aman_nyaman_kos</span>
+              <button onclick="copyToClipboard('aman_nyaman_kos', 'Password WiFi tersalin!')"
+                      class="text-[10px] text-slate-300 hover:text-white underline">
+                Salin Sandi
+              </button>
+            </div>
+          </div>
+
+          <!-- Gerbang -->
+          <div class="p-3 rounded-xl bg-[#122435] border border-slate-700 space-y-1">
+            <span class="text-[10px] text-slate-400 block font-semibold">Jam Malam Gerbang:</span>
+            <div class="font-bold text-white">Tutup Pk 23.00 WIB</div>
+            <p class="text-[10px] text-slate-400">Pulang larut malam? Kunci gembok cadangan ada di pos jaga.</p>
+          </div>
+        </div>
+
+        <!-- Emergency Contact -->
+        <div class="p-3.5 rounded-xl bg-[#152838] border border-[rgba(173,247,216,0.15)] flex items-center justify-between text-xs">
+          <div>
+            <span class="text-[10px] text-slate-400 block font-semibold">Penjaga Kos (Pak Bambang):</span>
+            <strong class="text-white">0812-9876-5432</strong>
+          </div>
+          <a href="https://wa.me/6281298765432" target="_blank" class="btn-outline-mint text-xs py-1.5 px-3">
+            Hubungi WA ↗
+          </a>
+        </div>
+
+      </div>
+
+      <!-- Quick Link to Landlord View -->
+      <div class="text-center pt-2">
+        <a href="dashboard.html" class="text-xs text-slate-400 hover:text-[#ADF7D8] underline">
+          ← Kembali ke Dasbor Juragan Kos (Kost Griya Harmoni)
+        </a>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Toast Notification Container -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <!-- Audio Ding for Payment -->
+  <audio id="dingSound" preload="auto">
+    <source src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3" type="audio/mpeg">
+  </audio>
+
+  <!-- ========================================================================= -->
+  <!-- JAVASCRIPT LOGIC -->
+  <!-- ========================================================================= -->
+  <script>
+    let currentRoom = null;
+    let countdownInterval = null;
+
+    // =========================================================================
+    // SECURITY & UTILITY HELPERS (XSS PREVENTION)
+    // =========================================================================
+    function escapeHtml(str) {
+      if (str === null || str === undefined) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    function initTenantPage() {
+      // 1. Read & Sanitize Room from URL query string ?room=102
+      const urlParams = new URLSearchParams(window.location.search);
+      const rawRoomId = urlParams.get('room') || '102';
+      const roomId = rawRoomId.replace(/[^a-zA-Z0-9_-]/g, '').slice(0, 10) || '102';
+
+      // 2. Fetch room from localStorage
+      const stored = localStorage.getItem('teranivo_rooms');
+      let rooms = [];
+      if (stored) {
+        try { rooms = JSON.parse(stored); } catch (e) {}
+      }
+
+      currentRoom = rooms.find(r => r.id === roomId);
+
+      // Fallback if not found
+      if (!currentRoom) {
+        currentRoom = {
+          id: roomId,
+          name: 'Andi Pratama',
+          rent: 1800000,
+          kwh: 42,
+          kwhCost: 84000,
+          status: 'unpaid'
+        };
+      }
+
+      // Render invoice details
+      const total = currentRoom.rent + currentRoom.kwhCost + 50000;
+      document.getElementById('invoiceRoomTitle').innerText = `Kamar ${currentRoom.id} · Deluxe AC`;
+      document.getElementById('invoiceTenantName').innerText = `Penghuni: ${currentRoom.name}`;
+      const propEl = document.getElementById('tenantPropertyName');
+      if (propEl && currentRoom.propertyName) {
+        propEl.innerText = `${currentRoom.propertyName} (${currentRoom.propertyCity || 'Yogyakarta'})`;
+      }
+      document.getElementById('invoiceRent').innerText = "Rp " + currentRoom.rent.toLocaleString('id-ID');
+      document.getElementById('invoiceKwhDetail').innerText = `(${currentRoom.kwh} kWh × Rp 2.000)`;
+      document.getElementById('invoiceKwhCost').innerText = "Rp " + currentRoom.kwhCost.toLocaleString('id-ID');
+      document.getElementById('invoiceTotal').innerText = "Rp " + total.toLocaleString('id-ID');
+
+      const dueDay = currentRoom.dueDate || 5;
+      const dueEl = document.getElementById('invoiceDueDate');
+      if (dueEl) dueEl.innerText = `Jatuh Tempo: ${String(dueDay).padStart(2, '0')} Okt 2026`;
+
+      if (currentRoom.status === 'paid') {
+        showPaidState();
+      } else {
+        showUnpaidState();
+        startCountdown();
+      }
+    }
+
+    function showUnpaidState() {
+      document.getElementById('invoiceStatusBadge').className = 'badge badge-danger text-[10px]';
+      document.getElementById('invoiceStatusBadge').innerText = 'BELUM LUNAS';
+      document.getElementById('paymentSection').classList.remove('hidden');
+      document.getElementById('paidSuccessBox').classList.add('hidden');
+    }
+
+    function showPaidState() {
+      const total = currentRoom.rent + currentRoom.kwhCost + 50000;
+      document.getElementById('invoiceStatusBadge').className = 'badge badge-success text-[10px]';
+      document.getElementById('invoiceStatusBadge').innerText = '🟢 SUDAH LUNAS';
+      document.getElementById('paymentSection').classList.add('hidden');
+      document.getElementById('paidSuccessBox').classList.remove('hidden');
+      document.getElementById('paidSuccessNominal').innerText = "Rp " + total.toLocaleString('id-ID');
+      document.getElementById('paidSuccessTimestamp').innerText = `Lunas terverifikasi pada ${currentRoom.paidAt || 'Hari ini'}.`;
+    }
+
+    function simulateTenantPay() {
+      if (!currentRoom) return;
+
+      currentRoom.status = 'paid';
+      currentRoom.paymentMethod = 'QRIS Instan';
+      currentRoom.paidAt = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) + ' WIB';
+
+      // Update in localStorage
+      const stored = localStorage.getItem('teranivo_rooms');
+      if (stored) {
+        try {
+          const rooms = JSON.parse(stored);
+          const idx = rooms.findIndex(r => r.id === currentRoom.id);
+          if (idx !== -1) {
+            rooms[idx] = currentRoom;
+            localStorage.setItem('teranivo_rooms', JSON.stringify(rooms));
+          }
+        } catch (e) {}
+      }
+
+      // Play Sound
+      try {
+        const audio = document.getElementById('dingSound');
+        if (audio) {
+          audio.currentTime = 0;
+          audio.play().catch(() => {});
+        }
+      } catch (e) {}
+
+      showPaidState();
+      showToast("🎉 Pembayaran Anda Berhasil! Status sewa otomatis lunas di dasbor pemilik kos.");
+    }
+
+    function switchPayTab(tab) {
+      if (tab === 'qris') {
+        document.getElementById('tabQris').className = "flex-1 py-2 text-xs font-bold rounded-lg bg-[#ADF7D8] text-[#08141F] transition";
+        document.getElementById('tabVa').className = "flex-1 py-2 text-xs font-bold rounded-lg text-slate-300 hover:text-white transition";
+        document.getElementById('panelQris').classList.remove('hidden');
+        document.getElementById('panelVa').classList.add('hidden');
+      } else {
+        document.getElementById('tabVa').className = "flex-1 py-2 text-xs font-bold rounded-lg bg-[#ADF7D8] text-[#08141F] transition";
+        document.getElementById('tabQris').className = "flex-1 py-2 text-xs font-bold rounded-lg text-slate-300 hover:text-white transition";
+        document.getElementById('panelVa').classList.remove('hidden');
+        document.getElementById('panelQris').classList.add('hidden');
+      }
+    }
+
+    function startCountdown() {
+      let seconds = 14 * 60 + 59;
+      if (countdownInterval) clearInterval(countdownInterval);
+
+      countdownInterval = setInterval(() => {
+        seconds--;
+        if (seconds <= 0) {
+          clearInterval(countdownInterval);
+          document.getElementById('qrisCountdown').innerText = "00:00 (Perbarui QR)";
+          return;
+        }
+        const m = Math.floor(seconds / 60);
+        const s = seconds % 60;
+        document.getElementById('qrisCountdown').innerText = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+      }, 1000);
+    }
+
+    function submitDamageReport(e) {
+      e.preventDefault();
+      const cat = document.getElementById('reportCategory').value;
+      const desc = document.getElementById('reportDesc').value;
+
+      const safeCat = escapeHtml(cat);
+      const safeDesc = escapeHtml(desc);
+
+      const list = document.getElementById('ticketList');
+      const item = document.createElement('div');
+      item.className = "p-3 rounded-xl bg-[#122435] border border-slate-700 text-xs space-y-1";
+      item.innerHTML = `
+        <div class="flex justify-between items-center">
+          <span class="font-bold text-white">Tiket Baru · ${safeCat}</span>
+          <span class="badge badge-mint text-[9px]">Diterima Pengelola</span>
+        </div>
+        <p class="text-slate-300 text-[11px]">${safeDesc}</p>
+        <span class="text-[10px] text-slate-400 block">Baru saja dilaporkan</span>
+      `;
+
+      list.prepend(item);
+      document.getElementById('reportDesc').value = '';
+      showToast("Laporan kerusakan berhasil dikirim ke pengelola kos!");
+    }
+
+    function copyToClipboard(text, message) {
+      navigator.clipboard.writeText(text).then(() => {
+        showToast(message);
+      }).catch(() => {
+        showToast("Teks berhasil disalin.");
+      });
+    }
+
+    function showToast(message) {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.innerHTML = `
+        <span class="text-[#ADF7D8] text-base">✓</span>
+        <span>${message}</span>
+      `;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.remove();
+      }, 4500);
+    }
+
+    // THEME HANDLING
+    function initTheme() {
+      const stored = localStorage.getItem('teranivo_theme');
+      if (stored === 'light') {
+        document.body.classList.add('light-mode');
+        updateThemeButton(true);
+      } else {
+        document.body.classList.remove('light-mode');
+        updateThemeButton(false);
+      }
+    }
+
+    function toggleTheme() {
+      const isLight = document.body.classList.toggle('light-mode');
+      localStorage.setItem('teranivo_theme', isLight ? 'light' : 'dark');
+      updateThemeButton(isLight);
+    }
+
+    function updateThemeButton(isLight) {
+      const icon = document.getElementById('themeIcon');
+      const label = document.getElementById('themeLabel');
+      if (isLight) {
+        if (icon) icon.innerText = '🌙';
+        if (label) label.innerText = 'Mode Malam';
+      } else {
+        if (icon) icon.innerText = '☀️';
+        if (label) label.innerText = 'Mode Siang';
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      initTheme();
+      initTenantPage();
+    });
+  </script>
+
+</body>
+</html>

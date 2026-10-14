@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Akun & Berlangganan — Teranivo Kos</title>
+  <link rel="icon" type="image/svg+xml" href="assets/logo.svg">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="assets/styles.css">
+  <style>
+    .plan-card {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .plan-card:hover {
+      transform: translateY(-4px);
+    }
+    .plan-card.active-plan {
+      border-color: var(--mint);
+      box-shadow: 0 0 25px var(--mint-glow);
+    }
+  </style>
+</head>
+<body id="appBody" class="selection:bg-[#ADF7D8] selection:text-[#08141F] min-h-screen flex flex-col">
+
+  <!-- ========================================================================= -->
+  <!-- 1. TOP NAVBAR -->
+  <!-- ========================================================================= -->
+  <header class="navbar">
+    <div class="container nav-inner">
+      <div class="flex items-center gap-4">
+        <a href="index.html" class="brand-link" title="Kembali ke Beranda Teranivo">
+          <img src="assets/logo.svg" alt="Teranivo Logo" class="brand-logo-img">
+        </a>
+        <div class="hidden sm:block border-l border-[rgba(255,255,255,0.1)] pl-3">
+          <span class="text-xs font-bold text-heading block">Pusat Akun & Langganan</span>
+          <span class="text-[10px] text-muted">Akses Fitur & Pengaturan Juragan</span>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2.5 sm:gap-3">
+        <!-- Theme Toggle -->
+        <button onclick="toggleTheme()" class="theme-toggle-btn" id="btnThemeToggle" title="Ganti Mode Tampilan">
+          <span id="themeIcon">☀️</span>
+          <span id="themeLabel" class="hidden sm:inline">Mode Siang</span>
+        </button>
+
+        <!-- Direct Link to Dashboard -->
+        <a href="dashboard.html" class="page-switch-pill" title="Kembali ke Dasbor Juragan">
+          <span>📊 Dasbor Kos</span>
+          <span class="text-xs text-mint">→</span>
+        </a>
+
+        <!-- Home -->
+        <a href="index.html" class="btn-secondary text-xs px-3 py-2 hidden md:inline-flex">
+          <span>Beranda</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ========================================================================= -->
+  <!-- 2. MAIN CONTENT -->
+  <!-- ========================================================================= -->
+  <main class="container py-8 flex-1 space-y-8 max-w-5xl">
+    
+    <!-- Header Greeting -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[var(--border-main)] pb-6">
+      <div>
+        <span class="eyebrow"><span class="dot"></span> Manajemen Akun Teranivo</span>
+        <h1 class="text-2xl sm:text-3xl font-extrabold text-heading mt-1" id="accountHeaderTitle">
+          Status Akun & Langganan Juragan
+        </h1>
+        <p class="text-xs sm:text-sm text-body mt-1">
+          Kelola login pengelola, pantau masa uji coba gratis, dan aktifkan paket berlangganan multi-kos.
+        </p>
+      </div>
+
+      <!-- Quick Switcher Demo Buttons -->
+      <div class="flex items-center gap-2">
+        <button onclick="simulateQuickLogin('trial')" class="btn-secondary text-xs py-2 px-3" title="Simulasi Akun Mode Trial">
+          <span>🧪 Coba Akun Trial</span>
+        </button>
+        <button onclick="simulateQuickLogin('pro')" class="btn-primary text-xs py-2 px-3" title="Simulasi Akun Mode Pro">
+          <span>⭐ Coba Akun Pro</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- ======================================================================= -->
+    <!-- SECTION A: LOGGED-IN USER PROFILE & MEMBERSHIP STATUS -->
+    <!-- ======================================================================= -->
+    <div id="loggedInView" class="space-y-6">
+      
+      <!-- Profile & Plan Status Card -->
+      <div class="card p-6 sm:p-8 space-y-6 border-[var(--border-main)] bg-[var(--bg-card)]">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-[var(--border-main)]">
+          <div class="flex items-center gap-4">
+            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#2BD9AF] to-[#047857] text-[#08141F] flex items-center justify-center text-2xl font-black shadow-md" id="avatarInitial">
+              BS
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <h2 class="text-lg sm:text-xl font-bold text-heading" id="profileName">H. Bambang Sudiro</h2>
+                <span id="planBadge" class="badge badge-warning text-[10px] font-bold">⚠️ TRIAL 14 HARI</span>
+              </div>
+              <p class="text-xs text-muted" id="profileEmailPhone">bambang.sudiro@teranivo.id · 0812-8899-7766</p>
+              <span class="text-[11px] text-mint font-semibold mt-0.5 block" id="profilePropertyInfo">
+                🏢 Mengelola 3 Lokasi Kos (Griya Harmoni, Teranivo Premiere, Putri Asri)
+              </span>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <button onclick="handleLogout()" class="px-4 py-2 rounded-xl text-xs font-bold bg-rose-500/10 hover:bg-rose-500/20 text-rose-500 border border-rose-500/30 transition flex items-center gap-1.5">
+              <span>🚪</span>
+              <span>Keluar (Logout)</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Dynamic Status Banner (Trial vs Subscribed) -->
+        <div id="statusBannerBox" class="p-4 sm:p-5 rounded-2xl border text-xs sm:text-sm space-y-2">
+          <!-- Populated by JavaScript -->
+        </div>
+
+        <!-- Account Capabilities / Feature Access Grid -->
+        <div>
+          <h3 class="text-xs font-bold uppercase tracking-wider text-muted mb-3">Hak Akses Fitur Akun Saat Ini:</h3>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+            <div class="p-3.5 rounded-xl bg-[var(--bg-subcard)] border border-[var(--border-main)] space-y-1">
+              <span class="text-muted block">Jumlah Tempat Kos:</span>
+              <strong class="text-heading text-sm" id="featureMultiKos">Maks. 3 Properti Aktif</strong>
+              <span class="text-[10px] text-emerald-500 block font-semibold" id="featureMultiKosSub">Termasuk cari per lokasi kos</span>
+            </div>
+            <div class="p-3.5 rounded-xl bg-[var(--bg-subcard)] border border-[var(--border-main)] space-y-1">
+              <span class="text-muted block">WhatsApp Gateway Tagih:</span>
+              <strong class="text-heading text-sm" id="featureWaGateway">Otomatis Tanpa Batas</strong>
+              <span class="text-[10px] text-emerald-500 block font-semibold" id="featureWaGatewaySub">Format resmi & 1-klik kirim</span>
+            </div>
+            <div class="p-3.5 rounded-xl bg-[var(--bg-subcard)] border border-[var(--border-main)] space-y-1">
+              <span class="text-muted block">Laporan PDF & Buku Kas:</span>
+              <strong class="text-heading text-sm" id="featureExport">Ekspor Resmi Terbuka</strong>
+              <span class="text-[10px] text-emerald-500 block font-semibold" id="featureExportSub">Stempel digital & jurnal rapi</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ======================================================================= -->
+      <!-- SECTION B: PRICING & SUBSCRIPTION PACKAGES -->
+      <!-- ======================================================================= -->
+      <div class="space-y-6 pt-4">
+        
+        <div class="text-center space-y-2 max-w-xl mx-auto">
+          <span class="eyebrow mx-auto justify-center"><span class="dot"></span> Pilih Paket Berlangganan</span>
+          <h2 class="text-xl sm:text-2xl font-bold text-heading">
+            Investasi Terjangkau untuk Ketenangan Juragan Kos
+          </h2>
+          <p class="text-xs sm:text-sm text-muted">
+            0% biaya komisi sewa. Biaya langganan flat bulanan/tahunan yang langsung balik modal sejak bulan pertama.
+          </p>
+
+          <!-- Billing Period Switcher (Bulanan vs Tahunan) -->
+          <div class="inline-flex items-center gap-2 p-1 rounded-xl bg-[var(--bg-subcard)] border border-[var(--border-main)] mt-3">
+            <button onclick="setBillingCycle('monthly')" id="btnBillingMonthly"
+                    class="px-4 py-1.5 rounded-lg text-xs font-bold transition bg-[var(--bg-card)] text-heading border border-[var(--border-main)]">
+              Bayar Bulanan
+            </button>
+            <button onclick="setBillingCycle('annual')" id="btnBillingAnnual"
+                    class="px-4 py-1.5 rounded-lg text-xs font-bold transition text-muted hover:text-heading flex items-center gap-1.5">
+              <span>Bayar Tahunan</span>
+              <span class="badge badge-mint text-[9px] py-0">Hemat 20%</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 3 Subscription Plans Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
+          
+          <!-- Plan 1: Starter -->
+          <div class="card plan-card p-6 flex flex-col justify-between space-y-6 border-[var(--border-main)] bg-[var(--bg-card)]">
+            <div class="space-y-4">
+              <div class="flex justify-between items-center">
+                <span class="badge text-[10px] bg-[var(--bg-subcard)] text-muted">Paket Starter</span>
+                <span class="text-xs text-muted">1 Tempat Kos</span>
+              </div>
+              <h3 class="text-lg font-bold text-heading">Juragan Pemula</h3>
+              <p class="text-xs text-muted">Cocok untuk pemilik 1 bangunan kos pemula hingga 10 kamar.</p>
+              
+              <div class="pt-2">
+                <div class="flex items-baseline gap-1">
+                  <span class="text-xs text-muted">Rp</span>
+                  <span class="text-3xl font-black text-heading font-mono" id="priceStarter">25.000</span>
+                  <span class="text-xs text-muted" id="periodStarter">/ bulan</span>
+                </div>
+                <span class="text-[10px] text-muted block mt-1">Ditagih rutin flat</span>
+              </div>
+
+              <ul class="text-xs text-body space-y-2.5 pt-4 border-t border-[var(--border-main)]">
+                <li class="flex items-center gap-2">
+                  <span class="text-emerald-500 font-bold">✓</span>
+                  <span>Maks. 1 Properti Kos (10 Kamar)</span>
+                </li>
+                <li class="flex items-center gap-2">
+                  <span class="text-emerald-500 font-bold">✓</span>
+                  <span>Tagih WhatsApp 1-Klik Manual</span>
+                </li>
+                <li class="flex items-center gap-2">
+                  <span class="text-emerald-500 font-bold">✓</span>
+                  <span>QRIS Statis & Resi Pembayaran</span>
+                </li>
+                <li class="flex items-center gap-2 text-muted">
+                  <span class="text-slate-500">✕</span>
+                  <span class="line-through">Multi-Tempat Kos / Cabang</span>
+                </li>
+              </ul>
+            </div>
+
+            <button onclick="openSubscribeModal('starter')" class="btn-secondary w-full text-xs py-3 font-bold">
+              Pilih Paket Starter
+            </button>
+          </div>
+
+          <!-- Plan 2: Pro Multi-Kos (Most Popular) -->
+          <div class="card plan-card active-plan p-6 flex flex-col justify-between space-y-6 border-mint bg-gradient-to-b from-[var(--bg-card)] to-[var(--bg-subcard)] relative shadow-lg overflow-visible">
+            
+            <!-- ATRACTIVE POPULAR BADGE (SOLID OPAQUE & CENTERED) -->
+            <div class="popular-badge-pill">
+              <span>⭐</span>
+              <span>Paling Direkomendasikan</span>
+            </div>
+
+            <div class="space-y-4 pt-1">
+              <div class="flex justify-between items-center">
+                <span class="badge badge-mint text-[10px]">Paket Pro</span>
+                <span class="text-xs text-mint font-semibold">Multi-Cabang</span>
+              </div>
+              <h3 class="text-lg font-bold text-heading">Juragan Pro Multi-Kos</h3>
+              <p class="text-xs text-muted">Solusi komplit juragan yang punya beberapa cabang kos & ingin otomatisasi penuh.</p>
+              
+              <div class="pt-2">
+                <div class="flex items-baseline gap-1">
+                  <span class="text-xs text-mint">Rp</span>
+                  <span class="text-3xl font-black text-mint font-mono" id="pricePro">49.000</span>
+                  <span class="text-xs text-muted" id="periodPro">/ bulan</span>
+                </div>
+                <span class="text-[10px] text-emerald-700 dark:text-emerald-300 font-semibold block mt-1" id="saveHintPro">Hemat Rp 120.000 bila bayar tahunan</span>
+              </div>
+
+              <ul class="text-xs text-body space-y-2.5 pt-4 border-t border-[var(--border-main)]">
+                <li class="flex items-center gap-2">
+                  <span class="text-emerald-500 font-bold">✓</span>
+                  <span><strong>Multi-Tempat Kos (Hingga 5 Cabang)</strong></span>
+                </li>
+                <li class="flex items-center gap-2">
+                  <span class="text-emerald-500 font-bold">✓</span>
+                  <span>Fitur Search & Filter per Lokasi Kos</span>
+                </li>
+                <li class="flex items-center gap-2">
+                  <span class="text-emerald-500 font-bold">✓</span>
+                  <span>WhatsApp Gateway Otomatis Auto-Notif</span>
+                </li>
+                <li class="flex items-center gap-2">
+                  <span class="text-emerald-500 font-bold">✓</span>
+                  <span>Catat Meter kWh Listrik & Auto Kalkulator</span>
+                </li>
+                <li class="flex items-center gap-2">
+                  <span class="text-emerald-500 font-bold">✓</span>
+                  <span>Cetak PDF Laporan Resmi & Stempel Digital</span>
+                </li>
+              </ul>
+            </div>
+
+            <button onclick="openSubscribeModal('pro')" class="btn-primary w-full text-xs py-3 font-bold shadow-md">
+              ⚡ Aktifkan Paket Pro Sekarang
+            </button>
+          </div>
+
+          <!-- Plan 3: Enterprise -->
+          <div class="card plan-card p-6 flex flex-col justify-between space-y-6 border-[var(--border-main)] bg-[var(--bg-card)]">
+            <div class="space-y-4">
+              <div class="flex justify-between items-center">
+                <span class="badge text-[10px] bg-[var(--bg-subcard)] text-muted">Enterprise</span>
+                <span class="text-xs text-muted">>100 Kamar</span>
+              </div>
+              <h3 class="text-lg font-bold text-heading">Juragan Korporasi Enterprise</h3>
+              <p class="text-xs text-muted">Untuk pemilik kos skala besar, kostel, atau asrama dengan tim pengelola.</p>
+              
+              <div class="pt-2">
+                <div class="flex items-baseline gap-1">
+                  <span class="text-xs text-muted">Rp</span>
+                  <span class="text-3xl font-black text-heading font-mono" id="priceEnterprise">99.000</span>
+                  <span class="text-xs text-muted" id="periodEnterprise">/ bulan</span>
+                </div>
+                <span class="text-[10px] text-muted block mt-1">Multi-admin & integrasi API</span>
+              </div>
+
+              <ul class="text-xs text-body space-y-2.5 pt-4 border-t border-[var(--border-main)]">
+                <li class="flex items-center gap-2">
+                  <span class="text-emerald-500 font-bold">✓</span>
+                  <span>Cabang & Kamar Kos Tanpa Batas</span>
+                </li>
+                <li class="flex items-center gap-2">
+                  <span class="text-emerald-500 font-bold">✓</span>
+                  <span>Akun Multi-Admin & Manajer Operasional</span>
+                </li>
+                <li class="flex items-center gap-2">
+                  <span class="text-emerald-500 font-bold">✓</span>
+                  <span>Direct Webhook Bank (BCA, Mandiri, BRI)</span>
+                </li>
+                <li class="flex items-center gap-2">
+                  <span class="text-emerald-500 font-bold">✓</span>
+                  <span>Export Jurnal Akuntansi Excel & Laporan Pajak</span>
+                </li>
+                <li class="flex items-center gap-2">
+                  <span class="text-emerald-500 font-bold">✓</span>
+                  <span>Prioritas Pendampingan Setup WhatsApp & Migrasi Gratis</span>
+                </li>
+              </ul>
+            </div>
+
+            <button onclick="openSubscribeModal('enterprise')" class="btn-secondary w-full text-xs py-3 font-bold">
+              Hubungi Tim Enterprise
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- ======================================================================= -->
+    <!-- SECTION C: LOGGED-OUT FORM (LOGIN & DAFTAR) -->
+    <!-- ======================================================================= -->
+    <div id="loggedOutView" class="hidden max-w-md mx-auto space-y-6">
+      <div class="card p-6 sm:p-8 space-y-5 border-[var(--border-main)] bg-[var(--bg-card)]">
+        
+        <div class="text-center space-y-1">
+          <div class="w-12 h-12 rounded-2xl bg-mint/10 border border-mint/20 text-mint flex items-center justify-center mx-auto text-xl mb-3">
+            🔐
+          </div>
+          <h2 class="text-xl font-bold text-heading">Masuk ke Akun Teranivo</h2>
+          <p class="text-xs text-muted">Masukkan email atau nomor WhatsApp pengelola kos Anda</p>
+        </div>
+
+        <form onsubmit="handleLoginForm(event)" class="space-y-4 text-xs">
+          <div>
+            <label class="block font-semibold text-body mb-1">Email atau No. WhatsApp:</label>
+            <input type="text" id="loginUsername" required placeholder="misal: 081288997766 atau nama@email.com"
+                   class="w-full bg-[var(--bg-subcard)] border border-[var(--border-main)] rounded-xl p-3 text-heading focus:border-mint focus:outline-none">
+          </div>
+
+          <div>
+            <div class="flex justify-between items-center mb-1">
+              <label class="font-semibold text-body">Kata Sandi:</label>
+              <a href="javascript:void(0)" onclick="showToast('Tautan reset sandi dikirim ke WhatsApp/Email Anda.')" class="text-mint hover:underline text-[11px]">Lupa Sandi?</a>
+            </div>
+            <input type="password" id="loginPassword" required placeholder="••••••••"
+                   class="w-full bg-[var(--bg-subcard)] border border-[var(--border-main)] rounded-xl p-3 text-heading focus:border-mint focus:outline-none">
+          </div>
+
+          <button type="submit" class="btn-primary w-full py-3 font-bold text-sm shadow-md">
+            Masuk ke Akun Juragan
+          </button>
+        </form>
+
+        <div class="pt-4 border-t border-[var(--border-main)] text-center space-y-3">
+          <span class="text-[11px] text-muted block">Belum punya akun juragan?</span>
+          <button onclick="simulateQuickLogin('trial')" class="btn-secondary w-full py-2.5 text-xs font-semibold">
+            ✨ Buat Akun Baru (Gratis Uji Coba 14 Hari)
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL: CHECKOUT & SIMULASI PEMBAYARAN LANGGANAN -->
+  <!-- ========================================================================= -->
+  <div id="subscribeModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="subscribeModalTitle">
+    <div class="modal-content max-w-lg">
+      
+      <div class="p-5 border-b border-[var(--border-main)] flex items-center justify-between bg-[var(--bg-subcard)]">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-xl bg-mint flex items-center justify-center font-bold text-lg text-[#08141F]">
+            💳
+          </div>
+          <div>
+            <h3 class="text-sm font-bold text-heading" id="subscribeModalTitle">Aktivasi Berlangganan Teranivo</h3>
+            <p class="text-xs text-muted" id="subscribeModalSubtitle">Paket Pro Multi-Kos · Akses Penuh</p>
+          </div>
+        </div>
+        <button onclick="closeSubscribeModal()" class="text-muted hover:text-heading text-xl font-bold" aria-label="Tutup modal langganan">&times;</button>
+      </div>
+
+      <div class="p-6 space-y-4">
+        
+        <!-- Order Summary -->
+        <div class="p-4 rounded-xl border border-[var(--border-main)] bg-[var(--bg-card)] space-y-2 text-xs">
+          <div class="flex justify-between items-center">
+            <span class="text-muted">Paket Terpilih:</span>
+            <strong class="text-heading" id="checkoutPlanName">Paket Pro Multi-Kos</strong>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="text-muted">Periode Tagihan:</span>
+            <span class="text-heading font-semibold" id="checkoutPeriodText">1 Tahun (Hemat 20%)</span>
+          </div>
+          <div class="flex justify-between items-center pt-2 border-t border-[var(--border-main)]">
+            <span class="font-bold text-heading">Total Pembayaran:</span>
+            <strong class="text-base font-extrabold text-mint font-mono" id="checkoutTotalAmount">Rp 1.490.000</strong>
+          </div>
+        </div>
+
+        <!-- Payment Method Options -->
+        <div class="space-y-2">
+          <label class="block text-xs font-semibold text-body">Pilih Cara Pembayaran:</label>
+          <div class="grid grid-cols-2 gap-2 text-xs">
+            <button type="button" onclick="selectPaymentMethod('qris')" id="btnMethodQris"
+                    class="p-3 rounded-xl border border-mint bg-mint/10 text-heading font-bold text-left flex items-center gap-2">
+              <span>📱</span>
+              <span>QRIS Instan (BCA/Gopay)</span>
+            </button>
+            <button type="button" onclick="selectPaymentMethod('va')" id="btnMethodVa"
+                    class="p-3 rounded-xl border border-[var(--border-main)] bg-[var(--bg-card)] text-muted font-bold text-left flex items-center gap-2 hover:border-mint">
+              <span>🏦</span>
+              <span>Virtual Account Bank</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- QRIS Simulation Box -->
+        <div id="qrisSimulatorBox" class="p-4 rounded-xl bg-slate-900 border border-slate-700 text-center space-y-2">
+          <span class="text-[11px] text-slate-300 block">Scan QRIS Resmi Teranivo di Bawah Ini:</span>
+          <div class="w-40 h-40 mx-auto bg-white p-2 rounded-xl flex items-center justify-center shadow-lg">
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=TERANIVO_SUBSCRIBE_PRO_MULTI_KOS"
+                 alt="QRIS Teranivo Subscribe" class="w-full h-full object-contain">
+          </div>
+          <p class="text-[10px] text-slate-400">NMID: ID1029384756201 · PT Teranivo Teknologi Indonesia</p>
+        </div>
+
+        <!-- Virtual Account Box (Hidden by default) -->
+        <div id="vaSimulatorBox" class="hidden p-4 rounded-xl bg-[var(--bg-card)] border border-[var(--border-main)] space-y-2 text-xs">
+          <div class="flex justify-between items-center">
+            <span class="text-muted">Nomor Virtual Account BCA:</span>
+            <strong class="font-mono text-heading">8801-0812-8899-7766</strong>
+          </div>
+          <span class="text-[10px] text-muted block">Batas pembayaran: 24 jam setelah pesanan dibuat.</span>
+        </div>
+
+      </div>
+
+      <div class="p-5 border-t border-[var(--border-main)] bg-[var(--bg-subcard)] flex justify-between items-center">
+        <button onclick="closeSubscribeModal()" class="btn-secondary text-xs py-2.5 px-4 font-semibold">
+          Batal
+        </button>
+        <button onclick="confirmSubscriptionPayment()" class="btn-primary text-xs py-2.5 px-5 font-bold shadow-md flex items-center gap-1.5">
+          <span>⚡ Konfirmasi Bayar & Buka Akses Pro</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <!-- ========================================================================= -->
+  <!-- 3. FOOTER -->
+  <!-- ========================================================================= -->
+  <footer class="border-t border-[rgba(255,255,255,0.08)] py-8 mt-auto text-xs text-muted">
+    <div class="container flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <img src="assets/logo.svg" alt="Teranivo" class="h-5 w-auto">
+        <span>© 2026 PT Teranivo Teknologi Indonesia. Software for clarity.</span>
+      </div>
+      <div class="flex items-center gap-4">
+        <a href="index.html" class="hover:text-heading">Beranda</a>
+        <a href="dashboard.html" class="hover:text-heading">Dasbor Juragan</a>
+        <a href="tenant.html?room=102" class="hover:text-heading">Layar Anak Kos</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ========================================================================= -->
+  <!-- JAVASCRIPT LOGIC -->
+  <!-- ========================================================================= -->
+  <script>
+    // =========================================================================
+    // SECURITY & UTILITY HELPERS (XSS PREVENTION)
+    // =========================================================================
+    function escapeHtml(str) {
+      if (str === null || str === undefined) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    // DEFAULT USER AUTH STATE
+    const DEFAULT_AUTH = {
+      isLoggedIn: true,
+      name: 'H. Bambang Sudiro',
+      email: 'bambang.sudiro@teranivo.id',
+      phone: '0812-8899-7766',
+      plan: 'trial', // 'trial' | 'pro' | 'enterprise'
+      trialDaysLeft: 7,
+      subscriptionExpire: '13 Okt 2027',
+      billingCycle: 'annual', // 'monthly' | 'annual'
+      propertiesCount: 3
+    };
+
+    let currentUser = null;
+    let currentBillingCycle = 'annual';
+    let selectedPlanForCheckout = 'pro';
+
+    function initAuth() {
+      initTheme();
+      const stored = localStorage.getItem('teranivo_auth');
+      if (stored) {
+        try {
+          currentUser = JSON.parse(stored);
+        } catch (e) {
+          currentUser = { ...DEFAULT_AUTH };
+        }
+      } else {
+        currentUser = { ...DEFAULT_AUTH };
+        localStorage.setItem('teranivo_auth', JSON.stringify(currentUser));
+      }
+
+      renderAuthUI();
+      setBillingCycle(currentUser.billingCycle || 'annual');
+    }
+
+    function renderAuthUI() {
+      const loggedInView = document.getElementById('loggedInView');
+      const loggedOutView = document.getElementById('loggedOutView');
+
+      if (!currentUser || !currentUser.isLoggedIn) {
+        loggedInView.classList.add('hidden');
+        loggedOutView.classList.remove('hidden');
+        document.getElementById('accountHeaderTitle').innerText = "Masuk atau Daftar Akun Juragan";
+        return;
+      }
+
+      loggedInView.classList.remove('hidden');
+      loggedOutView.classList.add('hidden');
+      document.getElementById('accountHeaderTitle').innerText = "Status Akun & Langganan Juragan";
+
+      // Render profile
+      document.getElementById('profileName').innerText = currentUser.name || 'H. Bambang Sudiro';
+      document.getElementById('profileEmailPhone').innerText = `${currentUser.email || 'bambang@teranivo.id'} · ${currentUser.phone || '0812-8899-7766'}`;
+      
+      const initials = (currentUser.name || 'BS').split(' ').map(n => n[0]).slice(0, 2).join('');
+      document.getElementById('avatarInitial').innerText = initials || 'BS';
+
+      // Render plan banner & badges
+      const badge = document.getElementById('planBadge');
+      const banner = document.getElementById('statusBannerBox');
+
+      if (currentUser.plan === 'pro' || currentUser.plan === 'enterprise') {
+        badge.className = 'badge badge-mint text-[10px] font-bold';
+        badge.innerText = '⭐ PRO MULTI-KOS AKTIF';
+
+        banner.className = 'p-4 sm:p-5 rounded-2xl border border-emerald-500/30 bg-emerald-500/10 text-emerald-800 dark:text-emerald-200 text-xs sm:text-sm space-y-2';
+        banner.innerHTML = `
+          <div class="flex items-center justify-between">
+            <strong class="font-bold flex items-center gap-1.5 text-emerald-600 dark:text-emerald-300">
+              <span>✓</span> Paket Berlangganan Pro Sedang Aktif
+            </strong>
+            <span class="text-[10px] bg-emerald-500/20 px-2.5 py-1 rounded-full font-bold">Masa Aktif: s.d. ${escapeHtml(currentUser.subscriptionExpire)}</span>
+          </div>
+          <p class="text-xs text-body leading-relaxed">
+            Semua fitur manajemen kos telah dibuka: Multi-Tempat Kos (Semua Cabang), WhatsApp Gateway Tagihan Otomatis, Pencatatan Meter Listrik kWh, dan Cetak PDF Jurnal Keuangan Tanpa Batas.
+          </p>
+          <div class="pt-1 flex items-center gap-3">
+            <a href="dashboard.html" class="btn-primary text-xs py-1.5 px-3">
+              <span>Buka Dasbor Juragan Sekarang →</span>
+            </a>
+          </div>
+        `;
+
+        document.getElementById('featureMultiKos').innerText = "Multi-Cabang Tak Terbatas";
+        document.getElementById('featureMultiKosSub').innerText = "Kelola Yogyakarta, Jakarta, Bandung dll";
+        document.getElementById('featureWaGateway').innerText = "WhatsApp Gateway Otomatis";
+        document.getElementById('featureExport').innerText = "Cetak PDF & Rekap Jurnal Sah";
+      } else {
+        badge.className = 'badge badge-warning text-[10px] font-bold';
+        badge.innerText = `⚠️ TRIAL ${escapeHtml(currentUser.trialDaysLeft || 7)} HARI TERSISA`;
+
+        banner.className = 'p-4 sm:p-5 rounded-2xl border border-amber-500/30 bg-amber-500/10 text-amber-900 dark:text-amber-200 text-xs sm:text-sm space-y-2';
+        banner.innerHTML = `
+          <div class="flex items-center justify-between">
+            <strong class="font-bold flex items-center gap-1.5 text-amber-600 dark:text-amber-300">
+              <span>⏳</span> Akun Dalam Masa Uji Coba Gratis (Free Trial)
+            </strong>
+            <span class="text-[10px] bg-amber-500/20 px-2.5 py-1 rounded-full font-bold">Sisa ${escapeHtml(currentUser.trialDaysLeft || 7)} Hari Lagi</span>
+          </div>
+          <p class="text-xs text-body leading-relaxed">
+            Anda sedang menikmati akses uji coba. Untuk terus mengelola banyak tempat kos secara bersamaan setelah masa trial berakhir dan mengunci harga langganan promo hemat 20%, silakan aktifkan paket Pro di bawah.
+          </p>
+          <div class="pt-1 flex items-center gap-3">
+            <button onclick="openSubscribeModal('pro')" class="btn-primary text-xs py-1.5 px-3">
+              <span>⚡ Upgrade ke Pro Multi-Kos Sekarang</span>
+            </button>
+          </div>
+        `;
+
+        document.getElementById('featureMultiKos').innerText = "Maks. 3 Properti (Masa Uji Coba)";
+        document.getElementById('featureMultiKosSub').innerText = "Upgrade untuk akses permanen";
+        document.getElementById('featureWaGateway').innerText = "Simulasi WhatsApp Gateway";
+        document.getElementById('featureExport').innerText = "Preview Cetak PDF Resmi";
+      }
+    }
+
+    function setBillingCycle(cycle) {
+      currentBillingCycle = cycle;
+      currentUser.billingCycle = cycle;
+      localStorage.setItem('teranivo_auth', JSON.stringify(currentUser));
+
+      const btnM = document.getElementById('btnBillingMonthly');
+      const btnA = document.getElementById('btnBillingAnnual');
+
+      if (cycle === 'annual') {
+        btnA.className = "px-4 py-1.5 rounded-lg text-xs font-bold transition bg-[var(--bg-card)] text-heading border border-[var(--border-main)] flex items-center gap-1.5";
+        btnM.className = "px-4 py-1.5 rounded-lg text-xs font-bold transition text-muted hover:text-heading";
+
+        // Prices annual (with discount)
+        document.getElementById('priceStarter').innerText = "20.000";
+        document.getElementById('periodStarter').innerText = "/ bln (Rp 240.000 / thn)";
+        
+        document.getElementById('pricePro').innerText = "39.000";
+        document.getElementById('periodPro').innerText = "/ bln (Rp 468.000 / thn)";
+        document.getElementById('saveHintPro').innerText = "Hemat Rp 120.000 dibanding bayar bulanan!";
+
+        document.getElementById('priceEnterprise').innerText = "79.000";
+        document.getElementById('periodEnterprise').innerText = "/ bln (Rp 948.000 / thn)";
+      } else {
+        btnM.className = "px-4 py-1.5 rounded-lg text-xs font-bold transition bg-[var(--bg-card)] text-heading border border-[var(--border-main)]";
+        btnA.className = "px-4 py-1.5 rounded-lg text-xs font-bold transition text-muted hover:text-heading flex items-center gap-1.5";
+
+        // Prices monthly
+        document.getElementById('priceStarter').innerText = "25.000";
+        document.getElementById('periodStarter').innerText = "/ bulan";
+
+        document.getElementById('pricePro').innerText = "49.000";
+        document.getElementById('periodPro').innerText = "/ bulan";
+        document.getElementById('saveHintPro').innerText = "Pilihan fleksibel tanpa komitmen tahunan";
+
+        document.getElementById('priceEnterprise').innerText = "99.000";
+        document.getElementById('periodEnterprise').innerText = "/ bulan";
+      }
+    }
+
+    function handleLogout() {
+      currentUser.isLoggedIn = false;
+      localStorage.setItem('teranivo_auth', JSON.stringify(currentUser));
+      renderAuthUI();
+      showToast("Anda telah berhasil logout dari akun pengelola.");
+    }
+
+    function handleLoginForm(e) {
+      e.preventDefault();
+      const rawUser = (document.getElementById('loginUsername').value || '').trim();
+      const user = rawUser.replace(/[<>"']/g, '');
+      currentUser.isLoggedIn = true;
+      currentUser.name = user.includes('@') ? user.split('@')[0] : (user || 'H. Bambang Sudiro');
+      localStorage.setItem('teranivo_auth', JSON.stringify(currentUser));
+      renderAuthUI();
+      showToast(`Selamat datang kembali, ${currentUser.name}!`);
+    }
+
+    function simulateQuickLogin(mode) {
+      if (mode === 'pro') {
+        currentUser = {
+          isLoggedIn: true,
+          name: 'H. Bambang Sudiro',
+          email: 'bambang.sudiro@teranivo.id',
+          phone: '0812-8899-7766',
+          plan: 'pro',
+          trialDaysLeft: 0,
+          subscriptionExpire: '13 Okt 2027',
+          billingCycle: 'annual',
+          propertiesCount: 3
+        };
+        showToast("Beralih ke Akun Pro Multi-Kos Aktif!");
+      } else {
+        currentUser = {
+          isLoggedIn: true,
+          name: 'H. Bambang Sudiro (Trial)',
+          email: 'bambang.sudiro@teranivo.id',
+          phone: '0812-8899-7766',
+          plan: 'trial',
+          trialDaysLeft: 7,
+          subscriptionExpire: '20 Okt 2026',
+          billingCycle: 'monthly',
+          propertiesCount: 3
+        };
+        showToast("Beralih ke Akun Mode Trial (Sisa 7 Hari)!");
+      }
+
+      localStorage.setItem('teranivo_auth', JSON.stringify(currentUser));
+      renderAuthUI();
+    }
+
+    // =========================================================================
+    // MODAL SUBSCRIPTION FLOW
+    // =========================================================================
+    function openSubscribeModal(plan) {
+      selectedPlanForCheckout = plan;
+      const modal = document.getElementById('subscribeModal');
+      
+      let planTitle = "Paket Pro Multi-Kos";
+      let amount = currentBillingCycle === 'annual' ? "Rp 468.000" : "Rp 49.000";
+      let period = currentBillingCycle === 'annual' ? "1 Tahun (Hemat 20%)" : "1 Bulan (Fleksibel)";
+
+      if (plan === 'starter') {
+        planTitle = "Paket Starter (Juragan Pemula)";
+        amount = currentBillingCycle === 'annual' ? "Rp 240.000" : "Rp 25.000";
+      } else if (plan === 'enterprise') {
+        planTitle = "Paket Korporasi Enterprise";
+        amount = currentBillingCycle === 'annual' ? "Rp 948.000" : "Rp 99.000";
+      }
+
+      document.getElementById('checkoutPlanName').innerText = planTitle;
+      document.getElementById('checkoutPeriodText').innerText = period;
+      document.getElementById('checkoutTotalAmount').innerText = amount;
+      document.getElementById('subscribeModalSubtitle').innerText = `${planTitle} · Aktivasi Instan`;
+
+      modal.classList.add('active');
+    }
+
+    function closeSubscribeModal() {
+      document.getElementById('subscribeModal').classList.remove('active');
+    }
+
+    function selectPaymentMethod(method) {
+      const btnQris = document.getElementById('btnMethodQris');
+      const btnVa = document.getElementById('btnMethodVa');
+      const boxQris = document.getElementById('qrisSimulatorBox');
+      const boxVa = document.getElementById('vaSimulatorBox');
+
+      if (method === 'qris') {
+        btnQris.className = "p-3 rounded-xl border border-mint bg-mint/10 text-heading font-bold text-left flex items-center gap-2";
+        btnVa.className = "p-3 rounded-xl border border-[var(--border-main)] bg-[var(--bg-card)] text-muted font-bold text-left flex items-center gap-2 hover:border-mint";
+        boxQris.classList.remove('hidden');
+        boxVa.classList.add('hidden');
+      } else {
+        btnVa.className = "p-3 rounded-xl border border-mint bg-mint/10 text-heading font-bold text-left flex items-center gap-2";
+        btnQris.className = "p-3 rounded-xl border border-[var(--border-main)] bg-[var(--bg-card)] text-muted font-bold text-left flex items-center gap-2 hover:border-mint";
+        boxVa.classList.remove('hidden');
+        boxQris.classList.add('hidden');
+      }
+    }
+
+    function confirmSubscriptionPayment() {
+      closeSubscribeModal();
+      currentUser.plan = selectedPlanForCheckout === 'starter' ? 'starter' : 'pro';
+      currentUser.trialDaysLeft = 0;
+      currentUser.subscriptionExpire = '13 Okt 2027';
+      currentUser.isLoggedIn = true;
+      localStorage.setItem('teranivo_auth', JSON.stringify(currentUser));
+
+      renderAuthUI();
+      showToast("Pembayaran langganan berhasil diverifikasi! Akun Pro Anda kini aktif!");
+    }
+
+    // THEME HANDLING
+    function initTheme() {
+      const stored = localStorage.getItem('teranivo_theme');
+      if (stored === 'light') {
+        document.body.classList.add('light-mode');
+        updateThemeButton(true);
+      } else {
+        document.body.classList.remove('light-mode');
+        updateThemeButton(false);
+      }
+    }
+
+    function toggleTheme() {
+      const isLight = document.body.classList.toggle('light-mode');
+      localStorage.setItem('teranivo_theme', isLight ? 'light' : 'dark');
+      updateThemeButton(isLight);
+    }
+
+    function updateThemeButton(isLight) {
+      const icon = document.getElementById('themeIcon');
+      const label = document.getElementById('themeLabel');
+      if (isLight) {
+        icon.innerText = '🌙';
+        if (label) label.innerText = 'Mode Malam';
+      } else {
+        icon.innerText = '☀️';
+        if (label) label.innerText = 'Mode Siang';
+      }
+    }
+
+    function showToast(message) {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.innerHTML = `
+        <span class="text-[#ADF7D8] text-base">✓</span>
+        <span>${escapeHtml(message)}</span>
+      `;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.remove();
+      }, 4500);
+    }
+
+    // Modal click outside & escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeSubscribeModal();
+    });
+
+    document.getElementById('subscribeModal').addEventListener('click', (e) => {
+      if (e.target.id === 'subscribeModal') closeSubscribeModal();
+    });
+
+    // Boot
+    window.addEventListener('DOMContentLoaded', initAuth);
+  </script>
+</body>
+</html>

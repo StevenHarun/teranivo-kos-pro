@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="464" height="148" viewBox="0 0 464 148" role="img" aria-label="Teranivo">
+  <title>Teranivo</title>
+  <desc>Teranivo official brand logo vector</desc>
+  <defs>
+    <linearGradient id="leafA" x1="0" y1="0" x2="1" y2=".8" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#ADF7D8"/>
+      <stop offset=".5" stop-color="#6DEDC0"/>
+      <stop offset="1" stop-color="#2BD9AF"/>
+    </linearGradient>
+    <linearGradient id="leafB" x1="0" y1=".35" x2="1" y2=".85">
+      <stop offset="0" stop-color="#51E3BC"/>
+      <stop offset="1" stop-color="#0B9F91"/>
+    </linearGradient>
+  </defs>
+  <g transform="translate(1,-2)">
+    <path d="M86 14 H134 V26 C134 55 110 73 78 77 C59 80 42 79 27 79 V67 C27 39 49 14 86 14 Z" fill="url(#leafA)"/>
+    <path d="M78 83 H97 V94 C97 122 72 139 40 139 H9 V126 C9 99 33 83 78 83 Z" fill="url(#leafB)"/>
+  </g>
+  <g color="#FFFFFF">
+    <g transform="translate(164,108) scale(0.03808594,-0.03808594)" fill="currentColor">
+      <path d="M711 1056H495V1344H200V1056H18V825H200V280C200 88 307 0 539 0H711V231H598C518 231 495 254 495 326V825H711Z" transform="translate(0.0000,0)"/>
+      <path d="M586 -24C842 -24 1046 122 1085 332H816C789 250 710 197 595 197C440 197 350 298 345 454H1096V533C1096 855 887 1080 576 1080C273 1080 58 849 58 527C58 206 266 -24 586 -24ZM347 642C363 774 450 856 582 856C715 856 803 774 818 642Z" transform="translate(703.8000,0)"/>
+      <path d="M104 0H399V572C399 731 488 815 609 815C659 815 714 811 736 810V1061C712 1062 683 1063 649 1063C510 1063 430 1003 391 876H388V1056H104Z" transform="translate(1802.6000,0)"/>
+      <path d="M427 -18C589 -18 680 46 736 149H740V0H1028V716C1028 942 862 1078 573 1078C283 1078 111 940 98 722H375C382 803 454 859 564 859C672 859 737 805 737 727V720C737 652 669 643 476 624C256 604 64 536 64 298C64 87 216 -18 427 -18ZM509 187C410 187 346 231 346 306C346 390 426 429 527 444C622 459 705 473 739 492V386C739 272 651 187 509 187Z" transform="translate(2515.4000,0)"/>
+      <path d="M399 587C399 751 484 824 606 824C729 824 800 749 800 607V0H1094V661C1094 928 949 1078 724 1078C572 1078 465 1010 394 890V1056H104V0H399Z" transform="translate(3596.2000,0)"/>
+      <path d="M104 0H399V1056H104ZM251 1189C348 1189 419 1256 419 1346C419 1436 348 1503 251 1503C154 1503 83 1436 83 1346C83 1256 154 1189 251 1189Z" transform="translate(4744.0000,0)"/>
+      <path d="M403 0H731L1123 1056H817L645 534C620 451 595 367 571 284C547 367 522 451 495 534L321 1056H12Z" transform="translate(5195.8000,0)"/>
+      <path d="M594 -24C915 -24 1131 196 1131 527C1131 858 915 1080 594 1080C274 1080 58 858 58 527C58 196 274 -24 594 -24ZM594 215C451 215 355 331 355 527C355 724 452 841 594 841C737 841 834 724 834 527C834 331 738 215 594 215Z" transform="translate(6278.6000,0)"/>
+    </g>
+  </g>
+</svg>

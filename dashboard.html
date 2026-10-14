@@ -1,0 +1,2426 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dasbor Juragan Kos — Teranivo</title>
+  <link rel="icon" href="assets/logo-icon.svg" type="image/svg+xml">
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Shared Teranivo Design System -->
+  <link rel="stylesheet" href="assets/styles.css">
+  <style>
+    /* Senior Friendly Accessibility Enhancements */
+    body.senior-mode {
+      font-size: 18px;
+    }
+    body.senior-mode h1 { font-size: 2.2rem; }
+    body.senior-mode h2 { font-size: 1.8rem; }
+    body.senior-mode h3 { font-size: 1.5rem; }
+    body.senior-mode .room-card {
+      padding: 24px;
+      border-width: 2px;
+    }
+    body.senior-mode .btn-action {
+      padding: 14px 20px;
+      font-size: 16px;
+    }
+    body.senior-mode .kpi-num {
+      font-size: 2.2rem;
+    }
+    /* WhatsApp Chat Preview Bubble */
+    .wa-bubble-in {
+      background: #1F362B;
+      border: 1px solid #2B5742;
+      border-radius: 12px 12px 12px 0px;
+    }
+    body.light-mode .wa-bubble-in {
+      background: #E8F5E9;
+      border: 1px solid #C8E6C9;
+      color: #1B5E20;
+    }
+  </style>
+</head>
+<body id="appBody" class="selection:bg-[#ADF7D8] selection:text-[#08141F] min-h-screen flex flex-col">
+
+  <!-- ========================================================================= -->
+  <!-- 1. TOP NAVBAR -->
+  <!-- ========================================================================= -->
+  <header class="navbar">
+    <div class="container nav-inner">
+      <div class="flex items-center gap-4">
+        <a href="index.html" class="brand-link" title="Kembali ke Beranda Teranivo">
+          <img src="assets/logo.svg" alt="Teranivo Logo" class="brand-logo-img">
+        </a>
+        <div class="hidden sm:block border-l border-[rgba(255,255,255,0.1)] pl-3">
+          <span class="text-xs font-bold text-heading block" id="topNavPropertyName">Kost Griya Harmoni</span>
+          <span class="text-[10px] text-muted" id="topNavPropertyMeta">Yogyakarta · 10 Kamar</span>
+        </div>
+      </div>
+
+      <!-- Quick Switcher to Tenant View, Account, & Home -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        
+        <!-- Link to Account & Subscription Page (Trial vs Pro) -->
+        <a href="account.html" id="navAccountBtn" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold bg-[var(--bg-card)] hover:bg-[var(--bg-card-hover)] border border-[var(--border-main)] text-heading transition" title="Kelola Akun, Login/Logout, dan Berlangganan">
+          <span id="navAccountIcon">👤</span>
+          <span id="navAccountText" class="hidden sm:inline">Akun (Trial)</span>
+        </a>
+
+        <!-- Theme Toggle (Siang / Malam) -->
+        <button onclick="toggleTheme()" class="theme-toggle-btn" id="btnThemeToggle" title="Ganti antara Mode Siang dan Mode Malam">
+          <span id="themeIcon">☀️</span>
+          <span id="themeLabel" class="hidden md:inline">Mode Siang</span>
+        </button>
+
+        <!-- Senior Mode Toggle -->
+        <button onclick="toggleSeniorMode()" id="btnSeniorToggle"
+                class="inline-flex items-center gap-1.5 bg-[var(--bg-card)] hover:bg-[var(--bg-card-hover)] text-xs font-semibold text-heading px-3 py-2 rounded-xl border border-[var(--border-main)] transition"
+                title="Perbesar teks dan tombol agar lebih nyaman dibaca orang tua">
+          <span>👓</span>
+          <span id="seniorText" class="hidden lg:inline">Teks Besar: OFF</span>
+        </button>
+
+        <!-- Direct Link to Tenant Screen -->
+        <a href="tenant.html?room=102" class="page-switch-pill hidden sm:inline-flex" title="Pindah ke halaman invoice anak kos">
+          <span>📱 Layar Anak Kos</span>
+          <span class="text-xs text-mint">↗</span>
+        </a>
+
+        <!-- Back to Home -->
+        <a href="index.html" class="btn-secondary text-xs px-3 py-2 hidden xl:inline-flex">
+          <span>Beranda</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ========================================================================= -->
+  <!-- 2. QUICK DEMO BAR (TRIGGER WEBHOOK & SIMULATOR) -->
+  <!-- ========================================================================= -->
+  <aside class="bg-[var(--bg-subcard)] border-b border-[rgba(255,255,255,0.08)] py-3">
+    <div class="container flex flex-wrap items-center justify-between gap-3 text-xs">
+      <div class="flex items-center gap-2 text-body">
+        <span class="badge badge-mint text-[9px]">Uji Coba Langsung</span>
+        <span>Simulasikan kejadian nyata pembayaran tanpa harus transfer uang sungguhan:</span>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-2">
+        <!-- Button: Simulate Tenant Payment -->
+        <button onclick="triggerSimulatedPayment('102')"
+                class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl font-extrabold text-xs bg-emerald-600 hover:bg-emerald-700 text-white dark:bg-emerald-500 dark:hover:bg-emerald-400 dark:text-slate-950 shadow-md border border-emerald-600/50 transition transform hover:-translate-y-0.5 active:translate-y-0 cursor-pointer"
+                title="Simulasikan anak kos Kamar 102 membayar tagihan via QRIS">
+          <span class="text-amber-300 dark:text-amber-700 font-black">⚡</span>
+          <span>Simulasi QRIS Masuk (Kmr 102)</span>
+        </button>
+
+        <!-- Reset Button -->
+        <button onclick="resetData()"
+                class="btn-secondary text-xs px-2.5 py-1.5 rounded-lg font-semibold transition"
+                title="Kembalikan data ke awal">
+          <span>🔄 Reset Demo</span>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ========================================================================= -->
+  <!-- 3. MAIN DASHBOARD CONTENT -->
+  <!-- ========================================================================= -->
+  <main class="container py-8 flex-1 space-y-8">
+    
+    <!-- Header Greeting & Date -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div>
+        <span class="eyebrow"><span class="dot"></span> Dasbor Operasional Juragan</span>
+        <h1 class="text-2xl sm:text-3xl font-extrabold text-heading mt-1">
+          Selamat Pagi, Bapak/Ibu Juragan.
+        </h1>
+        <p class="text-xs sm:text-sm text-body mt-1">
+          Periode Tagihan: <strong class="text-heading">Oktober 2026</strong> · Jatuh tempo tanggal 15 tiap bulan.
+        </p>
+      </div>
+
+      <!-- Quick Action Buttons -->
+      <div class="flex flex-wrap items-center gap-3">
+        <!-- TOMBOL REQUEST BAYAR KE SEMUA ORANG (SESUAI REQUEST USER) -->
+        <button onclick="openBatchBillingModal()" class="btn-primary text-xs sm:text-sm shadow-lg font-bold flex items-center gap-2">
+          <span>📢</span>
+          <span>Request Bayar ke Semua (<span id="btnBatchUnpaidCount">4</span> Kamar)</span>
+        </button>
+
+        <button onclick="openKwhCalculator()" class="btn-secondary text-xs sm:text-sm">
+          <span>⚡ Catat Meter Listrik</span>
+        </button>
+        <button onclick="openCashbookModal()" class="btn-secondary text-xs sm:text-sm">
+          <span>📒 Buku Kas Kos</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- KPI STATS CARDS WITH HOVER GLOW -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+      
+      <!-- Card 1: Okupansi Kamar -->
+      <div class="card card-glow p-5 space-y-2">
+        <div class="flex items-center justify-between text-xs text-muted">
+          <span>Kamar Terisi</span>
+          <span class="badge badge-mint text-[9px]" id="statOccupancyBadge">90% Terisi</span>
+        </div>
+        <div class="kpi-num text-2xl sm:text-3xl font-extrabold text-heading" id="statKamarTerisi">
+          18 <span class="text-base text-muted font-normal">/ 20 Kamar</span>
+        </div>
+        <p class="text-[11px] text-muted">2 kamar kosong siap disewa</p>
+      </div>
+
+      <!-- Card 2: Uang Masuk -->
+      <div class="card card-glow p-5 space-y-2 border-emerald-500/20 bg-gradient-to-br from-[var(--bg-surface)] to-[var(--bg-subcard)]">
+        <div class="flex items-center justify-between text-xs text-muted">
+          <span>Total Uang Masuk</span>
+          <span class="badge badge-success text-[9px]">Lunas</span>
+        </div>
+        <div class="kpi-num text-2xl sm:text-3xl font-extrabold text-mint" id="statUangMasuk">
+          Rp 32.400.000
+        </div>
+        <p class="text-[11px] text-muted">Dari target Rp 38.600.000 bulan ini</p>
+      </div>
+
+      <!-- Card 3: Menunggak / Belum Bayar -->
+      <div class="card card-glow p-5 space-y-2 border-rose-500/30 bg-rose-500/10">
+        <div class="flex items-center justify-between text-xs text-muted">
+          <span>Belum Membayar</span>
+          <span class="badge badge-danger text-[9px]" id="statTunggakanCount">4 Kamar</span>
+        </div>
+        <div class="kpi-num text-2xl sm:text-3xl font-extrabold text-rose-500" id="statTunggakanNominal">
+          Rp 6.200.000
+        </div>
+        <div class="flex items-center justify-between pt-1">
+          <p class="text-[11px] text-rose-500 font-semibold">4 tagihan tertunda</p>
+          <button onclick="openBatchBillingModal()" class="text-[11px] text-rose-500 underline font-bold hover:text-rose-400">
+            Tagih Semua →
+          </button>
+        </div>
+      </div>
+
+      <!-- Card 4: Biaya & Profit -->
+      <div class="card card-glow p-5 space-y-2">
+        <div class="flex items-center justify-between text-xs text-muted">
+          <span>Biaya Operasional</span>
+          <span class="text-[10px] text-muted">PLN, WiFi, Air</span>
+        </div>
+        <div class="kpi-num text-2xl sm:text-3xl font-extrabold text-heading">
+          Rp 4.150.000
+        </div>
+        <p class="text-[11px] text-emerald-500 font-semibold" id="statProfit">
+          Laba Bersih: Rp 28.250.000
+        </p>
+      </div>
+
+    </div>
+
+    <!-- ======================================================================= -->
+    <!-- 4. ROOM MATRIX & TABS -->
+    <!-- ======================================================================= -->
+    <div class="space-y-6">
+      
+      <!-- Multi-Property & Search Control Bar -->
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 p-4 rounded-2xl bg-[var(--bg-subcard)] border border-[var(--border-main)] shadow-sm">
+        
+        <!-- Multi-Property Kos Switcher -->
+        <div class="flex items-center gap-2.5 flex-wrap">
+          <span class="text-xs font-bold text-heading flex items-center gap-1.5 whitespace-nowrap">
+            <span>🏢</span>
+            <span>Tempat Kos:</span>
+          </span>
+          <select id="propertyFilterSelect" onchange="changePropertyFilter(this.value)"
+                  class="bg-[var(--bg-card)] border border-[var(--border-main)] rounded-xl py-2 px-3 text-xs text-heading font-bold focus:border-mint focus:outline-none transition cursor-pointer hover:border-mint">
+            <option value="all">🏢 Semua Tempat Kos (3 Cabang · 20 Kamar)</option>
+            <option value="harmoni">📍 Kost Griya Harmoni (Yogyakarta · 10 Kamar)</option>
+            <option value="premiere">📍 Kost Teranivo Premiere (Jakarta Selatan · 6 Kamar)</option>
+            <option value="asri">📍 Kost Putri Asri (Bandung · 4 Kamar)</option>
+          </select>
+          <span class="text-[10px] text-muted hidden lg:inline" id="propertyLocationHint">
+            · Sleman, Yogyakarta
+          </span>
+        </div>
+
+        <!-- Instant Search Box (Search Room, Tenant Name, Floor) -->
+        <div class="relative flex-1 md:max-w-xs w-full">
+          <input type="text" id="roomSearchInput" oninput="handleRoomSearch(this.value)"
+                 placeholder="🔍 Cari kamar, nama anak kos, lt..."
+                 class="w-full bg-[var(--bg-card)] border border-[var(--border-main)] rounded-xl py-2 pl-8 pr-7 text-xs text-heading placeholder:text-muted focus:border-mint focus:outline-none transition">
+          <span class="absolute left-2.5 top-2 text-xs text-muted pointer-events-none">🔍</span>
+          <button id="clearSearchBtn" onclick="clearRoomSearch()"
+                  class="hidden absolute right-2.5 top-1.5 text-xs text-muted hover:text-heading font-bold p-0.5"
+                  title="Hapus kata kunci pencarian">&times;</button>
+        </div>
+
+      </div>
+
+      <!-- Filter Pills & Quick Settings Bar -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[var(--border-main)]">
+        <div class="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0">
+          <button onclick="filterRooms('all')" id="btnFilterAll"
+                  class="filter-pill active px-4 py-2 rounded-xl text-xs font-bold transition">
+            Semua Kamar (<span id="countAllTab">20</span>)
+          </button>
+          <button onclick="filterRooms('unpaid')" id="btnFilterUnpaid"
+                  class="filter-pill px-4 py-2 rounded-xl text-xs font-bold bg-[var(--bg-card)] text-rose-500 hover:bg-[var(--bg-card-hover)] border border-rose-500/20 transition">
+            🔴 Belum Bayar (<span id="countUnpaidTab">4</span>)
+          </button>
+          <button onclick="filterRooms('paid')" id="btnFilterPaid"
+                  class="filter-pill px-4 py-2 rounded-xl text-xs font-bold bg-[var(--bg-card)] text-emerald-600 dark:text-emerald-300 hover:bg-[var(--bg-card-hover)] border border-emerald-500/20 transition">
+            🟢 Sudah Lunas (<span id="countPaidTab">14</span>)
+          </button>
+          <button onclick="filterRooms('vacant')" id="btnFilterVacant"
+                  class="filter-pill px-4 py-2 rounded-xl text-xs font-bold bg-[var(--bg-card)] text-muted hover:bg-[var(--bg-card-hover)] border border-[var(--border-main)] transition">
+            ⚪ Kamar Kosong (<span id="countVacantTab">2</span>)
+          </button>
+        </div>
+
+        <div class="flex items-center gap-2 flex-wrap">
+          <button onclick="openDueDateModal()" class="btn-secondary text-xs px-3.5 py-2 font-bold inline-flex items-center gap-1.5 shadow-sm" title="Atur tanggal tenggat jatuh tempo bulanan kos">
+            <span>📅</span>
+            <span>Jatuh Tempo: Tgl <strong id="topDueDateBadge" class="text-mint">05</strong></span>
+          </button>
+          <button onclick="openEditRateModal('102')" class="btn-secondary text-xs px-3.5 py-2 font-bold inline-flex items-center gap-1.5 shadow-sm" title="Ubah tarif sewa pokok dan listrik kamar">
+            <span>⚙️</span>
+            <span>Ubah Tarif & Tenggat</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Room Cards Grid -->
+      <div id="roomContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+        <!-- Room cards will be injected by JavaScript -->
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL 0: REQUEST BAYAR KE SEMUA ORANG SEKALIGUS (BATCH BROADCAST) -->
+  <!-- ========================================================================= -->
+  <div id="batchModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="batchModalTitle">
+    <div class="modal-content max-w-xl">
+      
+      <!-- Modal Header -->
+      <div class="p-5 border-b border-[var(--border-main)] flex items-center justify-between bg-[var(--bg-subcard)]">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-mint flex items-center justify-center font-bold text-xl text-[#08141F] shadow-md">
+            📢
+          </div>
+          <div>
+            <h3 class="text-base font-bold text-heading" id="batchModalTitle">Kirim Permintaan Bayar Sekaligus</h3>
+            <p class="text-xs text-muted">Broadcast pengingat sewa WhatsApp ke semua kamar menunggak</p>
+          </div>
+        </div>
+        <button onclick="closeBatchModal()" class="text-muted hover:text-heading text-2xl font-bold" aria-label="Tutup dialog broadcast tagihan">&times;</button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="p-6 space-y-5">
+        
+        <!-- Summary Alert Box -->
+        <div class="p-4 rounded-xl bg-amber-500/10 border border-amber-500/25 flex items-center justify-between text-xs">
+          <div class="space-y-0.5">
+            <strong class="text-amber-500 font-bold block">Daftar Penerima Tagihan:</strong>
+            <span class="text-body" id="batchTotalCountText">4 Penghuni Belum Membayar</span>
+          </div>
+          <strong class="text-base font-extrabold text-amber-500" id="batchTotalNominalText">
+            Rp 6.200.000
+          </strong>
+        </div>
+
+        <!-- Unpaid Room Checklist -->
+        <div class="space-y-2">
+          <label class="block text-xs font-bold uppercase tracking-wider text-muted">Pilih Kamar yang Ditagih:</label>
+          <div id="batchRoomList" class="space-y-2 max-h-48 overflow-y-auto pr-1">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+
+        <!-- Tone Selector -->
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-muted mb-1.5">Pilih Format Pesan:</label>
+          <select id="batchToneSelect" class="w-full bg-[var(--bg-card)] border border-[var(--border-main)] rounded-xl p-3 text-xs text-heading" onchange="updateBatchPreview()">
+            <option value="friendly">Format Ramah & Sopan (Pengingat Awal Periode)</option>
+            <option value="due">Format Hari Jatuh Tempo (H-1 / Hari Ini)</option>
+            <option value="overdue">Format Teguran Keterlambatan (Lewat Jatuh Tempo)</option>
+          </select>
+        </div>
+
+        <!-- Preview Message -->
+        <div class="p-3.5 rounded-xl border border-[var(--border-main)] bg-[var(--bg-subcard)] text-xs space-y-1">
+          <span class="text-[10px] text-muted uppercase font-bold block">Preview Template Pesan:</span>
+          <p id="batchPreviewText" class="text-body font-mono leading-relaxed">
+            "Halo Kak [Nama Penghuni] (Kamar [Nomor] - Kost Griya Harmoni), kami mengingatkan tagihan sewa kos bulan Oktober 2026 sebesar [Nominal]... Bayar via QRIS: [Link]"
+          </p>
+        </div>
+
+        <!-- Progress Animation Bar (Hidden initially) -->
+        <div id="batchProgressBarBox" class="hidden space-y-2">
+          <div class="flex justify-between text-xs font-bold text-mint">
+            <span id="batchProgressLabel">Mengirim pesan WhatsApp...</span>
+            <span id="batchProgressPercent">0%</span>
+          </div>
+          <div class="w-full h-3 bg-slate-700 rounded-full overflow-hidden">
+            <div id="batchProgressBar" class="h-full bg-mint transition-all duration-300 w-0"></div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="p-5 border-t border-[var(--border-main)] bg-[var(--bg-subcard)] flex items-center justify-between gap-3">
+        <button onclick="closeBatchModal()" class="btn-secondary text-xs">
+          Batal
+        </button>
+        <button onclick="executeBatchBroadcast()" id="btnExecuteBatch" class="btn-primary text-xs py-3 px-5 shadow-lg">
+          <span>🚀 Kirim Pengingat ke Semua Sekarang</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL 1: WHATSAPP BILLING SIMULATOR (INDIVIDU) -->
+  <!-- ========================================================================= -->
+  <div id="waModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="waModalTitle">
+    <div class="modal-content max-w-lg">
+      
+      <!-- Modal Header -->
+      <div class="p-5 border-b border-[var(--border-main)] flex items-center justify-between bg-[var(--bg-subcard)]">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-full bg-emerald-500 text-white flex items-center justify-center font-bold text-lg shadow-sm">
+            💬
+          </div>
+          <div>
+            <h3 class="text-sm font-bold text-heading" id="waModalTitle">Simulasi WhatsApp Tagihan 1-Klik</h3>
+            <p class="text-xs text-muted" id="waModalRecipient">Penerima: Andi Pratama (Kamar 102)</p>
+          </div>
+        </div>
+        <button onclick="closeWaModal()" class="text-muted hover:text-heading text-xl font-bold" aria-label="Tutup dialog tagihan WhatsApp">&times;</button>
+      </div>
+
+      <!-- Simulated WhatsApp Chat Screen -->
+      <div class="p-6 bg-[var(--bg-subcard)] space-y-4">
+        <div class="text-center">
+          <span class="text-[10px] bg-slate-800 text-slate-300 px-3 py-1 rounded-full border border-slate-700">
+            Hari ini, 09:41 WIB · Enkripsi End-to-End
+          </span>
+        </div>
+
+        <div class="wa-bubble-in p-4 text-xs sm:text-sm space-y-2 relative shadow-md">
+          <p class="font-semibold text-mint" id="waTextGreeting">
+            Halo Kak Andi Pratama (Kamar 102 - Kost Griya Harmoni),
+          </p>
+          <p id="waTextBody" class="leading-relaxed text-body">
+            Berikut rincian tagihan sewa kos untuk periode <strong class="text-heading">Oktober 2026</strong>:<br>
+            • Sewa Kamar: Rp 1.800.000<br>
+            • Pemakaian Listrik AC (42 kWh x Rp 2.000): Rp 84.000<br>
+            • Iuran Fasilitas & Air: Rp 50.000<br>
+            <strong class="text-heading">Total Tagihan: Rp 1.934.000</strong>
+          </p>
+          <p class="text-body">
+            Pembayaran dapat dilakukan instan lewat QRIS (BCA, Gopay, Mandiri, OVO, ShopeePay) dengan klik link berikut:
+          </p>
+          <div class="p-2.5 rounded-lg border border-mint text-xs font-mono text-mint break-all bg-[var(--bg-card)]">
+            <span id="waTextLink">http://localhost:8088/tenant.html?room=102</span>
+          </div>
+          <span class="block text-[10px] text-right text-muted">09:41 ✓✓</span>
+        </div>
+      </div>
+
+      <!-- Modal Footer Actions -->
+      <div class="p-5 border-t border-[var(--border-main)] bg-[var(--bg-subcard)] flex flex-col sm:flex-row items-center justify-between gap-3">
+        <!-- Button: Open real Tenant View in new tab or jump -->
+        <a id="waBtnOpenTenant" href="tenant.html?room=102"
+           class="btn-primary w-full sm:w-auto text-xs justify-center"
+           title="Buka simulasi link yang diterima anak kos">
+          <span>📱 Buka Layar Tagihan Anak Kos</span>
+          <span>↗</span>
+        </a>
+
+        <div class="flex items-center gap-2 w-full sm:w-auto">
+          <button onclick="copyWaText()" class="btn-secondary w-full sm:w-auto text-xs justify-center">
+            Salin Pesan
+          </button>
+          <button onclick="closeWaModal()" class="text-xs text-muted hover:text-heading px-3 py-2">
+            Tutup
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL 2: KALKULATOR SUB-METER LISTRIK (kWh) -->
+  <!-- ========================================================================= -->
+  <div id="kwhModal" class="modal-backdrop">
+    <div class="modal-content max-w-md">
+      
+      <div class="p-5 border-b border-[var(--border-main)] flex items-center justify-between bg-[var(--bg-subcard)]">
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-500 flex items-center justify-center font-bold">
+            ⚡
+          </div>
+          <div>
+            <h3 class="text-sm font-bold text-heading">Catat Sub-Meter Listrik PLN</h3>
+            <p class="text-xs text-muted">Kalkulasi biaya otomatis ke invoice</p>
+          </div>
+        </div>
+        <button onclick="closeKwhModal()" class="text-muted hover:text-heading text-xl font-bold">&times;</button>
+      </div>
+
+      <div class="p-6 space-y-4">
+        <div>
+          <label class="block text-xs font-semibold text-body mb-1">Pilih Kamar:</label>
+          <select id="kwhRoomSelect" class="w-full bg-[var(--bg-card)] border border-[var(--border-main)] rounded-xl p-3 text-sm text-heading" onchange="loadRoomKwhData()">
+            <option value="102">Kamar 102 - Andi Pratama (AC)</option>
+            <option value="105">Kamar 105 - Siti Rahma (AC)</option>
+            <option value="204">Kamar 204 - Reza Firmansyah (AC)</option>
+            <option value="208">Kamar 208 - Dewi Lestari (AC)</option>
+          </select>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-body mb-1">Meteran Lalu (kWh):</label>
+            <input type="number" id="kwhMeterLalu" value="1420"
+                   class="w-full bg-[var(--bg-card)] border border-[var(--border-main)] rounded-xl p-3 text-sm text-heading font-mono"
+                   oninput="calcKwhTotal()">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-body mb-1">Meteran Baru (kWh):</label>
+            <input type="number" id="kwhMeterBaru" value="1462"
+                   class="w-full bg-[var(--bg-card)] border border-[var(--border-main)] rounded-xl p-3 text-sm text-heading font-mono"
+                   oninput="calcKwhTotal()">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-body mb-1">Tarif Listrik per kWh (Rp):</label>
+          <input type="number" id="kwhTarif" value="2000"
+                 class="w-full bg-[var(--bg-card)] border border-[var(--border-main)] rounded-xl p-3 text-sm text-heading font-mono"
+                 oninput="calcKwhTotal()">
+        </div>
+
+        <!-- Calculation Result Box -->
+        <div class="p-4 rounded-xl bg-amber-500/10 border border-amber-500/25 space-y-1">
+          <div class="flex justify-between text-xs text-body">
+            <span>Selisih Pemakaian:</span>
+            <span id="kwhSelisih" class="font-bold text-heading">42 kWh</span>
+          </div>
+          <div class="flex justify-between text-xs text-body">
+            <span>Total Tagihan Listrik:</span>
+            <span id="kwhTotalRupiah" class="font-bold text-amber-500 text-base">Rp 84.000</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="p-5 border-t border-[var(--border-main)] bg-[var(--bg-subcard)] flex justify-end gap-3">
+        <button onclick="closeKwhModal()" class="btn-secondary text-xs">Batal</button>
+        <button onclick="saveKwhToRoom()" class="btn-primary text-xs">Simpan ke Tagihan Kamar</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL 3: BUKU KAS & LAPORAN OPERASIONAL -->
+  <!-- ========================================================================= -->
+  <div id="cashbookModal" class="modal-backdrop">
+    <div class="modal-content max-w-2xl">
+      
+      <div class="p-5 border-b border-[var(--border-main)] flex items-center justify-between bg-[var(--bg-subcard)]">
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-500 flex items-center justify-center font-bold">
+            📒
+          </div>
+          <div>
+            <h3 class="text-sm font-bold text-heading">Buku Catatan Kas Operasional Kos</h3>
+            <p class="text-xs text-muted">Pemasukan sewa vs Biaya pengeluaran rutin</p>
+          </div>
+        </div>
+        <button onclick="closeCashbookModal()" class="text-muted hover:text-heading text-xl font-bold">&times;</button>
+      </div>
+
+      <div class="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
+        <div class="grid grid-cols-3 gap-3">
+          <div class="p-3 rounded-xl border border-[var(--border-main)] bg-[var(--bg-card)]">
+            <span class="text-[10px] text-muted block">Pemasukan Sewa</span>
+            <strong class="text-sm font-bold text-emerald-500" id="cashInText">Rp 32.400.000</strong>
+          </div>
+          <div class="p-3 rounded-xl border border-[var(--border-main)] bg-[var(--bg-card)]">
+            <span class="text-[10px] text-muted block">Pengeluaran Biaya</span>
+            <strong class="text-sm font-bold text-rose-500">Rp 4.150.000</strong>
+          </div>
+          <div class="p-3 rounded-xl border border-[var(--border-main)] bg-[var(--bg-card)]">
+            <span class="text-[10px] text-muted block">Sisa Laba Bersih</span>
+            <strong class="text-sm font-bold text-mint" id="cashNetText">Rp 28.250.000</strong>
+          </div>
+        </div>
+
+        <div class="border border-[var(--border-main)] rounded-xl overflow-hidden text-xs">
+          <table class="w-full text-left">
+            <thead class="bg-[var(--bg-subcard)] text-muted border-b border-[var(--border-main)]">
+              <tr>
+                <th class="p-3">Tanggal</th>
+                <th class="p-3">Kategori</th>
+                <th class="p-3">Keterangan</th>
+                <th class="p-3 text-right">Nominal</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-[var(--border-main)] text-body">
+              <tr>
+                <td class="p-3">01 Okt 2026</td>
+                <td class="p-3"><span class="badge badge-danger text-[9px]">Pengeluaran</span></td>
+                <td class="p-3">Token Listrik Induk PLN 5.500 VA</td>
+                <td class="p-3 text-right text-rose-500">-Rp 2.500.000</td>
+              </tr>
+              <tr>
+                <td class="p-3">02 Okt 2026</td>
+                <td class="p-3"><span class="badge badge-danger text-[9px]">Pengeluaran</span></td>
+                <td class="p-3">Paket WiFi Biznet 100 Mbps</td>
+                <td class="p-3 text-right text-rose-500">-Rp 450.000</td>
+              </tr>
+              <tr>
+                <td class="p-3">03 Okt 2026</td>
+                <td class="p-3"><span class="badge badge-danger text-[9px]">Pengeluaran</span></td>
+                <td class="p-3">Gaji Penjaga Kos (Pak Bambang)</td>
+                <td class="p-3 text-right text-rose-500">-Rp 1.200.000</td>
+              </tr>
+              <tr>
+                <td class="p-3">05 Okt 2026</td>
+                <td class="p-3"><span class="badge badge-success text-[9px]">Pemasukan</span></td>
+                <td class="p-3">Sewa 14 Kamar Lunas (QRIS & Transfer)</td>
+                <td class="p-3 text-right text-emerald-500">+Rp 32.400.000</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="p-5 border-t border-[var(--border-main)] bg-[var(--bg-subcard)] flex justify-between items-center">
+        <span class="text-xs text-muted">Laporan tersimpan di memori lokal peramban.</span>
+        <button onclick="triggerPrintPdfReport()" class="btn-primary text-xs flex items-center gap-2">
+          <span>🖨️ Cetak / Simpan PDF Resmi</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL 4: UBAH TARIF SEWA & LISTRIK KAMAR (DENGAN LOGIKA NOTIFIKASI PENGHUNI) -->
+  <!-- ========================================================================= -->
+  <div id="editRateModal" class="modal-backdrop">
+    <div class="modal-content max-w-md">
+      
+      <div class="p-5 border-b border-[var(--border-main)] flex items-center justify-between bg-[var(--bg-subcard)]">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-xl bg-mint flex items-center justify-center font-bold text-lg text-[#08141F] shadow-sm">
+            ⚙️
+          </div>
+          <div>
+            <h3 class="text-sm font-bold text-heading">Ubah Tarif Sewa & Listrik</h3>
+            <p class="text-xs text-muted" id="editRateSubtitle">Pilih kamar yang ingin disesuaikan</p>
+          </div>
+        </div>
+        <button onclick="closeEditRateModal()" class="text-muted hover:text-heading text-xl font-bold">&times;</button>
+      </div>
+
+      <div class="p-6 space-y-4">
+        
+        <div>
+          <label class="block text-xs font-semibold text-body mb-1">Pilih Kamar:</label>
+          <select id="editRateRoomSelect" class="w-full bg-[var(--bg-card)] border border-[var(--border-main)] rounded-xl p-3 text-sm text-heading" onchange="loadEditRateData()">
+            <!-- Populated dynamically -->
+          </select>
+        </div>
+
+        <!-- Room Status Info Banner -->
+        <div id="editRateOccupancyBanner" class="p-3.5 rounded-xl border text-xs flex items-center gap-2.5">
+          <span id="editRateStatusIcon" class="text-lg">👤</span>
+          <div>
+            <strong id="editRateStatusTitle" class="block font-bold">Kamar Berpenghuni</strong>
+            <span id="editRateStatusDesc" class="text-muted block text-[11px]">Penghuni: Andi Pratama (0812-9876-5432)</span>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-body mb-1">Tarif Sewa Pokok Baru (Rp / Bulan):</label>
+          <input type="number" id="inputNewRent" value="1800000" step="50000"
+                 class="w-full bg-[var(--bg-card)] border border-[var(--border-main)] rounded-xl p-3 text-sm text-heading font-mono"
+                 oninput="checkPriceIncreaseAlert()">
+          <span class="text-[10px] text-muted block mt-1" id="currentRentHint">Tarif sebelumnya: Rp 1.800.000 / bln</span>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-body mb-1">Tarif Listrik Sub-meter (Rp / kWh):</label>
+          <input type="number" id="inputNewKwhRate" value="2000" step="100"
+                 class="w-full bg-[var(--bg-card)] border border-[var(--border-main)] rounded-xl p-3 text-sm text-heading font-mono"
+                 oninput="checkPriceIncreaseAlert()">
+          <span class="text-[10px] text-muted block mt-1">Standar PLN kos: Rp 2.000 / kWh</span>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-body mb-1">📅 Tanggal Jatuh Tempo Pembayaran (Tenggat Bulanan):</label>
+          <select id="inputDueDate" class="w-full bg-[var(--bg-card)] border border-[var(--border-main)] rounded-xl p-3 text-sm text-heading font-mono" onchange="checkPriceIncreaseAlert()">
+            <option value="1">Tanggal 01 setiap bulan (Awal Bulan)</option>
+            <option value="5">Tanggal 05 setiap bulan (Standar Default)</option>
+            <option value="10">Tanggal 10 setiap bulan</option>
+            <option value="15">Tanggal 15 setiap bulan (Tengah Bulan)</option>
+            <option value="20">Tanggal 20 setiap bulan</option>
+            <option value="25">Tanggal 25 setiap bulan</option>
+            <option value="28">Tanggal 28 setiap bulan (Akhir Bulan)</option>
+            <option value="30">Tanggal 30 setiap bulan</option>
+          </select>
+          <div class="mt-2 flex items-center gap-2">
+            <input type="checkbox" id="applyDueDateToAllRooms" class="w-4 h-4 rounded text-mint">
+            <label for="applyDueDateToAllRooms" class="text-[11px] text-muted cursor-pointer">
+              Terapkan tanggal tenggat ini ke <strong>SEMUA 20 kamar kos</strong> sekaligus
+            </label>
+          </div>
+        </div>
+
+        <!-- Dynamic Smart Notification Warning Notice -->
+        <div id="editRateNoticeBox" class="p-3.5 rounded-xl border border-amber-500/30 bg-amber-500/10 text-xs space-y-1">
+          <div class="flex items-center gap-2 text-amber-500 font-bold">
+            <span>📢</span>
+            <span id="editRateNoticeTitle">Notifikasi WhatsApp Akan Dikirim</span>
+          </div>
+          <p class="text-body text-[11px]" id="editRateNoticeText">
+            Karena kamar ini sedang berpenghuni dan tarif sewa dinaikkan, sistem akan otomatis mengirimkan pesan pengumuman resmi ke WhatsApp penghuni saat disimpan.
+          </p>
+        </div>
+
+      </div>
+
+      <div class="p-5 border-t border-[var(--border-main)] bg-[var(--bg-subcard)] flex justify-end gap-3">
+        <button onclick="closeEditRateModal()" class="btn-secondary text-xs">Batal</button>
+        <button onclick="saveRoomRate()" class="btn-primary text-xs py-2.5 px-4 shadow-md font-bold">
+          <span>Simpan Perubahan Tarif & Tenggat</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL 6: GANTI TENGGAT WAKTU BULANAN PEMBAYARAN KOS -->
+  <!-- ========================================================================= -->
+  <div id="dueDateModal" class="modal-backdrop">
+    <div class="modal-content max-w-md">
+      
+      <div class="p-5 border-b border-[var(--border-main)] flex items-center justify-between bg-[var(--bg-subcard)]">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-mint flex items-center justify-center font-bold text-xl text-[#08141F] shadow-sm">
+            📅
+          </div>
+          <div>
+            <h3 class="text-sm font-bold text-heading">Ganti Tenggat Waktu Pembayaran</h3>
+            <p class="text-xs text-muted">Atur tanggal jatuh tempo sewa bulanan kos</p>
+          </div>
+        </div>
+        <button onclick="closeDueDateModal()" class="text-muted hover:text-heading text-xl font-bold">&times;</button>
+      </div>
+
+      <div class="p-6 space-y-4">
+        
+        <!-- Target Scope Selector -->
+        <div>
+          <label class="block text-xs font-semibold text-body mb-1">Terapkan Perubahan Untuk:</label>
+          <select id="dueDateScopeSelect" class="w-full bg-[var(--bg-card)] border border-[var(--border-main)] rounded-xl p-3 text-sm text-heading" onchange="toggleDueDateScope()">
+            <option value="all">🌟 Semua Kamar Kos (20 Kamar) — Serentak</option>
+            <option value="single">Pilih Kamar Tertentu Saja...</option>
+          </select>
+        </div>
+
+        <div id="dueDateSingleRoomBox" class="hidden">
+          <label class="block text-xs font-semibold text-body mb-1">Pilih Kamar:</label>
+          <select id="dueDateRoomSelect" class="w-full bg-[var(--bg-card)] border border-[var(--border-main)] rounded-xl p-3 text-sm text-heading">
+            <!-- Dynamically populated -->
+          </select>
+        </div>
+
+        <!-- Date Selector -->
+        <div>
+          <label class="block text-xs font-semibold text-body mb-1">Pilih Tanggal Jatuh Tempo Setiap Bulan:</label>
+          <select id="dueDateDaySelect" class="w-full bg-[var(--bg-card)] border border-[var(--border-main)] rounded-xl p-3 text-sm text-heading font-mono" onchange="updateDueDatePreview()">
+            <option value="1">Tanggal 01 (Awal Bulan)</option>
+            <option value="5" selected>Tanggal 05 (Standar Default Kos)</option>
+            <option value="10">Tanggal 10 setiap bulan</option>
+            <option value="15">Tanggal 15 (Tengah Bulan)</option>
+            <option value="20">Tanggal 20 setiap bulan</option>
+            <option value="25">Tanggal 25 setiap bulan</option>
+            <option value="28">Tanggal 28 (Akhir Bulan)</option>
+            <option value="30">Tanggal 30 setiap bulan</option>
+          </select>
+        </div>
+
+        <!-- Live Explanation Info Box -->
+        <div class="p-4 rounded-xl bg-mint/10 border border-mint/25 text-xs space-y-1.5">
+          <div class="flex items-center gap-1.5 text-mint font-bold">
+            <span>ℹ️</span>
+            <span>Konfirmasi Jadwal Tagihan:</span>
+          </div>
+          <p class="text-body leading-relaxed" id="dueDatePreviewText">
+            Mulai periode berikutnya, tagihan sewa bulanan anak kos akan jatuh tempo setiap <strong>Tanggal 05</strong> pukul 23:59 WIB. WhatsApp gateway akan otomatis mengacu pada tanggal ini.
+          </p>
+        </div>
+
+      </div>
+
+      <div class="p-5 border-t border-[var(--border-main)] bg-[var(--bg-subcard)] flex justify-end gap-3">
+        <button onclick="closeDueDateModal()" class="btn-secondary text-xs">Batal</button>
+        <button onclick="saveDueDateSettings()" class="btn-primary text-xs py-2.5 px-5 shadow-md font-bold">
+          <span>Simpan Tenggat Waktu Baru</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL 5: SIMULASI NOTIFIKASI WA KENAIKAN TARIF TERKIRIM KE PENGHUNI -->
+  <!-- ========================================================================= -->
+  <div id="rateNoticeModal" class="modal-backdrop">
+    <div class="modal-content max-w-lg">
+      <div class="p-5 border-b border-[var(--border-main)] flex items-center justify-between bg-[var(--bg-subcard)]">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-full bg-emerald-500 text-white flex items-center justify-center font-bold text-lg">
+            📢
+          </div>
+          <div>
+            <h3 class="text-sm font-bold text-heading">Pemberitahuan Kenaikan Tarif Terkirim</h3>
+            <p class="text-xs text-muted" id="rateNoticeRecipient">Terkirim ke WhatsApp: Andi Pratama</p>
+          </div>
+        </div>
+        <button onclick="closeRateNoticeModal()" class="text-muted hover:text-heading text-xl font-bold">&times;</button>
+      </div>
+
+      <div class="p-6 bg-[var(--bg-subcard)] space-y-4">
+        <div class="text-center">
+          <span class="text-[10px] bg-emerald-500/20 text-emerald-500 border border-emerald-500/30 px-3 py-1 rounded-full font-bold">
+            ✓ Pesan Resmi Berhasil Dikirimkan ke Penghuni
+          </span>
+        </div>
+
+        <div class="wa-bubble-in p-4 text-xs sm:text-sm space-y-2 relative shadow-md">
+          <p class="font-semibold text-mint" id="rateNoticeHeader">
+            Yth. Kak Andi Pratama (Kamar 102 - Kost Griya Harmoni),
+          </p>
+          <p class="leading-relaxed text-body" id="rateNoticeContent">
+            Kami menginformasikan adanya penyesuaian tarif sewa kamar dari <strong>Rp 1.800.000</strong> menjadi <strong>Rp 1.950.000 / bulan</strong> yang mulai berlaku per periode sewa berikutnya.<br><br>
+            Penyesuaian ini dilakukan untuk mendukung pemeliharaan rutin fasilitas gedung, servis berkala AC, serta peningkatan kecepatan Wi-Fi kos.
+          </p>
+          <p class="text-body">
+            Terima kasih banyak atas pengertian, kerja sama, dan kenyamanan Kak Andi bersama Kost Griya Harmoni. 🙏
+          </p>
+          <span class="block text-[10px] text-right text-muted">Terkirim via WhatsApp Gateway ✓✓</span>
+        </div>
+      </div>
+
+      <div class="p-4 border-t border-[var(--border-main)] bg-[var(--bg-subcard)] flex justify-end">
+        <button onclick="closeRateNoticeModal()" class="btn-primary text-xs py-2.5 px-5">
+          <span>Mengerti & Tutup</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- DEDICATED OFFICIAL PRINTABLE PDF REPORT CONTAINER (PRINT-ONLY) -->
+  <!-- ========================================================================= -->
+  <div id="printReportArea" class="print-only hidden p-8 bg-white text-slate-900 font-sans">
+    
+    <!-- 1. Header & Kop Surat Resmi (Co-Branding: Teranivo Pro & Identitas Properti Kos) -->
+    <div class="flex items-start justify-between pb-5 border-b-2 border-slate-900 mb-5 avoid-break">
+      <!-- Left: Official Teranivo Logo & Property Info -->
+      <div class="space-y-3">
+        <!-- Dual Brand Letterhead: Teranivo Official SVG Logo -->
+        <div class="flex items-center gap-3">
+          <svg width="150" height="40" viewBox="0 0 464 148" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="pdfLeafA" x1="0" y1="0" x2="1" y2=".8">
+                <stop offset="0" stop-color="#059669"/>
+                <stop offset=".5" stop-color="#10B981"/>
+                <stop offset="1" stop-color="#34D399"/>
+              </linearGradient>
+              <linearGradient id="pdfLeafB" x1="0" y1=".35" x2="1" y2=".85">
+                <stop offset="0" stop-color="#047857"/>
+                <stop offset="1" stop-color="#065F46"/>
+              </linearGradient>
+            </defs>
+            <g transform="translate(1,-2)">
+              <path d="M86 14 H134 V26 C134 55 110 73 78 77 C59 80 42 79 27 79 V67 C27 39 49 14 86 14 Z" fill="url(#pdfLeafA)"/>
+              <path d="M78 83 H97 V94 C97 122 72 139 40 139 H9 V126 C9 99 33 83 78 83 Z" fill="url(#pdfLeafB)"/>
+            </g>
+            <g color="#0F172A">
+              <g transform="translate(164,108) scale(0.03808594,-0.03808594)" fill="#0F172A">
+                <path d="M711 1056H495V1344H200V1056H18V825H200V280C200 88 307 0 539 0H711V231H598C518 231 495 254 495 326V825H711Z"/>
+                <path d="M586 -24C842 -24 1046 122 1085 332H816C789 250 710 197 595 197C440 197 350 298 345 454H1096V533C1096 855 887 1080 576 1080C273 1080 58 849 58 527C58 206 266 -24 586 -24ZM347 642C363 774 450 856 582 856C715 856 803 774 818 642Z" transform="translate(703.8000,0)"/>
+                <path d="M104 0H399V572C399 731 488 815 609 815C659 815 714 811 736 810V1061C712 1062 683 1063 649 1063C510 1063 430 1003 391 876H388V1056H104Z" transform="translate(1802.6000,0)"/>
+                <path d="M427 -18C589 -18 680 46 736 149H740V0H1028V716C1028 942 862 1078 573 1078C283 1078 111 940 98 722H375C382 803 454 859 564 859C672 859 737 805 737 727V720C737 652 669 643 476 624C256 604 64 536 64 298C64 87 216 -18 427 -18ZM509 187C410 187 346 231 346 306C346 390 426 429 527 444C622 459 705 473 739 492V386C739 272 651 187 509 187Z" transform="translate(2515.4000,0)"/>
+                <path d="M399 587C399 751 484 824 606 824C729 824 800 749 800 607V0H1094V661C1094 928 949 1078 724 1078C572 1078 465 1010 394 890V1056H104V0H399Z" transform="translate(3596.2000,0)"/>
+                <path d="M104 0H399V1056H104ZM251 1189C348 1189 419 1256 419 1346C419 1436 348 1503 251 1503C154 1503 83 1436 83 1346C83 1256 154 1189 251 1189Z" transform="translate(4744.0000,0)"/>
+                <path d="M403 0H731L1123 1056H817L645 534C620 451 595 367 571 284C547 367 522 451 495 534L321 1056H12Z" transform="translate(5195.8000,0)"/>
+                <path d="M594 -24C915 -24 1131 196 1131 527C1131 858 915 1080 594 1080C274 1080 58 858 58 527C58 196 274 -24 594 -24ZM594 215C451 215 355 331 355 527C355 724 452 841 594 841C737 841 834 724 834 527C834 331 738 215 594 215Z" transform="translate(6278.6000,0)"/>
+              </g>
+            </g>
+          </svg>
+          <div class="pl-3 border-l-2 border-slate-300">
+            <span class="text-[8.5px] font-black uppercase tracking-widest text-slate-600 block leading-none">TERANIVO KOS PRO</span>
+            <span class="text-[7.5px] text-emerald-700 font-bold block mt-0.5">Software for clarity</span>
+          </div>
+        </div>
+        
+        <div>
+          <div class="flex items-center gap-2 mb-1">
+            <span class="text-[8.5px] tracking-widest uppercase font-extrabold text-slate-700 bg-slate-100 border border-slate-200 px-2 py-0.5 rounded">
+              SISTEM PEMBUKUAN & MANAJEMEN OPERASIONAL PROPERTI
+            </span>
+          </div>
+          <h1 id="pdfPropertyName" class="text-xl font-black text-slate-900 tracking-tight leading-snug uppercase">
+            KOST GRIYA HARMONI YOGYAKARTA
+          </h1>
+          <p id="pdfPropertySubtitle" class="text-xs text-slate-600 mt-0.5">
+            Jl. Kaliurang KM 5, Sleman, D.I. Yogyakarta · Telp: 0812-9876-5432 · Pengelola: H. Bambang Sudiro
+          </p>
+        </div>
+      </div>
+
+      <!-- Right: Official Doc Credentials -->
+      <div class="text-right flex flex-col items-end shrink-0 pl-6">
+        <div class="border-2 border-slate-900 px-3 py-1 bg-slate-900 text-white rounded text-center mb-2">
+          <span class="text-[9.5px] font-black tracking-widest uppercase block">
+            LAPORAN EKSEKUTIF RESMI
+          </span>
+        </div>
+        <div class="text-xs text-slate-900 font-mono font-bold" id="pdfDocNumber">No: TRN/RPT/202610/842</div>
+        <div class="text-[10px] text-slate-600 mt-0.5" id="pdfPrintDate">Dicetak: 14 Okt 2026, 14:45 WIB</div>
+        <div class="text-[9px] font-extrabold text-emerald-800 flex items-center gap-1 mt-1 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-300">
+          <span class="text-emerald-600 font-bold">●</span>
+          <span>TERVERIFIKASI SAH DIGITAL</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. Title & Period Banner -->
+    <div class="flex items-center justify-between mb-5 bg-slate-50 border border-slate-200 rounded-lg p-3.5 avoid-break">
+      <div>
+        <h2 class="text-sm font-extrabold text-slate-900 uppercase tracking-wide">
+          Rekapitulasi Keuangan Eksekutif & Kinerja Hunian Kos
+        </h2>
+        <p class="text-[11px] text-slate-600 mt-0.5">
+          Periode Pembukuan: <strong>01 Oktober 2026 – 31 Oktober 2026</strong> · Basis Pencatatan: <strong>Kas Riil (Cash Basis)</strong>
+        </p>
+      </div>
+      <div class="text-right text-[11px] text-slate-600">
+        Filter Aktif: <strong id="pdfActiveFilterText" class="text-slate-900">Semua Cabang Kos (Konsolidasi)</strong>
+      </div>
+    </div>
+
+    <!-- 3. Financial KPI Summary Cards (5 Metrik Ringkas & Jelas) -->
+    <div class="grid grid-cols-5 gap-3 mb-6 avoid-break">
+      <!-- Card 1: Penerimaan Sewa -->
+      <div class="p-3 rounded-lg border border-emerald-300 bg-emerald-50/40">
+        <span class="text-[9px] font-bold text-emerald-800 uppercase tracking-wider block">Pemasukan Sewa (Kas)</span>
+        <strong class="text-lg font-black text-emerald-700 font-mono block mt-0.5" id="pdfInTotal">Rp 30.400.000</strong>
+        <span class="text-[9px] text-emerald-700 block mt-0.5" id="pdfPaidRoomsCount">14 Kamar Terbayar</span>
+      </div>
+      <!-- Card 2: Tunggakan Piutang -->
+      <div class="p-3 rounded-lg border border-rose-300 bg-rose-50/40">
+        <span class="text-[9px] font-bold text-rose-800 uppercase tracking-wider block">Tunggakan (Belum Bayar)</span>
+        <strong class="text-lg font-black text-rose-700 font-mono block mt-0.5" id="pdfUnpaidTotal">Rp 8.000.000</strong>
+        <span class="text-[9px] text-rose-700 block mt-0.5" id="pdfUnpaidRoomsCount">4 Kamar Menunggak</span>
+      </div>
+      <!-- Card 3: Beban Operasional -->
+      <div class="p-3 rounded-lg border border-slate-300 bg-slate-50">
+        <span class="text-[9px] font-bold text-slate-600 uppercase tracking-wider block">Beban Operasional</span>
+        <strong class="text-lg font-black text-slate-800 font-mono block mt-0.5" id="pdfOutTotal">Rp 4.150.000</strong>
+        <span class="text-[9px] text-slate-500 block mt-0.5">Listrik, WiFi, Gaji</span>
+      </div>
+      <!-- Card 4: Laba Bersih -->
+      <div class="p-3 rounded-lg border-2 border-emerald-600 bg-emerald-100/40">
+        <span class="text-[9px] font-bold text-emerald-900 uppercase tracking-wider block">Laba Bersih Operasional</span>
+        <strong class="text-lg font-black text-emerald-900 font-mono block mt-0.5" id="pdfNetProfit">Rp 26.250.000</strong>
+        <span class="text-[9px] text-emerald-800 font-bold block mt-0.5" id="pdfMarginPercent">Margin Laba: 86.3%</span>
+      </div>
+      <!-- Card 5: Okupansi Hunian -->
+      <div class="p-3 rounded-lg border border-slate-300 bg-slate-50">
+        <span class="text-[9px] font-bold text-slate-600 uppercase tracking-wider block">Tingkat Okupansi</span>
+        <strong class="text-lg font-black text-slate-900 font-mono block mt-0.5" id="pdfOccupancyRate">90.0%</strong>
+        <span class="text-[9px] text-slate-600 block mt-0.5" id="pdfOccupancyRooms">18 dari 20 Kamar Terisi</span>
+      </div>
+    </div>
+
+    <!-- 4. Tabel Pivot 1: Kinerja per Cabang/Tempat Kos (Multi-Property Pivot) -->
+    <div class="mb-6 avoid-break">
+      <div class="flex items-center justify-between mb-2">
+        <h3 class="text-xs font-black uppercase tracking-wider text-slate-800 flex items-center gap-1.5">
+          <span>📊</span>
+          <span>Tabel Pivot 1: Ringkasan Kinerja & Okupansi per Cabang Kos</span>
+        </h3>
+        <span class="text-[10px] text-slate-500 font-mono">Data Terkonsolidasi Real-Time</span>
+      </div>
+      <table class="w-full text-xs print-table">
+        <thead>
+          <tr>
+            <th class="text-left">Nama Properti & Lokasi Cabang</th>
+            <th class="text-center w-20">Kapasitas</th>
+            <th class="text-center w-24">Terisi (Okupansi)</th>
+            <th class="text-center w-24">Status Bayar</th>
+            <th class="text-right w-28">Potensi Omset</th>
+            <th class="text-right w-28">Kas Terkumpul</th>
+            <th class="text-right w-24">Sisa Piutang</th>
+          </tr>
+        </thead>
+        <tbody id="pdfBranchPivotBody" class="divide-y divide-slate-200">
+          <!-- Populated dynamically by triggerPrintPdfReport() -->
+        </tbody>
+        <tfoot id="pdfBranchPivotFoot" class="border-t-2 border-slate-900 font-bold bg-slate-100">
+          <!-- Populated dynamically by triggerPrintPdfReport() -->
+        </tfoot>
+      </table>
+    </div>
+
+    <!-- 5. Tabel Pivot 2: Buku Kas & Jurnal Operasional Bulan Berjalan -->
+    <div class="mb-6 avoid-break">
+      <div class="flex items-center justify-between mb-2">
+        <h3 class="text-xs font-black uppercase tracking-wider text-slate-800 flex items-center gap-1.5">
+          <span>📑</span>
+          <span>Tabel Pivot 2: Ringkasan Buku Kas & Jurnal Arus Kas Operasional</span>
+        </h3>
+        <span class="text-[10px] text-slate-500 font-mono">Rekonsiliasi Bank & Kas Masuk</span>
+      </div>
+      <table class="w-full text-xs print-table">
+        <thead>
+          <tr>
+            <th class="text-left w-24">Tanggal</th>
+            <th class="text-left w-32">Kategori Jurnal</th>
+            <th class="text-left">Uraian / Deskripsi Transaksi</th>
+            <th class="text-right w-28">Penerimaan (Debit)</th>
+            <th class="text-right w-28">Pengeluaran (Kredit)</th>
+            <th class="text-right w-28">Saldo Kas Berjalan</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-200">
+          <tr>
+            <td>01 Okt 2026</td>
+            <td><span class="font-semibold text-rose-700">Beban Rutin</span></td>
+            <td>Pembelian Token Listrik Induk PLN 5.500 VA (Token Utama Gedung)</td>
+            <td class="text-right text-slate-400">-</td>
+            <td class="text-right text-rose-700 font-mono font-semibold">Rp 2.500.000</td>
+            <td class="text-right font-mono text-slate-700">-Rp 2.500.000</td>
+          </tr>
+          <tr>
+            <td>02 Okt 2026</td>
+            <td><span class="font-semibold text-rose-700">Beban Internet</span></td>
+            <td>Langganan Paket WiFi Dedicated Biznet 100 Mbps (Semua Kamar)</td>
+            <td class="text-right text-slate-400">-</td>
+            <td class="text-right text-rose-700 font-mono font-semibold">Rp 450.000</td>
+            <td class="text-right font-mono text-slate-700">-Rp 2.950.000</td>
+          </tr>
+          <tr>
+            <td>03 Okt 2026</td>
+            <td><span class="font-semibold text-rose-700">Beban SDM & Kebersihan</span></td>
+            <td>Gaji & Tunjangan Operasional Penjaga Kos (Pak Bambang)</td>
+            <td class="text-right text-slate-400">-</td>
+            <td class="text-right text-rose-700 font-mono font-semibold">Rp 1.200.000</td>
+            <td class="text-right font-mono text-slate-700">-Rp 4.150.000</td>
+          </tr>
+          <tr>
+            <td>05 Okt 2026</td>
+            <td><span class="font-semibold text-emerald-700">Penerimaan Sewa</span></td>
+            <td id="pdfJournalIncomeDesc">Penerimaan Pembayaran Sewa Kamar Terbayar (QRIS Instan & Virtual Account)</td>
+            <td class="text-right text-emerald-700 font-mono font-bold" id="pdfJournalIncomeVal">Rp 30.400.000</td>
+            <td class="text-right text-slate-400">-</td>
+            <td class="text-right font-mono font-bold text-emerald-800" id="pdfJournalNetVal">Rp 26.250.000</td>
+          </tr>
+        </tbody>
+        <tfoot class="border-t-2 border-b-2 border-slate-900 font-bold bg-slate-100">
+          <tr>
+            <td colspan="3" class="text-right uppercase">TOTAL REKAPITULASI ARUS KAS:</td>
+            <td class="text-right font-mono text-emerald-700" id="pdfJournalTotalIn">Rp 30.400.000</td>
+            <td class="text-right font-mono text-rose-700">Rp 4.150.000</td>
+            <td class="text-right font-mono text-emerald-900 font-black" id="pdfJournalTotalNet">Rp 26.250.000</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+
+    <!-- 6. Tabel Khusus: Rekapitulasi Tagihan Belum Lunas (Actionable Arrears Table) -->
+    <div class="mb-6 avoid-break">
+      <div class="flex items-center justify-between mb-2">
+        <h3 class="text-xs font-black uppercase tracking-wider text-rose-800 flex items-center gap-1.5">
+          <span>⚠️</span>
+          <span>Daftar Khusus Tagihan Belum Lunas (Prioritas Penagihan Pengelola)</span>
+        </h3>
+        <span class="text-[10px] text-rose-700 font-semibold" id="pdfUnpaidSummaryHint">
+          4 Kamar Memerlukan Tindak Lanjut WhatsApp
+        </span>
+      </div>
+      <table class="w-full text-xs print-table">
+        <thead>
+          <tr>
+            <th class="text-left w-20">No. Kamar</th>
+            <th class="text-left w-36">Cabang Properti</th>
+            <th class="text-left">Nama Penghuni</th>
+            <th class="text-left w-28">No. WhatsApp</th>
+            <th class="text-center w-24">Jatuh Tempo</th>
+            <th class="text-right w-36">Rincian Komponen Biaya</th>
+            <th class="text-right w-28">Total Tagihan</th>
+            <th class="text-center w-24">Status Tindakan</th>
+          </tr>
+        </thead>
+        <tbody id="pdfUnpaidTableBody" class="divide-y divide-slate-200">
+          <!-- Populated dynamically by triggerPrintPdfReport() -->
+        </tbody>
+        <tfoot id="pdfUnpaidTableFoot" class="border-t-2 border-slate-900 font-bold bg-slate-100">
+          <!-- Populated dynamically by triggerPrintPdfReport() -->
+        </tfoot>
+      </table>
+    </div>
+
+    <!-- 7. Official Legal Signatures, Digital Stamp & QR Verification -->
+    <div class="grid grid-cols-12 gap-6 pt-5 border-t-2 border-slate-900 text-xs avoid-break">
+      
+      <!-- Signature Column -->
+      <div class="col-span-5 space-y-1">
+        <span class="text-[10px] text-slate-500 uppercase tracking-wider block" id="pdfSignLocationDate">
+          Sleman, D.I. Yogyakarta, 14 Oktober 2026
+        </span>
+        <span class="text-xs font-bold text-slate-800 block">Pengelola / Pemilik Properti:</span>
+        
+        <div class="h-16 flex items-end pt-2">
+          <div class="font-serif italic text-base text-slate-800 tracking-wider border-b border-slate-400 pb-1 w-52">
+            H. Bambang Sudiro
+          </div>
+        </div>
+        <div class="text-[10px] text-slate-600 font-semibold">
+          <strong>H. Bambang Sudiro</strong> · Pemilik Kos
+        </div>
+        <span class="text-[9px] text-slate-400 font-mono block">UID Pengelola: TRN-OWNER-77189</span>
+      </div>
+
+      <!-- Digital System Stamp Badge -->
+      <div class="col-span-4 flex items-center justify-center">
+        <div class="border-2 border-emerald-800 bg-emerald-50/70 p-3 rounded-xl text-center space-y-1 w-full max-w-[220px] shadow-sm">
+          <div class="text-[8px] font-black uppercase tracking-widest text-emerald-900 border-b border-emerald-300 pb-0.5">
+            TERANIVO PRO ENTERPRISE
+          </div>
+          <div class="text-xs font-black text-emerald-950 tracking-tight leading-none py-1">
+            TERVERIFIKASI SAH DIGITAL
+          </div>
+          <div class="text-[8px] text-emerald-800 leading-tight">
+            Data tercatat otomatis & sesuai mutasi kas riil perbankan.
+          </div>
+          <div class="text-[8px] font-mono text-emerald-900 font-bold pt-0.5">
+            CERT-ID: TRN-202610-88A9F
+          </div>
+        </div>
+      </div>
+
+      <!-- QR Code & Integrity Column -->
+      <div class="col-span-3 flex flex-col items-end text-right justify-center">
+        <!-- SVG Crisp QR Code -->
+        <div class="p-1.5 bg-white border border-slate-300 rounded-lg shadow-sm mb-1.5">
+          <svg class="w-16 h-16" viewBox="0 0 29 29" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0 0h7v7H0V0zm2 2v3h3V2H2zm8-2h1v1h-1V0zm2 0h1v3h-1V0zm2 0h3v1h-3V0zm4 0h1v1h-1V0zm3 0h1v2h-1V0zm2 0h1v1h-1V0zm2 0h7v7h-7V0zm2 2v3h3V2h-3zM0 8h1v1H0V8zm3 0h1v1H3V8zm3 0h1v1H6V8zm2 0h2v1H8V8zm3 0h2v1h-2V8zm4 0h2v1h-2V8zm3 0h1v1h-1V8zm3 0h2v1h-2V8zm3 0h1v1h-1V8zm-21 2h7v1H0v-1zm9 0h2v1h-2v-1zm4 0h1v1h-1v-1zm4 0h3v1h-3v-1zm6 0h1v1h-1v-1zm-23 2h1v1H0v-1zm4 0h1v2H4v-2zm4 0h1v1H8v-1zm2 0h1v1h-1v-1zm3 0h1v2h-1v-2zm3 0h2v1h-2v-1zm4 0h1v1h-1v-1zm2 0h3v1h-3v-1zm-22 2h1v1H0v-1zm2 0h1v1H2v-1zm5 0h1v2H7v-2zm3 0h1v1h-1v-1zm5 0h1v1h-1v-1zm3 0h1v1h-1v-1zm2 0h1v1h-1v-1zm3 0h1v2h-1v-2zm-18 2h1v1H3v-1zm3 0h1v1H6v-1zm2 0h2v1H8v-1zm3 0h2v1h-2v-1zm4 0h1v1h-1v-1zm2 0h2v1h-2v-1zm4 0h1v1h-1v-1zm2 0h1v1h-1v-1zm-21 2h7v7H0v-7zm2 2v3h3v-3H2zm8-2h1v1h-1v-1zm2 0h2v1h-2v-1zm3 0h1v1h-1v-1zm4 0h1v2h-1v-2zm2 0h1v1h-1v-1zm2 0h2v1h-2v-1zm3 0h1v1h-1v-1zm-10 2h2v1h-2v-1zm5 0h1v1h-1v-1zm2 0h1v1h-1v-1zm-9 2h2v1h-2v-1zm4 0h1v1h-1v-1zm3 0h2v1h-2v-1zm-8 2h1v1H9v-1zm3 0h1v1h-1v-1zm3 0h2v1h-2v-1zm3 0h1v1h-1v-1z" fill="#0F172A"/>
+          </svg>
+        </div>
+        <span class="text-[8px] font-bold text-slate-700 block uppercase">Validasi Keaslian</span>
+        <span class="text-[7.5px] text-slate-500 block leading-tight max-w-[140px]">
+          Scan QR untuk cek integritas dokumen di Cloud Teranivo.
+        </span>
+        <span class="text-[7.5px] font-mono text-slate-400 block mt-0.5">SHA256: e87a...90f2</span>
+      </div>
+
+    </div>
+
+    <!-- Official Legal Footer Under UU ITE -->
+    <div class="mt-6 pt-3 border-t border-slate-200 text-center text-[8.5px] text-slate-500 leading-relaxed avoid-break">
+      <p>
+        <strong>PT TERANIVO TEKNOLOGI INDONESIA</strong> · Platform Manajemen Operasional Kos Mandiri · Dokumen resmi terbitan sistem.
+      </p>
+      <p class="text-[8px] text-slate-400 mt-0.5">
+        Berdasarkan UU ITE No. 11/2008 & PP No. 71/2019, dokumen elektronik ini memiliki kekuatan hukum pembukuan internal yang sah tanpa memerlukan tanda tangan basah.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <!-- Audio Ding for Payment Simulator -->
+  <audio id="dingSound" preload="auto">
+    <source src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3" type="audio/mpeg">
+  </audio>
+
+  <!-- ========================================================================= -->
+  <!-- JAVASCRIPT LOGIC (20 ROOMS, BATCH WHATSAPP, WEBHOOK SIMULATOR) -->
+  <!-- ========================================================================= -->
+  <script>
+    // =========================================================================
+    // SECURITY & UTILITY HELPERS (CLEAN CODE & XSS PREVENTION)
+    // =========================================================================
+    function escapeHtml(str) {
+      if (str === null || str === undefined) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    // =========================================================================
+    // MULTI-PROPERTI KOS & DATA DEFINITION
+    // =========================================================================
+    const DEFAULT_PROPERTIES = [
+      { id: 'all', name: 'Semua Tempat Kos', address: '3 Cabang Kos Aktif', city: 'Gabungan', totalRooms: 20 },
+      { id: 'harmoni', name: 'Kost Griya Harmoni', address: 'Jl. Kaliurang KM 5, Sleman', city: 'Yogyakarta', totalRooms: 10 },
+      { id: 'premiere', name: 'Kost Teranivo Premiere', address: 'Jl. Denpasar Raya, Kuningan', city: 'Jakarta Selatan', totalRooms: 6 },
+      { id: 'asri', name: 'Kost Putri Asri', address: 'Jl. Cisitu Indah, Dago', city: 'Bandung', totalRooms: 4 }
+    ];
+
+    // Initial 20 Rooms Data (Distributed across 3 Kos Properties)
+    const DEFAULT_ROOMS = [
+      // 1. Kost Griya Harmoni — Yogyakarta (10 Kamar: 101 - 110)
+      { id: '101', propertyId: 'harmoni', propertyName: 'Kost Griya Harmoni', propertyCity: 'Yogyakarta', name: 'Rian Pratama', phone: '081234567890', floor: 1, rent: 1800000, kwh: 40, kwhCost: 80000, dueDate: 5, status: 'paid', paymentMethod: 'QRIS BCA', paidAt: '05 Okt 08:30' },
+      { id: '102', propertyId: 'harmoni', propertyName: 'Kost Griya Harmoni', propertyCity: 'Yogyakarta', name: 'Andi Pratama', phone: '081298765432', floor: 1, rent: 1800000, kwh: 42, kwhCost: 84000, dueDate: 5, status: 'unpaid', paymentMethod: '-', paidAt: '-' },
+      { id: '103', propertyId: 'harmoni', propertyName: 'Kost Griya Harmoni', propertyCity: 'Yogyakarta', name: 'Budi Santoso', phone: '081345678901', floor: 1, rent: 1800000, kwh: 35, kwhCost: 70000, dueDate: 5, status: 'paid', paymentMethod: 'BCA VA', paidAt: '04 Okt 14:15' },
+      { id: '104', propertyId: 'harmoni', propertyName: 'Kost Griya Harmoni', propertyCity: 'Yogyakarta', name: 'Dian Nugraha', phone: '081567890123', floor: 1, rent: 1800000, kwh: 50, kwhCost: 100000, dueDate: 5, status: 'paid', paymentMethod: 'QRIS Gopay', paidAt: '03 Okt 19:40' },
+      { id: '105', propertyId: 'harmoni', propertyName: 'Kost Griya Harmoni', propertyCity: 'Yogyakarta', name: 'Siti Rahma', phone: '081789012345', floor: 1, rent: 1800000, kwh: 45, kwhCost: 90000, dueDate: 5, status: 'unpaid', paymentMethod: '-', paidAt: '-' },
+      { id: '106', propertyId: 'harmoni', propertyName: 'Kost Griya Harmoni', propertyCity: 'Yogyakarta', name: 'Fajar Hidayat', phone: '081901234567', floor: 1, rent: 1800000, kwh: 38, kwhCost: 76000, dueDate: 5, status: 'paid', paymentMethod: 'QRIS Livin', paidAt: '02 Okt 11:20' },
+      { id: '107', propertyId: 'harmoni', propertyName: 'Kost Griya Harmoni', propertyCity: 'Yogyakarta', name: 'Gita Savitri', phone: '081212345678', floor: 1, rent: 1800000, kwh: 41, kwhCost: 82000, dueDate: 5, status: 'paid', paymentMethod: 'Mandiri VA', paidAt: '05 Okt 16:00' },
+      { id: '108', propertyId: 'harmoni', propertyName: 'Kost Griya Harmoni', propertyCity: 'Yogyakarta', name: 'Hendra Wijaya', phone: '081323456789', floor: 1, rent: 1800000, kwh: 30, kwhCost: 60000, dueDate: 5, status: 'paid', paymentMethod: 'QRIS BCA', paidAt: '01 Okt 09:10' },
+      { id: '109', propertyId: 'harmoni', propertyName: 'Kost Griya Harmoni', propertyCity: 'Yogyakarta', name: 'Indra Gunawan', phone: '081434567890', floor: 1, rent: 1800000, kwh: 48, kwhCost: 96000, dueDate: 5, status: 'paid', paymentMethod: 'BRImo VA', paidAt: '05 Okt 12:45' },
+      { id: '110', propertyId: 'harmoni', propertyName: 'Kost Griya Harmoni', propertyCity: 'Yogyakarta', name: '(Kosong)', phone: '-', floor: 1, rent: 1800000, kwh: 0, kwhCost: 0, dueDate: 5, status: 'vacant', paymentMethod: '-', paidAt: '-' },
+      
+      // 2. Kost Teranivo Premiere — Jakarta Selatan (6 Kamar: 201 - 206)
+      { id: '201', propertyId: 'premiere', propertyName: 'Kost Teranivo Premiere', propertyCity: 'Jakarta Selatan', name: 'Joko Widodo', phone: '081545678901', floor: 2, rent: 2400000, kwh: 44, kwhCost: 88000, dueDate: 5, status: 'paid', paymentMethod: 'QRIS BCA', paidAt: '04 Okt 10:12' },
+      { id: '202', propertyId: 'premiere', propertyName: 'Kost Teranivo Premiere', propertyCity: 'Jakarta Selatan', name: 'Kartika Sari', phone: '081656789012', floor: 2, rent: 2400000, kwh: 39, kwhCost: 78000, dueDate: 5, status: 'paid', paymentMethod: 'BNI VA', paidAt: '03 Okt 15:30' },
+      { id: '203', propertyId: 'premiere', propertyName: 'Kost Teranivo Premiere', propertyCity: 'Jakarta Selatan', name: 'Lukman Hakim', phone: '081767890123', floor: 2, rent: 2400000, kwh: 52, kwhCost: 104000, dueDate: 5, status: 'paid', paymentMethod: 'QRIS Shopee', paidAt: '05 Okt 17:20' },
+      { id: '204', propertyId: 'premiere', propertyName: 'Kost Teranivo Premiere', propertyCity: 'Jakarta Selatan', name: 'Reza Firmansyah', phone: '081878901234', floor: 2, rent: 2400000, kwh: 46, kwhCost: 92000, dueDate: 5, status: 'unpaid', paymentMethod: '-', paidAt: '-' },
+      { id: '205', propertyId: 'premiere', propertyName: 'Kost Teranivo Premiere', propertyCity: 'Jakarta Selatan', name: 'Mega Utami', phone: '081989012345', floor: 2, rent: 2400000, kwh: 36, kwhCost: 72000, dueDate: 5, status: 'paid', paymentMethod: 'BCA VA', paidAt: '02 Okt 18:00' },
+      { id: '206', propertyId: 'premiere', propertyName: 'Kost Teranivo Premiere', propertyCity: 'Jakarta Selatan', name: 'Naufal Ramadhan', phone: '081290123456', floor: 2, rent: 2400000, kwh: 40, kwhCost: 80000, dueDate: 5, status: 'paid', paymentMethod: 'QRIS Livin', paidAt: '04 Okt 09:50' },
+
+      // 3. Kost Putri Asri — Bandung (4 Kamar: 207 - 210)
+      { id: '207', propertyId: 'asri', propertyName: 'Kost Putri Asri', propertyCity: 'Bandung', name: 'Olivia Putri', phone: '081301234567', floor: 2, rent: 1600000, kwh: 43, kwhCost: 86000, dueDate: 5, status: 'paid', paymentMethod: 'QRIS BCA', paidAt: '05 Okt 13:10' },
+      { id: '208', propertyId: 'asri', propertyName: 'Kost Putri Asri', propertyCity: 'Bandung', name: 'Dewi Lestari', phone: '081412345678', floor: 2, rent: 1600000, kwh: 47, kwhCost: 94000, dueDate: 5, status: 'unpaid', paymentMethod: '-', paidAt: '-' },
+      { id: '209', propertyId: 'asri', propertyName: 'Kost Putri Asri', propertyCity: 'Bandung', name: 'Panji Gumilang', phone: '081523456789', floor: 2, rent: 1600000, kwh: 33, kwhCost: 66000, dueDate: 5, status: 'paid', paymentMethod: 'Mandiri VA', paidAt: '01 Okt 14:00' },
+      { id: '210', propertyId: 'asri', propertyName: 'Kost Putri Asri', propertyCity: 'Bandung', name: '(Kosong)', phone: '-', floor: 2, rent: 1600000, kwh: 0, kwhCost: 0, dueDate: 5, status: 'vacant', paymentMethod: '-', paidAt: '-' }
+    ];
+
+    let currentProperty = 'all'; // 'all' | 'harmoni' | 'premiere' | 'asri'
+    let currentFilter = 'all';   // 'all' | 'unpaid' | 'paid' | 'vacant'
+    let searchQuery = '';
+    let rooms = [];
+
+    // THEME HANDLING
+    function initTheme() {
+      const stored = localStorage.getItem('teranivo_theme');
+      if (stored === 'light') {
+        document.body.classList.add('light-mode');
+        updateThemeButton(true);
+      } else {
+        document.body.classList.remove('light-mode');
+        updateThemeButton(false);
+      }
+    }
+
+    function toggleTheme() {
+      const isLight = document.body.classList.toggle('light-mode');
+      localStorage.setItem('teranivo_theme', isLight ? 'light' : 'dark');
+      updateThemeButton(isLight);
+    }
+
+    function updateThemeButton(isLight) {
+      const icon = document.getElementById('themeIcon');
+      const label = document.getElementById('themeLabel');
+      if (isLight) {
+        icon.innerText = '🌙';
+        if (label) label.innerText = 'Mode Malam';
+      } else {
+        icon.innerText = '☀️';
+        if (label) label.innerText = 'Mode Siang';
+      }
+    }
+
+    function initData() {
+      initTheme();
+
+      // Sinkronkan status akun dari localStorage ('teranivo_auth')
+      const authStored = localStorage.getItem('teranivo_auth');
+      if (authStored) {
+        try {
+          const auth = JSON.parse(authStored);
+          const navText = document.getElementById('navAccountText');
+          const navBtn = document.getElementById('navAccountBtn');
+          if (auth.plan === 'pro' || auth.plan === 'enterprise') {
+            if (navText) navText.innerText = '⭐ Akun Pro';
+            if (navBtn) navBtn.classList.add('border-mint', 'text-mint');
+          } else {
+            if (navText) navText.innerText = `Akun (Trial ${auth.trialDaysLeft || 7}h)`;
+          }
+        } catch (e) {}
+      }
+
+      const stored = localStorage.getItem('teranivo_rooms');
+      if (stored) {
+        try {
+          rooms = JSON.parse(stored);
+        } catch (e) {
+          rooms = JSON.parse(JSON.stringify(DEFAULT_ROOMS));
+        }
+      } else {
+        rooms = JSON.parse(JSON.stringify(DEFAULT_ROOMS));
+      }
+
+      // Pastikan setiap kamar memiliki nilai propertyId dan dueDate
+      const globalDue = parseInt(localStorage.getItem('teranivo_global_due_date')) || 5;
+      rooms.forEach(r => {
+        if (!r.dueDate) r.dueDate = globalDue;
+        if (!r.propertyId) {
+          if (String(r.id).startsWith('1')) {
+            r.propertyId = 'harmoni';
+            r.propertyName = 'Kost Griya Harmoni';
+            r.propertyCity = 'Yogyakarta';
+          } else if (['201', '202', '203', '204', '205', '206'].includes(String(r.id))) {
+            r.propertyId = 'premiere';
+            r.propertyName = 'Kost Teranivo Premiere';
+            r.propertyCity = 'Jakarta Selatan';
+          } else {
+            r.propertyId = 'asri';
+            r.propertyName = 'Kost Putri Asri';
+            r.propertyCity = 'Bandung';
+          }
+        }
+      });
+      localStorage.setItem('teranivo_rooms', JSON.stringify(rooms));
+
+      updateTopDueDateBadge();
+      renderDashboard();
+    }
+
+    function resetData() {
+      rooms = JSON.parse(JSON.stringify(DEFAULT_ROOMS));
+      localStorage.setItem('teranivo_rooms', JSON.stringify(rooms));
+      currentProperty = 'all';
+      currentFilter = 'all';
+      searchQuery = '';
+      const propSel = document.getElementById('propertyFilterSelect');
+      if (propSel) propSel.value = 'all';
+      const searchInp = document.getElementById('roomSearchInput');
+      if (searchInp) searchInp.value = '';
+      filterRooms('all');
+      showToast("Data dasbor berhasil dikembalikan ke pengaturan awal!");
+    }
+
+    // =========================================================================
+    // SEARCH & MULTI-PROPERTY HANDLERS
+    // =========================================================================
+    function changePropertyFilter(propId) {
+      currentProperty = propId;
+      
+      const prop = DEFAULT_PROPERTIES.find(p => p.id === propId) || DEFAULT_PROPERTIES[0];
+      const navTitle = document.getElementById('topNavPropertyName');
+      const navMeta = document.getElementById('topNavPropertyMeta');
+      const hint = document.getElementById('propertyLocationHint');
+
+      if (propId === 'all') {
+        if (navTitle) navTitle.innerText = "Semua Tempat Kos";
+        if (navMeta) navMeta.innerText = "Gabungan · 20 Kamar";
+        if (hint) hint.innerText = "· 3 Lokasi Cabang Aktif";
+      } else {
+        if (navTitle) navTitle.innerText = prop.name;
+        if (navMeta) navMeta.innerText = `${prop.city} · ${prop.totalRooms} Kamar`;
+        if (hint) hint.innerText = `· ${prop.address}`;
+      }
+
+      renderDashboard();
+      showToast(`Menampilkan data untuk: ${prop.name}`);
+    }
+
+    function handleRoomSearch(query) {
+      searchQuery = query || '';
+      const clearBtn = document.getElementById('clearSearchBtn');
+      if (clearBtn) {
+        if (searchQuery.trim().length > 0) {
+          clearBtn.classList.remove('hidden');
+        } else {
+          clearBtn.classList.add('hidden');
+        }
+      }
+      renderDashboard();
+    }
+
+    function clearRoomSearch() {
+      searchQuery = '';
+      const searchInp = document.getElementById('roomSearchInput');
+      if (searchInp) searchInp.value = '';
+      const clearBtn = document.getElementById('clearSearchBtn');
+      if (clearBtn) clearBtn.classList.add('hidden');
+      renderDashboard();
+    }
+
+    // =========================================================================
+    // MAIN RENDER DASHBOARD
+    // =========================================================================
+    function renderDashboard() {
+      // 1. Filter Rooms by Property for KPI calculations
+      const propertyRooms = rooms.filter(r => {
+        if (currentProperty === 'all') return true;
+        return r.propertyId === currentProperty;
+      });
+
+      const totalPropertyRoomsCount = propertyRooms.length;
+
+      let occupiedCount = 0;
+      let uangMasuk = 0;
+      let tunggakanCount = 0;
+      let tunggakanNominal = 0;
+      let paidCount = 0;
+      let vacantCount = 0;
+
+      propertyRooms.forEach(r => {
+        if (r.status === 'vacant') {
+          vacantCount++;
+        } else {
+          occupiedCount++;
+          const totalTagihan = r.rent + r.kwhCost + 50000;
+          if (r.status === 'paid') {
+            paidCount++;
+            uangMasuk += totalTagihan;
+          } else if (r.status === 'unpaid') {
+            tunggakanCount++;
+            tunggakanNominal += totalTagihan;
+          }
+        }
+      });
+
+      // Update KPI Cards
+      const occupancyPct = totalPropertyRoomsCount > 0 ? Math.round((occupiedCount / totalPropertyRoomsCount) * 100) : 0;
+      document.getElementById('statKamarTerisi').innerHTML = `${occupiedCount} <span class="text-base text-muted font-normal">/ ${totalPropertyRoomsCount} Kamar</span>`;
+      document.getElementById('statOccupancyBadge').innerText = `${occupancyPct}% Terisi`;
+      document.getElementById('statUangMasuk').innerText = "Rp " + uangMasuk.toLocaleString('id-ID');
+      document.getElementById('statTunggakanCount').innerText = `${tunggakanCount} Kamar`;
+      document.getElementById('statTunggakanNominal').innerText = "Rp " + tunggakanNominal.toLocaleString('id-ID');
+      
+      // Update Tab Pill Counters
+      document.getElementById('countAllTab').innerText = totalPropertyRoomsCount;
+      document.getElementById('countUnpaidTab').innerText = tunggakanCount;
+      document.getElementById('countPaidTab').innerText = paidCount;
+      document.getElementById('countVacantTab').innerText = vacantCount;
+      document.getElementById('btnBatchUnpaidCount').innerText = tunggakanCount;
+
+      const operasionalEst = currentProperty === 'all' ? 4150000 : Math.round(4150000 * (totalPropertyRoomsCount / 20));
+      const profitBersih = uangMasuk - operasionalEst;
+      document.getElementById('statProfit').innerText = `Laba Bersih: Rp ${profitBersih.toLocaleString('id-ID')}`;
+      document.getElementById('cashInText').innerText = "Rp " + uangMasuk.toLocaleString('id-ID');
+      document.getElementById('cashNetText').innerText = "Rp " + profitBersih.toLocaleString('id-ID');
+
+      // 2. Filter Rooms for Card Grid (Property + Status Filter + Search Query)
+      const container = document.getElementById('roomContainer');
+      container.innerHTML = '';
+
+      const q = searchQuery.toLowerCase().trim();
+
+      const displayedRooms = propertyRooms.filter(r => {
+        // Tab status filter
+        if (currentFilter === 'unpaid' && r.status !== 'unpaid') return false;
+        if (currentFilter === 'paid' && r.status !== 'paid') return false;
+        if (currentFilter === 'vacant' && r.status !== 'vacant') return false;
+
+        // Search query filter (room id, tenant name, floor, property name)
+        if (q) {
+          const matchId = String(r.id).toLowerCase().includes(q);
+          const matchName = String(r.name).toLowerCase().includes(q);
+          const matchFloor = `lt ${r.floor}`.includes(q) || `lantai ${r.floor}`.includes(q) || String(r.floor) === q;
+          const matchProp = String(r.propertyName || '').toLowerCase().includes(q);
+          const matchCity = String(r.propertyCity || '').toLowerCase().includes(q);
+          if (!matchId && !matchName && !matchFloor && !matchProp && !matchCity) return false;
+        }
+
+        return true;
+      });
+
+      // Handle Empty State when searching
+      if (displayedRooms.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-full py-16 text-center space-y-3 bg-[var(--bg-card)] rounded-2xl border border-[var(--border-main)] p-6">
+            <div class="text-4xl">🔍</div>
+            <h4 class="font-bold text-base text-heading">Tidak Ada Kamar yang Sesuai</h4>
+            <p class="text-xs text-muted max-w-md mx-auto">
+              Tidak ditemukan kamar yang cocok dengan kata kunci <strong class="text-mint">"${escapeHtml(searchQuery)}"</strong> pada filter yang dipilih.
+            </p>
+            <div class="pt-2">
+              <button onclick="clearRoomSearch()" class="btn-secondary text-xs px-4 py-2 font-bold inline-flex items-center gap-1.5">
+                <span>🔄 Reset Pencarian</span>
+              </button>
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      displayedRooms.forEach(r => {
+        const total = r.status === 'vacant' ? 0 : (r.rent + r.kwhCost + 50000);
+        
+        // STATUS BADGE SIMPLIFIKASI (Sesuai Request: Cuma LUNAS, BELUM BAYAR, dan KOSONG - tanpa rincian via apa)
+        let statusBadge = '';
+        let cardBorder = 'border-[var(--border-main)]';
+        let actionButtons = '';
+
+        if (r.status === 'paid') {
+          statusBadge = `<span class="badge badge-success text-[10px] status-badge-clean">🟢 LUNAS</span>`;
+          cardBorder = 'border-emerald-500/30';
+          actionButtons = `
+            <div class="flex items-center justify-between w-full">
+              <a href="tenant.html?room=${encodeURIComponent(r.id)}" class="text-[11px] text-mint hover:underline font-semibold flex items-center gap-1">
+                <span>Lihat Resi Anak Kos</span> <span>↗</span>
+              </a>
+              <button onclick="openEditRateModal('${escapeHtml(r.id)}')" class="text-[11px] text-muted hover:text-heading flex items-center gap-1 transition">
+                <span>✏️ Ubah Tarif</span>
+              </button>
+            </div>
+          `;
+        } else if (r.status === 'unpaid') {
+          statusBadge = `<span class="badge badge-danger text-[10px] status-badge-clean">🔴 BELUM BAYAR</span>`;
+          cardBorder = 'border-rose-500/40 bg-rose-500/5';
+          actionButtons = `
+            <div class="flex items-center gap-2 w-full pt-1 flex-nowrap">
+              <button onclick="openWaModal('${escapeHtml(r.id)}')" class="btn-action bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs py-2 px-3 rounded-lg flex-1 flex items-center justify-center gap-1.5 shadow-sm transition whitespace-nowrap shrink-0">
+                <span class="whitespace-nowrap">📱 Tagih WA</span>
+              </button>
+              <button onclick="triggerSimulatedPayment('${escapeHtml(r.id)}')" class="btn-action bg-[var(--bg-card)] hover:bg-[var(--bg-card-hover)] text-mint font-bold text-xs py-2 px-3 rounded-lg border border-mint transition whitespace-nowrap shrink-0" title="Simulasi Auto-Lunas Instan">
+                <span class="whitespace-nowrap">⚡ Lunas</span>
+              </button>
+            </div>
+          `;
+        } else {
+          statusBadge = `<span class="badge text-[10px] bg-[var(--bg-subcard)] text-muted status-badge-clean">⚪ KOSONG</span>`;
+          actionButtons = `
+            <div class="flex items-center justify-between w-full">
+              <span class="text-[11px] text-muted">Siap ditempati</span>
+              <button onclick="openEditRateModal('${escapeHtml(r.id)}')" class="text-[11px] text-mint hover:underline flex items-center gap-1 font-semibold">
+                <span>✏️ Set Tarif Baru</span>
+              </button>
+            </div>
+          `;
+        }
+
+        // Tampilan tag lokasi jika sedang melihat "Semua Tempat Kos"
+        const propertyTagHtml = currentProperty === 'all' ? `
+          <div class="text-[10px] text-muted flex items-center gap-1 pt-0.5 pb-1">
+            <span class="text-mint">📍</span>
+            <span class="font-semibold text-heading truncate">${escapeHtml(r.propertyName)}</span>
+            <span class="text-muted">(${escapeHtml(r.propertyCity)})</span>
+          </div>
+        ` : '';
+
+        const card = document.createElement('div');
+        card.className = `card card-glow room-card ${cardBorder} p-5 flex flex-col justify-between space-y-4 transition`;
+        card.innerHTML = `
+          <div>
+            <!-- HEADER KARTU: JAMINAN 1 BARIS (Lt 1 / Lt 2 dan Kamar 102 tidak pernah terputus) -->
+            <div class="flex items-center justify-between pb-3 border-b border-[var(--border-main)] gap-2">
+              <div class="room-title-nowrap gap-2">
+                <span class="font-extrabold text-base text-heading whitespace-nowrap">Kamar ${escapeHtml(r.id)}</span>
+                <span class="floor-tag-pill text-[10px] font-semibold text-muted px-2 py-0.5 rounded-md bg-[var(--bg-subcard)] border border-[var(--border-main)]">Lt ${escapeHtml(r.floor)}</span>
+              </div>
+              <div class="flex items-center gap-1.5 shrink-0 whitespace-nowrap">
+                ${statusBadge}
+                <button onclick="openEditRateModal('${escapeHtml(r.id)}')" class="text-xs py-1 px-1.5 rounded-lg bg-[var(--bg-card)] hover:bg-[var(--bg-card-hover)] border border-[var(--border-main)] text-muted hover:text-heading transition shrink-0" title="Ubah Tarif Kamar">
+                  ✏️
+                </button>
+              </div>
+            </div>
+
+            ${propertyTagHtml}
+
+            <div class="pt-2 space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="text-xs text-muted">Penghuni:</span>
+                <strong class="text-xs text-heading">${escapeHtml(r.name)}</strong>
+              </div>
+              ${r.status !== 'vacant' ? `
+                <div class="flex items-center justify-between text-xs">
+                  <span class="text-muted">Sewa Pokok:</span>
+                  <span class="text-body font-mono">Rp ${(r.rent || 0).toLocaleString('id-ID')}</span>
+                </div>
+                <div class="flex items-center justify-between text-xs">
+                  <span class="text-muted">Listrik AC (${escapeHtml(r.kwh)} kWh):</span>
+                  <span class="text-body font-mono">Rp ${(r.kwhCost || 0).toLocaleString('id-ID')}</span>
+                </div>
+                <div class="flex items-center justify-between text-xs">
+                  <span class="text-muted">Jatuh Tempo:</span>
+                  <span class="font-semibold ${r.status === 'unpaid' ? 'text-rose-500 font-bold' : 'text-body'} flex items-center gap-1">
+                    <span>📅</span> Tgl ${String(r.dueDate || 5).padStart(2, '0')} setiap bulan
+                  </span>
+                </div>
+                <div class="flex items-center justify-between text-xs pt-1 border-t border-[var(--border-main)]">
+                  <span class="font-semibold text-heading">Total Tagihan:</span>
+                  <strong class="text-sm font-bold text-mint font-mono">Rp ${total.toLocaleString('id-ID')}</strong>
+                </div>
+              ` : `
+                <div class="flex items-center justify-between text-xs">
+                  <span class="text-muted">Jatuh Tempo:</span>
+                  <span class="text-muted">Tgl ${String(r.dueDate || 5).padStart(2, '0')} setiap bulan</span>
+                </div>
+                <p class="text-xs text-muted py-2 text-center">Kamar tidak berpenghuni</p>
+              `}
+            </div>
+          </div>
+
+          <div class="pt-2 border-t border-[var(--border-main)]">
+            ${actionButtons}
+          </div>
+        `;
+
+        container.appendChild(card);
+      });
+    }
+
+    function filterRooms(filter) {
+      currentFilter = filter;
+      
+      const buttons = [
+        { id: 'btnFilterAll', active: filter === 'all' },
+        { id: 'btnFilterUnpaid', active: filter === 'unpaid' },
+        { id: 'btnFilterPaid', active: filter === 'paid' },
+        { id: 'btnFilterVacant', active: filter === 'vacant' }
+      ];
+
+      buttons.forEach(b => {
+        const el = document.getElementById(b.id);
+        if (!el) return;
+        if (b.active) {
+          el.className = "filter-pill active px-4 py-2 rounded-xl text-xs font-bold transition";
+        } else {
+          el.className = "filter-pill px-4 py-2 rounded-xl text-xs font-bold transition";
+        }
+      });
+
+      renderDashboard();
+    }
+
+    // =========================================================================
+    // FEATURE BARU: REQUEST BAYAR KE SEMUA ORANG SEKALIGUS (BATCH BROADCAST)
+    // =========================================================================
+    function openBatchBillingModal() {
+      const unpaidRooms = rooms.filter(r => r.status === 'unpaid');
+      if (unpaidRooms.length === 0) {
+        showToast("Semua kamar kos saat ini sudah lunas!");
+        return;
+      }
+
+      const listContainer = document.getElementById('batchRoomList');
+      listContainer.innerHTML = '';
+
+      let totalNominal = 0;
+      unpaidRooms.forEach(r => {
+        const total = r.rent + r.kwhCost + 50000;
+        totalNominal += total;
+
+        const row = document.createElement('div');
+        row.className = "flex items-center justify-between p-2.5 rounded-lg border border-[var(--border-main)] bg-[var(--bg-card)] text-xs";
+        row.innerHTML = `
+          <div class="flex items-center gap-2.5">
+            <input type="checkbox" id="chk_room_${escapeHtml(r.id)}" checked class="w-4 h-4 rounded text-mint">
+            <div>
+              <strong class="text-heading block">Kamar ${escapeHtml(r.id)} · ${escapeHtml(r.name)}</strong>
+              <span class="text-[10px] text-muted">${escapeHtml(r.phone)} · Listrik ${escapeHtml(r.kwh)} kWh</span>
+            </div>
+          </div>
+          <strong class="text-mint font-mono font-bold">Rp ${total.toLocaleString('id-ID')}</strong>
+        `;
+        listContainer.appendChild(row);
+      });
+
+      document.getElementById('batchTotalCountText').innerText = `${unpaidRooms.length} Penghuni Belum Membayar Terpilih`;
+      document.getElementById('batchTotalNominalText').innerText = "Rp " + totalNominal.toLocaleString('id-ID');
+      
+      updateBatchPreview();
+      document.getElementById('batchProgressBarBox').classList.add('hidden');
+      document.getElementById('btnExecuteBatch').disabled = false;
+      document.getElementById('btnExecuteBatch').innerHTML = '<span>🚀 Kirim Pengingat ke Semua Sekarang</span>';
+      
+      document.getElementById('batchModal').classList.add('active');
+    }
+
+    function closeBatchModal() {
+      document.getElementById('batchModal').classList.remove('active');
+    }
+
+    function updateBatchPreview() {
+      const tone = document.getElementById('batchToneSelect').value;
+      const preview = document.getElementById('batchPreviewText');
+      
+      if (tone === 'friendly') {
+        preview.innerText = `"Halo Kak [Nama Penghuni] (Kamar [Nomor] - Kost Griya Harmoni), semoga harinya menyenangkan! Kami infokan tagihan sewa kos periode Oktober 2026 sebesar [Nominal]. Pembayaran instan lewat QRIS di sini: [Link Tagihan]"`;
+      } else if (tone === 'due') {
+        preview.innerText = `"Halo Kak [Nama Penghuni] (Kamar [Nomor] - Kost Griya Harmoni), mengingatkan bahwa hari ini adalah jatuh tempo sewa kos bulan Oktober sebesar [Nominal]. Mohon dapat diselesaikan sebelum pk 23.59 via link QRIS: [Link Tagihan]"`;
+      } else {
+        preview.innerText = `"Pemberitahuan Keterlambatan: Halo Kak [Nama Penghuni] (Kamar [Nomor]), tagihan kos sebesar [Nominal] telah melewati batas jatuh tempo. Mohon segera lakukan pembayaran via link resmi berikut: [Link Tagihan]"`;
+      }
+    }
+
+    function executeBatchBroadcast() {
+      const btn = document.getElementById('btnExecuteBatch');
+      const progressBox = document.getElementById('batchProgressBarBox');
+      const progressBar = document.getElementById('batchProgressBar');
+      const progressLabel = document.getElementById('batchProgressLabel');
+      const progressPercent = document.getElementById('batchProgressPercent');
+
+      btn.disabled = true;
+      progressBox.classList.remove('hidden');
+
+      const unpaidRooms = rooms.filter(r => r.status === 'unpaid');
+      let currentStep = 0;
+      const totalSteps = unpaidRooms.length;
+
+      const interval = setInterval(() => {
+        currentStep++;
+        const percent = Math.round((currentStep / totalSteps) * 100);
+        progressBar.style.width = percent + '%';
+        progressPercent.innerText = percent + '%';
+        
+        const room = unpaidRooms[currentStep - 1];
+        if (room) {
+          progressLabel.innerText = `Mengirim ke Kamar ${room.id} (${room.name})...`;
+        }
+
+        if (currentStep >= totalSteps) {
+          clearInterval(interval);
+          setTimeout(() => {
+            progressLabel.innerText = `Selesai! ${totalSteps} pesan WhatsApp berhasil terkirim.`;
+            
+            // Audio Chime
+            try {
+              const audio = document.getElementById('dingSound');
+              if (audio) { audio.currentTime = 0; audio.play().catch(() => {}); }
+            } catch (e) {}
+
+            showToast(`🎉 Sukses! Tagihan berhasil dikirimkan ke ${totalSteps} nomor WhatsApp penghuni.`);
+            closeBatchModal();
+          }, 600);
+        }
+      }, 700);
+    }
+
+    // SIMULATE PAYMENT WEBHOOK (MIDTRANS / QRIS)
+    function triggerSimulatedPayment(roomId) {
+      const room = rooms.find(r => r.id === roomId);
+      if (!room) return;
+
+      const total = room.rent + room.kwhCost + 50000;
+      room.status = 'paid';
+      room.paymentMethod = 'QRIS BCA (Auto)';
+      room.paidAt = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) + ' WIB';
+
+      localStorage.setItem('teranivo_rooms', JSON.stringify(rooms));
+      renderDashboard();
+
+      // Play Sound
+      try {
+        const audio = document.getElementById('dingSound');
+        if (audio) {
+          audio.currentTime = 0;
+          audio.play().catch(() => {});
+        }
+      } catch (e) {}
+
+      showToast(`🎉 UANG MASUK! ${room.name} (Kmr ${room.id}) membayar Rp ${total.toLocaleString('id-ID')} via QRIS. Status otomatis LUNAS!`);
+    }
+
+    // WHATSAPP BILLING MODAL (INDIVIDU)
+    let currentWaRoom = null;
+
+    function openWaModal(roomId) {
+      const room = rooms.find(r => r.id === roomId);
+      if (!room) return;
+      currentWaRoom = room;
+
+      const total = room.rent + room.kwhCost + 50000;
+      const origin = window.location.origin;
+      const tenantUrl = `${origin}/tenant.html?room=${room.id}`;
+
+      const dueDay = room.dueDate || 5;
+      document.getElementById('waModalRecipient').innerText = `Penerima: ${room.name} (${room.phone}) · Kamar ${room.id}`;
+      document.getElementById('waTextGreeting').innerText = `Halo Kak ${room.name} (Kamar ${room.id} - Kost Griya Harmoni),`;
+      document.getElementById('waTextBody').innerHTML = `
+        Berikut rincian tagihan sewa kos untuk periode <strong class="text-heading">Oktober 2026</strong> (Jatuh tempo: <strong class="text-rose-400">Tgl ${String(dueDay).padStart(2, '0')} Okt 2026</strong>):<br>
+        • Sewa Kamar: Rp ${room.rent.toLocaleString('id-ID')}<br>
+        • Pemakaian Listrik AC (${room.kwh} kWh x Rp 2.000): Rp ${room.kwhCost.toLocaleString('id-ID')}<br>
+        • Iuran Fasilitas & Air: Rp 50.000<br>
+        <strong class="text-heading">Total Tagihan: Rp ${total.toLocaleString('id-ID')}</strong>
+      `;
+      document.getElementById('waTextLink').innerText = tenantUrl;
+      document.getElementById('waBtnOpenTenant').href = `tenant.html?room=${room.id}`;
+
+      document.getElementById('waModal').classList.add('active');
+    }
+
+    function closeWaModal() {
+      document.getElementById('waModal').classList.remove('active');
+    }
+
+    function copyWaText() {
+      if (!currentWaRoom) return;
+      const total = currentWaRoom.rent + currentWaRoom.kwhCost + 50000;
+      const dueDay = currentWaRoom.dueDate || 5;
+      const tenantUrl = `${window.location.origin}/tenant.html?room=${currentWaRoom.id}`;
+      const text = `Halo Kak ${currentWaRoom.name} (Kamar ${currentWaRoom.id} - Kost Griya Harmoni),\n\nBerikut rincian tagihan sewa kos periode Oktober 2026 (Jatuh tempo: Tanggal ${dueDay} Oktober 2026):\n• Sewa Kamar: Rp ${currentWaRoom.rent.toLocaleString('id-ID')}\n• Pemakaian Listrik AC (${currentWaRoom.kwh} kWh): Rp ${currentWaRoom.kwhCost.toLocaleString('id-ID')}\n• Iuran Fasilitas: Rp 50.000\nTotal: Rp ${total.toLocaleString('id-ID')}\n\nBayar instan via QRIS di sini:\n${tenantUrl}`;
+      
+      navigator.clipboard.writeText(text).then(() => {
+        showToast("Teks pesan WhatsApp berhasil disalin!");
+      }).catch(() => {
+        showToast("Teks pesan siap digunakan.");
+      });
+    }
+
+    // KWH CALCULATOR
+    function openKwhCalculator(preselectedRoomId) {
+      const select = document.getElementById('kwhRoomSelect');
+      if (select) {
+        select.innerHTML = '';
+        const propGroups = {};
+        rooms.forEach(r => {
+          if (r.status !== 'vacant') {
+            const propName = r.propertyName || 'Kost Griya Harmoni';
+            if (!propGroups[propName]) propGroups[propName] = [];
+            propGroups[propName].push(r);
+          }
+        });
+
+        Object.keys(propGroups).forEach(propName => {
+          const grp = document.createElement('optgroup');
+          grp.label = `🏢 ${propName}`;
+          propGroups[propName].forEach(r => {
+            const opt = document.createElement('option');
+            opt.value = r.id;
+            opt.innerText = `Kamar ${r.id} - ${r.name} (AC)`;
+            if (preselectedRoomId === r.id) opt.selected = true;
+            grp.appendChild(opt);
+          });
+          select.appendChild(grp);
+        });
+      }
+      loadRoomKwhData();
+      document.getElementById('kwhModal').classList.add('active');
+    }
+
+    function loadRoomKwhData() {
+      const select = document.getElementById('kwhRoomSelect');
+      const roomId = select ? select.value : '102';
+      const room = rooms.find(r => r.id === roomId);
+      if (!room) return;
+
+      const baseLalu = 1400 + (parseInt(room.id) || 100);
+      document.getElementById('kwhMeterLalu').value = baseLalu;
+      document.getElementById('kwhMeterBaru').value = baseLalu + (room.kwh || 40);
+      document.getElementById('kwhTarif').value = room.kwhRate || 2000;
+      calcKwhTotal();
+    }
+
+    function closeKwhModal() {
+      document.getElementById('kwhModal').classList.remove('active');
+    }
+
+    function calcKwhTotal() {
+      const lalu = Math.max(0, parseFloat(document.getElementById('kwhMeterLalu').value) || 0);
+      const baru = Math.max(0, parseFloat(document.getElementById('kwhMeterBaru').value) || 0);
+      const tarif = Math.max(500, parseFloat(document.getElementById('kwhTarif').value) || 2000);
+
+      const selisih = Math.max(0, baru - lalu);
+      const total = selisih * tarif;
+
+      document.getElementById('kwhSelisih').innerText = `${selisih} kWh`;
+      document.getElementById('kwhTotalRupiah').innerText = `Rp ${total.toLocaleString('id-ID')}`;
+    }
+
+    function saveKwhToRoom() {
+      const roomId = document.getElementById('kwhRoomSelect').value;
+      const lalu = Math.max(0, parseFloat(document.getElementById('kwhMeterLalu').value) || 0);
+      const baru = Math.max(0, parseFloat(document.getElementById('kwhMeterBaru').value) || 0);
+      const tarif = Math.max(500, parseFloat(document.getElementById('kwhTarif').value) || 2000);
+      const selisih = Math.max(0, baru - lalu);
+      const cost = selisih * tarif;
+
+      const room = rooms.find(r => r.id === roomId);
+      if (room) {
+        room.kwh = selisih;
+        room.kwhCost = cost;
+        room.kwhRate = tarif;
+        localStorage.setItem('teranivo_rooms', JSON.stringify(rooms));
+        renderDashboard();
+        closeKwhModal();
+        showToast(`Catatan listrik Kamar ${room.id} (${selisih} kWh = Rp ${cost.toLocaleString('id-ID')}) berhasil disimpan!`);
+      }
+    }
+
+    // CASHBOOK MODAL
+    function openCashbookModal() {
+      document.getElementById('cashbookModal').classList.add('active');
+    }
+
+    function closeCashbookModal() {
+      document.getElementById('cashbookModal').classList.remove('active');
+    }
+
+    // =========================================================================
+    // FITUR UBAH TARIF SEWA & LISTRIK DENGAN SMART NOTIFIKASI PENGHUNI
+    // Sesuai Request:
+    // - Opsi jika juragan mau edit biaya kos / listrik
+    // - Notified ke anak sewa jika sedang di tempati namun dinaikan biayanya
+    // - Gausah notified kalau emang kosong si kamarnya
+    // =========================================================================
+    function openEditRateModal(roomId) {
+      const select = document.getElementById('editRateRoomSelect');
+      if (select) {
+        select.innerHTML = '';
+        const propGroups = {};
+        rooms.forEach(r => {
+          const propName = r.propertyName || 'Kost Griya Harmoni';
+          if (!propGroups[propName]) propGroups[propName] = [];
+          propGroups[propName].push(r);
+        });
+
+        Object.keys(propGroups).forEach(propName => {
+          const grp = document.createElement('optgroup');
+          grp.label = `🏢 ${propName}`;
+          propGroups[propName].forEach(r => {
+            const opt = document.createElement('option');
+            opt.value = r.id;
+            opt.innerText = `Kamar ${r.id} - ${r.status === 'vacant' ? '(Kosong)' : r.name} (Lt ${r.floor})`;
+            if (r.id === roomId) opt.selected = true;
+            grp.appendChild(opt);
+          });
+          select.appendChild(grp);
+        });
+      }
+
+      loadEditRateData();
+      document.getElementById('editRateModal').classList.add('active');
+    }
+
+    function closeEditRateModal() {
+      document.getElementById('editRateModal').classList.remove('active');
+    }
+
+    function loadEditRateData() {
+      const select = document.getElementById('editRateRoomSelect');
+      const roomId = select ? select.value : '102';
+      const room = rooms.find(r => r.id === roomId);
+      if (!room) return;
+
+      document.getElementById('editRateSubtitle').innerText = `Kamar ${room.id} · Lantai ${room.floor}`;
+      document.getElementById('inputNewRent').value = room.rent;
+      const kwhRate = room.kwhRate || 2000;
+      document.getElementById('inputNewKwhRate').value = kwhRate;
+      document.getElementById('currentRentHint').innerText = `Tarif sebelumnya: Rp ${room.rent.toLocaleString('id-ID')} / bln`;
+      document.getElementById('inputDueDate').value = String(room.dueDate || 5);
+      document.getElementById('applyDueDateToAllRooms').checked = false;
+
+      const banner = document.getElementById('editRateOccupancyBanner');
+      const icon = document.getElementById('editRateStatusIcon');
+      const title = document.getElementById('editRateStatusTitle');
+      const desc = document.getElementById('editRateStatusDesc');
+
+      if (room.status !== 'vacant') {
+        banner.className = "p-3.5 rounded-xl border border-emerald-500/30 bg-emerald-500/10 text-xs flex items-center gap-2.5";
+        icon.innerText = "👤";
+        title.innerText = "Kamar Sedang Berpenghuni (Aktif)";
+        title.className = "block font-bold text-emerald-500";
+        desc.innerText = `Penghuni: ${room.name} (${room.phone})`;
+      } else {
+        banner.className = "p-3.5 rounded-xl border border-slate-500/30 bg-slate-500/10 text-xs flex items-center gap-2.5";
+        icon.innerText = "⚪";
+        title.innerText = "Kamar Saat Ini Kosong";
+        title.className = "block font-bold text-muted";
+        desc.innerText = "Tidak ada anak kos aktif di kamar ini.";
+      }
+
+      checkPriceIncreaseAlert();
+    }
+
+    function checkPriceIncreaseAlert() {
+      const select = document.getElementById('editRateRoomSelect');
+      const roomId = select ? select.value : '102';
+      const room = rooms.find(r => r.id === roomId);
+      if (!room) return;
+
+      const newRent = parseInt(document.getElementById('inputNewRent').value) || 0;
+      const newKwh = parseInt(document.getElementById('inputNewKwhRate').value) || 2000;
+      const oldKwh = room.kwhRate || 2000;
+      const isPriceIncreased = (newRent > room.rent) || (newKwh > oldKwh);
+
+      const noticeBox = document.getElementById('editRateNoticeBox');
+      const noticeTitle = document.getElementById('editRateNoticeTitle');
+      const noticeText = document.getElementById('editRateNoticeText');
+
+      if (room.status !== 'vacant') {
+        if (isPriceIncreased) {
+          noticeBox.className = "p-3.5 rounded-xl border border-amber-500/30 bg-amber-500/10 text-xs space-y-1 block";
+          noticeTitle.innerText = "Notifikasi WhatsApp Akan Dikirim Otomatis";
+          noticeText.innerHTML = `Karena kamar ini sedang ditempati oleh <strong>${room.name}</strong> dan tarif mengalami kenaikan dari <strong>Rp ${room.rent.toLocaleString('id-ID')}</strong> menjadi <strong>Rp ${newRent.toLocaleString('id-ID')}</strong>, sistem akan otomatis mengirimkan pesan pengumuman resmi ke nomor WhatsApp anak kos saat disimpan.`;
+        } else {
+          noticeBox.className = "hidden";
+        }
+      } else {
+        // Room is vacant: Do not notify
+        noticeBox.className = "p-3.5 rounded-xl border border-slate-500/30 bg-slate-500/10 text-xs space-y-1 block";
+        noticeTitle.innerText = "Kamar Kosong - Tidak Ada Notifikasi";
+        noticeText.innerHTML = `Kamar ${room.id} saat ini berstatus <strong>Kamar Kosong</strong>. Perubahan tarif sewa pokok atau listrik langsung diperbarui di database tanpa mengirim notifikasi ke siapapun.`;
+      }
+    }
+
+    function saveRoomRate() {
+      const select = document.getElementById('editRateRoomSelect');
+      const roomId = select ? select.value : '102';
+      const room = rooms.find(r => r.id === roomId);
+      if (!room) return;
+
+      const newRent = parseInt(document.getElementById('inputNewRent').value) || room.rent;
+      const newKwh = parseInt(document.getElementById('inputNewKwhRate').value) || 2000;
+      const newDueDate = parseInt(document.getElementById('inputDueDate').value) || 5;
+      const applyDueDateAll = document.getElementById('applyDueDateToAllRooms').checked;
+      const oldRent = room.rent;
+      const isPriceIncreased = (newRent > room.rent);
+
+      room.rent = newRent;
+      room.kwhRate = newKwh;
+      room.kwhCost = room.kwh * newKwh;
+
+      if (applyDueDateAll) {
+        rooms.forEach(r => r.dueDate = newDueDate);
+        localStorage.setItem('teranivo_global_due_date', newDueDate);
+      } else {
+        room.dueDate = newDueDate;
+      }
+
+      localStorage.setItem('teranivo_rooms', JSON.stringify(rooms));
+      updateTopDueDateBadge();
+      renderDashboard();
+      closeEditRateModal();
+
+      // Rule: Notified ke anak sewa jika sedang di tempati namun dinaikan biayanya tapi gausah notified kalau emang kosong si kamarnya
+      if (isPriceIncreased && room.status !== 'vacant') {
+        document.getElementById('rateNoticeRecipient').innerText = `Terkirim ke WhatsApp: ${room.name} (${room.phone})`;
+        document.getElementById('rateNoticeHeader').innerText = `Yth. Kak ${room.name} (Kamar ${room.id} - Kost Griya Harmoni),`;
+        document.getElementById('rateNoticeContent').innerHTML = `
+          Kami menginformasikan adanya penyesuaian tarif sewa kamar dari <strong>Rp ${oldRent.toLocaleString('id-ID')}</strong> menjadi <strong>Rp ${newRent.toLocaleString('id-ID')} / bulan</strong> (Tarif listrik: Rp ${newKwh.toLocaleString('id-ID')}/kWh, Jatuh tempo: Tanggal ${room.dueDate || 5} setiap bulan) yang mulai berlaku per periode sewa berikutnya.<br><br>
+          Penyesuaian ini dilakukan untuk mendukung pemeliharaan rutin fasilitas kamar, servis berkala AC, serta peningkatan kecepatan Wi-Fi kos.
+        `;
+        document.getElementById('rateNoticeModal').classList.add('active');
+
+        try {
+          const audio = document.getElementById('dingSound');
+          if (audio) { audio.currentTime = 0; audio.play().catch(() => {}); }
+        } catch (e) {}
+
+        showToast(`Tarif Kamar ${room.id} berhasil dinaikkan! Notifikasi WhatsApp otomatis terkirim ke ${room.name}.`);
+      } else {
+        if (room.status === 'vacant') {
+          showToast(`Tarif Kamar ${room.id} (Kosong) berhasil diubah menjadi Rp ${newRent.toLocaleString('id-ID')} (Jatuh tempo: Tgl ${newDueDate}). Tanpa kirim notifikasi.`);
+        } else {
+          showToast(`Pengaturan tarif & tenggat Kamar ${room.id} berhasil disimpan.`);
+        }
+      }
+    }
+
+    function closeRateNoticeModal() {
+      document.getElementById('rateNoticeModal').classList.remove('active');
+    }
+
+    // =========================================================================
+    // FITUR GANTI TENGGAT WAKTU BULANAN PEMBAYARAN KOS
+    // =========================================================================
+    function openDueDateModal() {
+      const roomSelect = document.getElementById('dueDateRoomSelect');
+      if (roomSelect) {
+        roomSelect.innerHTML = '';
+        rooms.forEach(r => {
+          const opt = document.createElement('option');
+          opt.value = r.id;
+          opt.innerText = `Kamar ${r.id} - ${r.status === 'vacant' ? '(Kosong)' : r.name} (Lt ${r.floor}) [Saat ini: Tgl ${r.dueDate || 5}]`;
+          roomSelect.appendChild(opt);
+        });
+      }
+
+      const globalDue = parseInt(localStorage.getItem('teranivo_global_due_date')) || 5;
+      document.getElementById('dueDateDaySelect').value = String(globalDue);
+      document.getElementById('dueDateScopeSelect').value = 'all';
+      toggleDueDateScope();
+      updateDueDatePreview();
+      document.getElementById('dueDateModal').classList.add('active');
+    }
+
+    function closeDueDateModal() {
+      document.getElementById('dueDateModal').classList.remove('active');
+    }
+
+    function toggleDueDateScope() {
+      const scope = document.getElementById('dueDateScopeSelect').value;
+      const box = document.getElementById('dueDateSingleRoomBox');
+      if (scope === 'single') {
+        box.classList.remove('hidden');
+      } else {
+        box.classList.add('hidden');
+      }
+      updateDueDatePreview();
+    }
+
+    function updateDueDatePreview() {
+      const day = document.getElementById('dueDateDaySelect').value;
+      const scope = document.getElementById('dueDateScopeSelect').value;
+      const preview = document.getElementById('dueDatePreviewText');
+      if (scope === 'all') {
+        preview.innerHTML = `Mulai periode berikutnya, tagihan sewa bulanan untuk <strong>SEMUA 20 Kamar Kos</strong> akan jatuh tempo setiap <strong>Tanggal ${String(day).padStart(2, '0')}</strong> pukul 23:59 WIB. WhatsApp gateway akan otomatis mengacu pada tanggal ini.`;
+      } else {
+        const roomId = document.getElementById('dueDateRoomSelect').value || '101';
+        preview.innerHTML = `Tagihan sewa bulanan untuk <strong>Kamar ${roomId}</strong> akan jatuh tempo setiap <strong>Tanggal ${String(day).padStart(2, '0')}</strong> pukul 23:59 WIB.`;
+      }
+    }
+
+    function saveDueDateSettings() {
+      const scope = document.getElementById('dueDateScopeSelect').value;
+      const day = parseInt(document.getElementById('dueDateDaySelect').value) || 5;
+
+      if (scope === 'all') {
+        rooms.forEach(r => r.dueDate = day);
+        localStorage.setItem('teranivo_global_due_date', day);
+        showToast(`🎉 Tenggat waktu pembayaran SEMUA kamar kos berhasil diubah ke Tanggal ${day} setiap bulan!`);
+      } else {
+        const roomId = document.getElementById('dueDateRoomSelect').value;
+        const room = rooms.find(r => r.id === roomId);
+        if (room) {
+          room.dueDate = day;
+          showToast(`Tenggat waktu pembayaran Kamar ${room.id} (${room.name}) diubah ke Tanggal ${day} setiap bulan.`);
+        }
+      }
+
+      localStorage.setItem('teranivo_rooms', JSON.stringify(rooms));
+      updateTopDueDateBadge();
+      renderDashboard();
+      closeDueDateModal();
+    }
+
+    function updateTopDueDateBadge() {
+      const badge = document.getElementById('topDueDateBadge');
+      if (badge) {
+        const globalDue = parseInt(localStorage.getItem('teranivo_global_due_date')) || 5;
+        badge.innerText = String(globalDue).padStart(2, '0');
+      }
+    }
+
+    // =========================================================================
+    // DEDICATED OFFICIAL PRINT / EXPORT PDF REPORT
+    // =========================================================================
+    function triggerPrintPdfReport() {
+      const now = new Date();
+      const options = { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' };
+      const dateStr = now.toLocaleDateString('id-ID', options) + ' WIB';
+      const signDateStr = now.toLocaleDateString('id-ID', { day: '2-digit', month: 'long', year: 'numeric' });
+      
+      const docNoEl = document.getElementById('pdfDocNumber');
+      const dateEl = document.getElementById('pdfPrintDate');
+      const signLocEl = document.getElementById('pdfSignLocationDate');
+      
+      const randomDocNum = Math.floor(100 + Math.random() * 900);
+      if (docNoEl) docNoEl.innerText = `No: TRN/RPT/${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}/${randomDocNum}`;
+      if (dateEl) dateEl.innerText = `Dicetak: ${dateStr}`;
+      if (signLocEl) signLocEl.innerText = `Sleman, D.I. Yogyakarta, ${signDateStr}`;
+
+      // Property header & subtitle based on currentProperty
+      const nameEl = document.getElementById('pdfPropertyName');
+      const subEl = document.getElementById('pdfPropertySubtitle');
+      const filterTextEl = document.getElementById('pdfActiveFilterText');
+
+      if (currentProperty === 'harmoni') {
+        if (nameEl) nameEl.innerText = "KOST GRIYA HARMONI YOGYAKARTA";
+        if (subEl) subEl.innerText = "Jl. Kaliurang KM 5, Sleman, D.I. Yogyakarta · Telp: 0812-9876-5432 · Pengelola: H. Bambang Sudiro";
+        if (filterTextEl) filterTextEl.innerText = "Cabang Yogyakarta (10 Kamar)";
+      } else if (currentProperty === 'premiere') {
+        if (nameEl) nameEl.innerText = "KOST TERANIVO PREMIERE JAKARTA";
+        if (subEl) subEl.innerText = "Jl. Denpasar Raya, Kuningan, Jakarta Selatan · Telp: 0812-1122-3344 · Pengelola: H. Bambang Sudiro";
+        if (filterTextEl) filterTextEl.innerText = "Cabang Jakarta Selatan (6 Kamar)";
+      } else if (currentProperty === 'asri') {
+        if (nameEl) nameEl.innerText = "KOST PUTRI ASRI BANDUNG";
+        if (subEl) subEl.innerText = "Jl. Cisitu Indah, Dago, Bandung · Telp: 0813-5566-7788 · Pengelola: H. Bambang Sudiro";
+        if (filterTextEl) filterTextEl.innerText = "Cabang Bandung (4 Kamar)";
+      } else {
+        if (nameEl) nameEl.innerText = "KONSORSIUM KOS TERANIVO · MULTI-PROPERTI";
+        if (subEl) subEl.innerText = "Konsolidasi 3 Cabang: Sleman Yogyakarta, Kuningan Jakarta, & Dago Bandung · Pengelola: H. Bambang Sudiro";
+        if (filterTextEl) filterTextEl.innerText = "Semua Cabang Kos (Konsolidasi 3 Lokasi)";
+      }
+
+      // 1. Calculate overall financial metrics
+      let totalRoomsCount = rooms.length;
+      let occupiedCount = 0;
+      let paidCount = 0;
+      let unpaidCount = 0;
+      let totalUangMasuk = 0;
+      let totalUangTunggakan = 0;
+
+      rooms.forEach(r => {
+        if (r.status !== 'vacant') {
+          occupiedCount++;
+          const billTotal = r.rent + (r.kwhCost || 0) + 50000;
+          if (r.status === 'paid') {
+            paidCount++;
+            totalUangMasuk += billTotal;
+          } else if (r.status === 'unpaid') {
+            unpaidCount++;
+            totalUangTunggakan += billTotal;
+          }
+        }
+      });
+
+      const bebanOperasional = 4150000;
+      const labaBersih = totalUangMasuk - bebanOperasional;
+      const margin = totalUangMasuk > 0 ? ((labaBersih / totalUangMasuk) * 100).toFixed(1) : '0.0';
+      const okupansiPct = totalRoomsCount > 0 ? ((occupiedCount / totalRoomsCount) * 100).toFixed(1) : '0.0';
+
+      // Update KPI cards
+      const pdfInTotal = document.getElementById('pdfInTotal');
+      const pdfPaidRoomsCount = document.getElementById('pdfPaidRoomsCount');
+      const pdfUnpaidTotal = document.getElementById('pdfUnpaidTotal');
+      const pdfUnpaidRoomsCount = document.getElementById('pdfUnpaidRoomsCount');
+      const pdfOutTotal = document.getElementById('pdfOutTotal');
+      const pdfNetProfit = document.getElementById('pdfNetProfit');
+      const pdfMarginPercent = document.getElementById('pdfMarginPercent');
+      const pdfOccupancyRate = document.getElementById('pdfOccupancyRate');
+      const pdfOccupancyRooms = document.getElementById('pdfOccupancyRooms');
+
+      if (pdfInTotal) pdfInTotal.innerText = "Rp " + totalUangMasuk.toLocaleString('id-ID');
+      if (pdfPaidRoomsCount) pdfPaidRoomsCount.innerText = `${paidCount} Kamar Terbayar (QRIS/VA)`;
+      if (pdfUnpaidTotal) pdfUnpaidTotal.innerText = "Rp " + totalUangTunggakan.toLocaleString('id-ID');
+      if (pdfUnpaidRoomsCount) pdfUnpaidRoomsCount.innerText = `${unpaidCount} Kamar Menunggak Tagihan`;
+      if (pdfOutTotal) pdfOutTotal.innerText = "Rp " + bebanOperasional.toLocaleString('id-ID');
+      if (pdfNetProfit) pdfNetProfit.innerText = "Rp " + labaBersih.toLocaleString('id-ID');
+      if (pdfMarginPercent) pdfMarginPercent.innerText = `Margin Laba: ${margin}%`;
+      if (pdfOccupancyRate) pdfOccupancyRate.innerText = `${okupansiPct}%`;
+      if (pdfOccupancyRooms) pdfOccupancyRooms.innerText = `${occupiedCount} dari ${totalRoomsCount} Kamar Terisi`;
+
+      // Update Journal / Cash Flow Rows
+      const pdfJournalIncomeVal = document.getElementById('pdfJournalIncomeVal');
+      const pdfJournalNetVal = document.getElementById('pdfJournalNetVal');
+      const pdfJournalTotalIn = document.getElementById('pdfJournalTotalIn');
+      const pdfJournalTotalNet = document.getElementById('pdfJournalTotalNet');
+      const pdfJournalIncomeDesc = document.getElementById('pdfJournalIncomeDesc');
+
+      if (pdfJournalIncomeVal) pdfJournalIncomeVal.innerText = "Rp " + totalUangMasuk.toLocaleString('id-ID');
+      if (pdfJournalNetVal) pdfJournalNetVal.innerText = "Rp " + labaBersih.toLocaleString('id-ID');
+      if (pdfJournalTotalIn) pdfJournalTotalIn.innerText = "Rp " + totalUangMasuk.toLocaleString('id-ID');
+      if (pdfJournalTotalNet) pdfJournalTotalNet.innerText = "Rp " + labaBersih.toLocaleString('id-ID');
+      if (pdfJournalIncomeDesc) pdfJournalIncomeDesc.innerText = `Penerimaan Pembayaran Sewa ${paidCount} Kamar Terbayar (QRIS Instan & Virtual Account)`;
+
+      // 2. Populate Pivot Table 1: Multi-Property Performance
+      const pivotBody = document.getElementById('pdfBranchPivotBody');
+      const pivotFoot = document.getElementById('pdfBranchPivotFoot');
+      if (pivotBody && pivotFoot) {
+        const branches = [
+          { id: 'harmoni', name: 'Kost Griya Harmoni', city: 'Sleman, Yogyakarta' },
+          { id: 'premiere', name: 'Kost Teranivo Premiere', city: 'Kuningan, Jakarta Selatan' },
+          { id: 'asri', name: 'Kost Putri Asri', city: 'Dago, Bandung' }
+        ];
+
+        let grandTotalRooms = 0;
+        let grandOccupied = 0;
+        let grandPaid = 0;
+        let grandUnpaid = 0;
+        let grandPotential = 0;
+        let grandCollected = 0;
+        let grandArrears = 0;
+
+        let pivotRowsHtml = '';
+        branches.forEach(b => {
+          const branchRooms = rooms.filter(r => r.propertyId === b.id);
+          const bTotal = branchRooms.length;
+          const bOccupied = branchRooms.filter(r => r.status !== 'vacant').length;
+          const bPaid = branchRooms.filter(r => r.status === 'paid').length;
+          const bUnpaid = branchRooms.filter(r => r.status === 'unpaid').length;
+          
+          let bPotential = 0;
+          let bCollected = 0;
+          let bArrears = 0;
+
+          branchRooms.forEach(r => {
+            if (r.status !== 'vacant') {
+              const nominal = r.rent + (r.kwhCost || 0) + 50000;
+              bPotential += nominal;
+              if (r.status === 'paid') bCollected += nominal;
+              else if (r.status === 'unpaid') bArrears += nominal;
+            }
+          });
+
+          grandTotalRooms += bTotal;
+          grandOccupied += bOccupied;
+          grandPaid += bPaid;
+          grandUnpaid += bUnpaid;
+          grandPotential += bPotential;
+          grandCollected += bCollected;
+          grandArrears += bArrears;
+
+          const bOccRate = bTotal > 0 ? ((bOccupied / bTotal) * 100).toFixed(0) : '0';
+
+          pivotRowsHtml += `
+            <tr>
+              <td>
+                <strong class="text-slate-900">${escapeHtml(b.name)}</strong>
+                <span class="block text-[9px] text-slate-500">${escapeHtml(b.city)}</span>
+              </td>
+              <td class="text-center font-mono">${bTotal} Kamar</td>
+              <td class="text-center">
+                <span class="font-bold text-slate-800">${bOccupied} Kamar</span>
+                <span class="block text-[9px] text-emerald-700 font-semibold">(${bOccRate}%)</span>
+              </td>
+              <td class="text-center">
+                <span class="text-emerald-700 font-bold">${bPaid} Lunas</span>
+                <span class="text-slate-400"> / </span>
+                <span class="text-rose-600 font-bold">${bUnpaid} Nunggak</span>
+              </td>
+              <td class="text-right font-mono font-semibold text-slate-700">Rp ${bPotential.toLocaleString('id-ID')}</td>
+              <td class="text-right font-mono font-bold text-emerald-700">Rp ${bCollected.toLocaleString('id-ID')}</td>
+              <td class="text-right font-mono font-semibold text-rose-700">${bArrears > 0 ? 'Rp ' + bArrears.toLocaleString('id-ID') : '-'}</td>
+            </tr>
+          `;
+        });
+
+        pivotBody.innerHTML = pivotRowsHtml;
+
+        const grandOccRate = grandTotalRooms > 0 ? ((grandOccupied / grandTotalRooms) * 100).toFixed(0) : '0';
+        pivotFoot.innerHTML = `
+          <tr>
+            <td class="uppercase">TOTAL KONSOLIDASI (3 CABANG KOS):</td>
+            <td class="text-center font-mono">${grandTotalRooms} Kamar</td>
+            <td class="text-center font-bold text-slate-900">${grandOccupied} Kamar (${grandOccRate}%)</td>
+            <td class="text-center font-bold text-slate-900">${grandPaid} Lunas / ${grandUnpaid} Nunggak</td>
+            <td class="text-right font-mono text-slate-900">Rp ${grandPotential.toLocaleString('id-ID')}</td>
+            <td class="text-right font-mono text-emerald-800 font-black">Rp ${grandCollected.toLocaleString('id-ID')}</td>
+            <td class="text-right font-mono text-rose-800 font-black">Rp ${grandArrears.toLocaleString('id-ID')}</td>
+          </tr>
+        `;
+      }
+
+      // 3. Populate Dedicated Unpaid / Arrears Table
+      const unpaidBody = document.getElementById('pdfUnpaidTableBody');
+      const unpaidFoot = document.getElementById('pdfUnpaidTableFoot');
+      const unpaidHint = document.getElementById('pdfUnpaidSummaryHint');
+      const unpaidRoomsList = rooms.filter(r => r.status === 'unpaid');
+
+      if (unpaidHint) {
+        unpaidHint.innerText = `${unpaidRoomsList.length} Kamar Memerlukan Tindak Lanjut Penagihan`;
+      }
+
+      if (unpaidBody && unpaidFoot) {
+        if (unpaidRoomsList.length === 0) {
+          unpaidBody.innerHTML = `
+            <tr>
+              <td colspan="8" class="text-center py-4 text-emerald-700 font-bold bg-emerald-50/50">
+                ✓ Sempurna! Seluruh penghuni kamar telah melunasi tagihan sewa bulan berjalan (Nol Tunggakan).
+              </td>
+            </tr>
+          `;
+          unpaidFoot.innerHTML = '';
+        } else {
+          let unpaidRowsHtml = '';
+          let sumUnpaidRent = 0;
+          unpaidRoomsList.forEach(r => {
+            const totBill = r.rent + (r.kwhCost || 0) + 50000;
+            sumUnpaidRent += totBill;
+            unpaidRowsHtml += `
+              <tr>
+                <td class="font-bold font-mono text-slate-900">Kamar ${escapeHtml(r.id)} <span class="text-[9px] text-slate-500 font-normal">(Lt ${r.floor})</span></td>
+                <td><span class="font-medium text-slate-800">${escapeHtml(r.propertyName)}</span></td>
+                <td class="font-bold text-slate-900">${escapeHtml(r.name)}</td>
+                <td class="font-mono text-slate-700">${escapeHtml(r.phone)}</td>
+                <td class="text-center font-medium text-rose-700">Tgl ${r.dueDate || 5} Okt 2026</td>
+                <td class="text-right text-[8.5px] text-slate-600">
+                  Sewa: Rp ${r.rent.toLocaleString('id-ID')}<br>
+                  Listrik (${r.kwh || 0} kWh): Rp ${(r.kwhCost || 0).toLocaleString('id-ID')}<br>
+                  Sampah/Air: Rp 50.000
+                </td>
+                <td class="text-right font-mono font-bold text-rose-700">Rp ${totBill.toLocaleString('id-ID')}</td>
+                <td class="text-center">
+                  <span class="text-[8px] bg-rose-100 text-rose-800 px-1.5 py-0.5 rounded font-extrabold uppercase">
+                    WA Pending
+                  </span>
+                </td>
+              </tr>
+            `;
+          });
+          unpaidBody.innerHTML = unpaidRowsHtml;
+          unpaidFoot.innerHTML = `
+            <tr>
+              <td colspan="6" class="text-right uppercase font-bold text-slate-800">TOTAL TUNGGAKAN PIUTANG SEWA BERJALAN:</td>
+              <td class="text-right font-mono font-black text-rose-800">Rp ${sumUnpaidRent.toLocaleString('id-ID')}</td>
+              <td class="text-center text-[9px] font-bold text-rose-700">${unpaidRoomsList.length} Kamar</td>
+            </tr>
+          `;
+        }
+      }
+
+      window.print();
+    }
+
+    // SENIOR MODE TOGGLE
+    function toggleSeniorMode() {
+      const body = document.getElementById('appBody');
+      const isSenior = body.classList.toggle('senior-mode');
+      const text = document.getElementById('seniorText');
+      if (isSenior) {
+        text.innerText = "Teks Besar: ON";
+        showToast("Mode Ramah Orang Tua diaktifkan: Huruf & tombol diperbesar.");
+      } else {
+        text.innerText = "Teks Besar: OFF";
+        showToast("Tampilan kembali ke ukuran standar.");
+      }
+    }
+
+    // TOAST HELPER
+    function showToast(message) {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.innerHTML = `
+        <span class="text-mint text-base">✓</span>
+        <span>${message}</span>
+      `;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.remove();
+      }, 4500);
+    }
+
+    // MODAL ACCESSIBILITY: ESC KEY & BACKDROP CLICK TO DISMISS
+    function closeAllModals() {
+      document.querySelectorAll('.modal-backdrop.active').forEach(m => m.classList.remove('active'));
+    }
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeAllModals();
+    });
+
+    document.querySelectorAll('.modal-backdrop').forEach(modal => {
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) modal.classList.remove('active');
+      });
+    });
+
+    // INIT ON LOAD
+    window.addEventListener('DOMContentLoaded', initData);
+  </script>
+
+</body>
+</html>

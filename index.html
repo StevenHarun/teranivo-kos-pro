@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Teranivo Kos — Software for clarity</title>
+  <meta name="description" content="Software manajemen kos mandiri tanpa potongan komisi 10%. Tagih otomatis via WhatsApp, terima QRIS instan auto-lunas, dan catat sub-meter listrik kWh.">
+  <link rel="icon" href="assets/logo-icon.svg" type="image/svg+xml">
+  <!-- Tailwind CSS CDN for utility grid -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Shared Teranivo Design System -->
+  <link rel="stylesheet" href="assets/styles.css">
+  <style>
+    .hero-glow-surface {
+      background: var(--hero-glow);
+    }
+    .grid-pattern {
+      background-image: linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                        linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+    body.light-mode .grid-pattern {
+      background-image: linear-gradient(to right, rgba(0, 0, 0, 0.03) 1px, transparent 1px),
+                        linear-gradient(to bottom, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
+    }
+  </style>
+</head>
+<body id="appBody" class="selection:bg-[#ADF7D8] selection:text-[#08141F]">
+
+  <!-- ========================================================================= -->
+  <!-- NAVBAR -->
+  <!-- ========================================================================= -->
+  <header class="navbar">
+    <div class="container nav-inner">
+      <div class="flex items-center gap-3 shrink-0">
+        <a href="index.html" class="brand-link" aria-label="Teranivo Home">
+          <img src="assets/logo.svg" alt="Teranivo Logo" class="brand-logo-img">
+        </a>
+        <span class="brand-tag">KOS</span>
+      </div>
+
+      <nav class="hidden lg:flex items-center gap-6 text-sm font-semibold text-slate-300 shrink-0">
+        <a href="#fitur" class="hover:text-mint transition whitespace-nowrap">Fitur Unggulan</a>
+        <a href="#kalkulator" class="hover:text-mint transition whitespace-nowrap">Kalkulator Hemat</a>
+        <a href="#komparasi" class="hover:text-mint transition whitespace-nowrap">Komparasi OTA</a>
+        <a href="#harga" class="hover:text-mint transition whitespace-nowrap">Promo & Harga</a>
+      </nav>
+
+      <div class="flex items-center gap-2.5 sm:gap-3">
+        <!-- Link to Account / Login / Subscribe -->
+        <a href="account.html" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold bg-[var(--bg-card)] hover:bg-[var(--bg-card-hover)] border border-[var(--border-main)] text-heading transition" title="Masuk Akun & Langganan">
+          <span>👤</span>
+          <span class="hidden md:inline">Akun / Langganan</span>
+        </a>
+
+        <!-- Theme Toggle Button (Siang / Malam) -->
+        <button onclick="toggleTheme()" class="theme-toggle-btn" id="btnThemeToggle" title="Ganti antara Mode Siang dan Mode Malam">
+          <span id="themeIcon">☀️</span>
+          <span id="themeLabel" class="hidden sm:inline">Mode Siang</span>
+        </button>
+
+        <!-- Direct Link to Tenant Screen -->
+        <a href="tenant.html?room=102" class="page-switch-pill hidden sm:inline-flex" title="Buka Simulasi Portal Tagihan Anak Kos">
+          <span>📱 Layar Anak Kos</span>
+          <span class="text-xs text-mint">↗</span>
+        </a>
+        
+        <!-- Main CTA navigating to Juragan Dashboard -->
+        <a href="dashboard.html" class="btn-primary" title="Buka Dasbor Operasional Juragan Kos">
+          <span>Dasbor Juragan Kos</span>
+          <span aria-hidden="true">→</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ========================================================================= -->
+  <!-- HERO SECTION -->
+  <!-- ========================================================================= -->
+  <section class="hero-glow-surface grid-pattern border-b border-[rgba(255,255,255,0.08)] py-20 lg:py-28">
+    <div class="container">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+        
+        <!-- Hero Text -->
+        <div class="lg:col-span-7 space-y-6">
+          <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[rgba(173,247,216,0.1)] border border-mint">
+            <span class="dot"></span>
+            <span class="text-xs font-bold tracking-wide uppercase text-mint">Software for clarity · Kos Management</span>
+          </div>
+
+          <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.1]">
+            Kelola kos dengan tenang. <br class="hidden sm:inline">
+            <span class="text-mint">Tanpa potongan komisi 10%.</span>
+          </h1>
+
+          <p class="text-base sm:text-lg text-body max-w-2xl leading-relaxed">
+            Satu aplikasi terpadu yang dirancang khusus untuk <strong class="text-heading font-semibold">Juragan & Pengelola Kos di Indonesia</strong>: Tagih sewa otomatis via WhatsApp, terima QRIS instan auto-lunas, catat sub-meter listrik kWh, dan pantau keuangan kos tanpa ribet.
+          </p>
+
+          <!-- Action Buttons (Multi-Page Navigation) -->
+          <div class="flex flex-wrap items-center gap-4 pt-2">
+            <a href="dashboard.html" class="btn-primary text-base px-6 py-4">
+              <span>Coba Demo Dashboard Juragan</span>
+              <span class="text-lg">→</span>
+            </a>
+            <a href="tenant.html?room=102" class="btn-secondary text-base px-6 py-4">
+              <span>Lihat Tampilan Tagihan Anak Kos</span>
+              <span class="text-mint">↗</span>
+            </a>
+          </div>
+
+          <!-- Quick Value Props -->
+          <div class="pt-6 border-t border-[rgba(255,255,255,0.08)] grid grid-cols-3 gap-4 text-xs sm:text-sm text-muted">
+            <div>
+              <strong class="block text-heading font-bold text-base">0% Komisi</strong>
+              <span>Uang sewa 100% milik Anda</span>
+            </div>
+            <div>
+              <strong class="block text-heading font-bold text-base">Langsung Cair</strong>
+              <span>Dana masuk detik itu juga</span>
+            </div>
+            <div>
+              <strong class="block text-heading font-bold text-base">Ramah Lansia</strong>
+              <span>Teks besar, mudah dipahami</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hero Concept Mockup (Matching teranivo.app Concept Card) -->
+        <div class="lg:col-span-5">
+          <div class="card card-glow p-6 relative overflow-hidden backdrop-blur-xl shadow-2xl">
+            <!-- Top Tag -->
+            <div class="flex items-center justify-between pb-4 border-b border-[rgba(255,255,255,0.08)] mb-5">
+              <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-lg bg-mint flex items-center justify-center text-[#08141F] font-bold text-sm shadow-md">
+                  ▦
+                </div>
+                <div>
+                  <h4 class="text-xs font-bold text-heading tracking-wide uppercase">Kost Griya Harmoni</h4>
+                  <p class="text-[10px] text-muted">Jl. Kaliurang KM 5, Yogyakarta</p>
+                </div>
+              </div>
+              <span class="badge badge-mint text-[10px]">Live Demo</span>
+            </div>
+
+            <!-- KPI Mini Cards -->
+            <div class="grid grid-cols-3 gap-2.5 mb-5">
+              <div class="p-3 rounded-xl border border-[rgba(255,255,255,0.08)] bg-[var(--bg-subcard)]">
+                <span class="text-[10px] text-muted block">Total Kamar</span>
+                <strong class="text-xl font-bold text-heading">20</strong>
+              </div>
+              <div class="p-3 rounded-xl border border-[rgba(255,255,255,0.08)] bg-[var(--bg-subcard)]">
+                <span class="text-[10px] text-muted block">Okupansi</span>
+                <strong class="text-xl font-bold text-mint">90%</strong>
+              </div>
+              <div class="p-3 rounded-xl border border-[rgba(255,255,255,0.08)] bg-[var(--bg-subcard)]">
+                <span class="text-[10px] text-muted block">Menunggak</span>
+                <strong class="text-xl font-bold text-rose-500">4 Kamar</strong>
+              </div>
+            </div>
+
+            <!-- Realtime Room Matrix Preview -->
+            <div class="space-y-3 mb-5">
+              <div class="flex items-center justify-between text-xs text-muted">
+                <span>Simulasi Status Kamar Hari Ini:</span>
+                <span class="text-[11px] text-mint font-semibold">Bulan Oktober 2026</span>
+              </div>
+              
+              <div class="space-y-2">
+                <!-- Room 101 -->
+                <div class="flex items-center justify-between p-3 rounded-xl border border-[rgba(255,255,255,0.06)] bg-[var(--bg-subcard)] text-xs">
+                  <div class="flex items-center gap-3">
+                    <span class="font-bold text-heading">Kmr 101</span>
+                    <span class="text-body">Rian Pratama</span>
+                  </div>
+                  <span class="badge badge-success text-[10px]">Lunas (QRIS)</span>
+                </div>
+
+                <!-- Room 102 -->
+                <div class="flex items-center justify-between p-3 rounded-xl border border-rose-500/30 bg-rose-500/10 text-xs">
+                  <div class="flex items-center gap-3">
+                    <span class="font-bold text-heading">Kmr 102</span>
+                    <span class="text-body">Andi Pratama</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <span class="badge badge-danger text-[10px]">Belum Bayar</span>
+                    <a href="dashboard.html" class="text-[11px] text-mint hover:underline font-semibold">Tagih WA →</a>
+                  </div>
+                </div>
+
+                <!-- Room 103 -->
+                <div class="flex items-center justify-between p-3 rounded-xl border border-[rgba(255,255,255,0.06)] bg-[var(--bg-subcard)] text-xs">
+                  <div class="flex items-center gap-3">
+                    <span class="font-bold text-heading">Kmr 103</span>
+                    <span class="text-body">Budi Santoso</span>
+                  </div>
+                  <span class="badge badge-success text-[10px]">Lunas (BCA VA)</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- CTA Card Footer -->
+            <div class="bg-[rgba(173,247,216,0.08)] border border-mint rounded-xl p-3.5 flex items-center justify-between">
+              <div>
+                <strong class="text-xs text-heading block">Mau coba langsung?</strong>
+                <span class="text-[11px] text-muted">Klik untuk masuk ke dasbor simulasi lengkap</span>
+              </div>
+              <a href="dashboard.html" class="btn-outline-mint text-xs">
+                Buka Sekarang →
+              </a>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================================= -->
+  <!-- 2 DIRECT DEMO PATHS (PILIH PENGALAMAN YANG INGIN DICOBA) -->
+  <!-- ========================================================================= -->
+  <section class="py-16 border-b border-[rgba(255,255,255,0.08)] bg-[var(--bg-subcard)]">
+    <div class="container">
+      <div class="text-center max-w-2xl mx-auto mb-12">
+        <span class="eyebrow justify-center mb-2"><span class="dot"></span> Dua Pengalaman Terpisah</span>
+        <h2 class="text-3xl font-extrabold text-heading">Coba Demo Interaktif Sekarang</h2>
+        <p class="text-sm text-body mt-2">
+          Kami memisahkan halaman secara fisik agar Anda bisa merasakan alur nyata dari sisi Pemilik Kos maupun dari sisi Anak Kos.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+        
+        <!-- CARD 1: DASBOR JURAGAN KOS -->
+        <div class="card card-glow flex flex-col justify-between relative group">
+          <div class="space-y-4">
+            <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-500/20 to-teal-500/10 border border-mint/40 flex items-center justify-center shadow-md text-mint">
+              <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 9.5L12 3l9 6.5V20a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 20V9.5z"/>
+                <path d="M9 21.5V12h6v9.5"/>
+                <circle cx="12" cy="7.5" r="1.5" fill="currentColor"/>
+              </svg>
+            </div>
+            <div class="inline-block">
+              <span class="badge badge-mint text-[10px]">Untuk Pemilik Kos</span>
+            </div>
+            <h3 class="text-2xl font-bold text-heading">Dasbor Juragan Kos</h3>
+            <p class="text-sm text-body leading-relaxed">
+              Dirancang dengan huruf besar, kontras tinggi, dan tombol jelas. Pantau 20 kamar, kirim tagihan WhatsApp otomatis masal, tes pembayaran auto-lunas, dan hitung sub-meter listrik kWh.
+            </p>
+            <ul class="text-xs text-body space-y-2 pt-2">
+              <li class="flex items-center gap-2"><span class="text-mint font-bold">✓</span> Matriks 20 Kamar Interaktif</li>
+              <li class="flex items-center gap-2"><span class="text-mint font-bold">✓</span> <strong>Baru:</strong> Tombol Tagih Masal ke Semua Kamar Menunggak</li>
+              <li class="flex items-center gap-2"><span class="text-mint font-bold">✓</span> Uji Coba Midtrans Webhook (Auto Lunas)</li>
+              <li class="flex items-center gap-2"><span class="text-mint font-bold">✓</span> Kalkulator Sub-Meter Listrik PLN</li>
+            </ul>
+          </div>
+          <div class="pt-6 mt-6 border-t border-[rgba(255,255,255,0.08)]">
+            <a href="dashboard.html" class="btn-primary w-full justify-center">
+              <span>Masuk ke Dasbor Juragan</span>
+              <span>→</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- CARD 2: PORTAL TAGIHAN ANAK KOS -->
+        <div class="card card-glow flex flex-col justify-between relative group">
+          <div class="space-y-4">
+            <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-500/20 to-blue-500/10 border border-indigo-400/40 flex items-center justify-center shadow-md text-indigo-400">
+              <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="5" y="2" width="14" height="20" rx="3" ry="3"/>
+                <path d="M12 18h.01"/>
+                <path d="M9 6h6"/>
+                <path d="M9 10h6"/>
+              </svg>
+            </div>
+            <div class="inline-block">
+              <span class="badge text-[10px] bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">Untuk Penghuni Kos</span>
+            </div>
+            <h3 class="text-2xl font-bold text-heading">Portal Tagihan Anak Kos</h3>
+            <p class="text-sm text-body leading-relaxed">
+              Tampilan mobile yang diterima anak kos via WhatsApp. Rincian tagihan transparan (sewa + kWh listrik), pembayaran instan via QRIS semua bank/e-wallet, tiket lapor kerusakan fasilitas, dan info Wi-Fi.
+            </p>
+            <ul class="text-xs text-body space-y-2 pt-2">
+              <li class="flex items-center gap-2"><span class="text-indigo-400 font-bold">✓</span> Rincian Tagihan Transparan (Listrik + Sewa)</li>
+              <li class="flex items-center gap-2"><span class="text-indigo-400 font-bold">✓</span> QRIS Dinamis Instan (Countdown Timer)</li>
+              <li class="flex items-center gap-2"><span class="text-indigo-400 font-bold">✓</span> Form Lapor Kerusakan Fasilitas (Tiket)</li>
+              <li class="flex items-center gap-2"><span class="text-indigo-400 font-bold">✓</span> Download Bukti Pembayaran Resmi</li>
+            </ul>
+          </div>
+          <div class="pt-6 mt-6 border-t border-[rgba(255,255,255,0.08)]">
+            <a href="tenant.html?room=102" class="btn-secondary w-full justify-center hover:border-indigo-400">
+              <span>Buka Layar Tagihan Anak Kos</span>
+              <span class="text-indigo-400">↗</span>
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================================= -->
+  <!-- 3. FITUR UTAMA (SOFTWARE FOR CLARITY) -->
+  <!-- ========================================================================= -->
+  <section id="fitur" class="py-24 border-b border-[rgba(255,255,255,0.08)]">
+    <div class="container">
+      <div class="max-w-2xl mb-16">
+        <span class="eyebrow mb-2"><span class="dot"></span> 01 / Fitur Produk</span>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-heading">
+          Dibuat untuk pekerjaan nyata sehari-hari.
+        </h2>
+        <p class="text-base text-body mt-3">
+          Kami menyingkirkan fitur-fitur rumit yang tidak pernah disentuh pemilik kos. Hanya alur kerja inti yang menyelesaikan masalah penagihan dan pencatatan.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        
+        <!-- Feature 1 -->
+        <div class="card card-glow space-y-4">
+          <div class="text-mint text-3xl font-bold">01</div>
+          <h3 class="text-xl font-bold text-heading">Tagih WhatsApp 1-Klik</h3>
+          <p class="text-sm text-body leading-relaxed">
+            Tidak perlu lagi ketik pesan manual satu per satu atau merasa canggung menagih. Sistem menyiapkan pesan sopan berisikan nominal akurat dan link pembayaran QRIS unik untuk setiap kamar.
+          </p>
+        </div>
+
+        <!-- Feature 2 -->
+        <div class="card card-glow space-y-4">
+          <div class="text-mint text-3xl font-bold">02</div>
+          <h3 class="text-xl font-bold text-heading">QRIS Otomatis Lunas</h3>
+          <p class="text-sm text-body leading-relaxed">
+            Begitu anak kos scan QRIS pakai BCA, Mandiri, Gopay, atau ShopeePay, uang langsung masuk ke rekening Juragan detik itu juga. Status kamar berubah hijau (Lunas) secara otomatis tanpa cek mutasi manual.
+          </p>
+        </div>
+
+        <!-- Feature 3 -->
+        <div class="card card-glow space-y-4">
+          <div class="text-mint text-3xl font-bold">03</div>
+          <h3 class="text-xl font-bold text-heading">Hitung Sub-Meter Listrik (kWh)</h3>
+          <p class="text-sm text-body leading-relaxed">
+            Setiap akhir bulan, cukup catat angka meteran listrik di depan pintu kamar. Sistem menghitung selisih pemakaian dikali tarif per kWh, dan langsung memasukkannya ke rincian tagihan anak kos.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================================= -->
+  <!-- 4. KALKULATOR PENGHEMATAN KOMISI (AKTUAL & REALISTIK SESUAI KOMPETITOR) -->
+  <!-- ========================================================================= -->
+  <section id="kalkulator" class="py-24 border-b border-[rgba(255,255,255,0.08)] bg-[var(--bg-subcard)]">
+    <div class="container">
+      
+      <!-- Section Header -->
+      <div class="text-center max-w-3xl mx-auto mb-12">
+        <span class="eyebrow justify-center mb-2"><span class="dot"></span> 02 / KALKULATOR PENGHEMATAN AKTUAL</span>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-heading">
+          Hitung Penghematan Nyata Properti Anda
+        </h2>
+        <p class="text-sm sm:text-base text-body mt-2">
+          Bandingkan biaya operasional aktual antara platform agregator/OTA konvensional dengan sistem mandiri Teranivo berdasarkan data riil industri kos Indonesia.
+        </p>
+      </div>
+
+      <!-- Model Switcher Tabs (OTA Booking vs Full Management vs Manual) -->
+      <div class="flex flex-wrap justify-center gap-2 max-w-2xl mx-auto mb-10 p-1.5 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-main)] shadow-sm">
+        <button onclick="switchCalcModel('ota')" id="tabModelOta"
+                class="flex-1 py-2.5 px-4 rounded-xl text-xs font-bold bg-mint text-[var(--text-inverted)] transition shadow-sm">
+          🏢 Agregator OTA & Listing
+        </button>
+        <button onclick="switchCalcModel('mgmt')" id="tabModelMgmt"
+                class="flex-1 py-2.5 px-4 rounded-xl text-xs font-bold text-body hover:text-heading transition">
+          🤝 Operator Bagi Hasil (15%)
+        </button>
+        <button onclick="switchCalcModel('manual')" id="tabModelManual"
+                class="flex-1 py-2.5 px-4 rounded-xl text-xs font-bold text-body hover:text-heading transition">
+          📑 Kelola Manual (Excel & WA)
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start max-w-6xl mx-auto">
+        
+        <!-- Left: Input Controls -->
+        <div class="lg:col-span-6 space-y-5">
+          <div class="p-6 sm:p-7 rounded-2xl border border-[var(--border-main)] bg-[var(--bg-surface)] space-y-6 shadow-md">
+            
+            <div class="flex items-center justify-between pb-3 border-b border-[var(--border-main)]">
+              <span class="text-xs font-bold uppercase tracking-wider text-muted">Parameter Properti Kos:</span>
+              <span class="badge badge-mint text-[9px]" id="calcModelBadge">Model: Agregator OTA</span>
+            </div>
+
+            <!-- Slider 1: Jumlah Kamar -->
+            <div>
+              <div class="flex justify-between items-center text-sm mb-2">
+                <span class="text-body font-semibold">Jumlah Kamar Kos:</span>
+                <span id="labelKamar" class="text-mint font-extrabold text-base font-mono">45 Kamar</span>
+              </div>
+              <input type="range" id="inputKamar" min="5" max="60" value="45" step="1"
+                     class="w-full h-2.5 rounded-lg appearance-none cursor-pointer bg-slate-700 accent-emerald-400"
+                     oninput="updateCalculator()">
+              <div class="flex justify-between text-[10px] text-muted mt-1">
+                <span>5 Kamar</span>
+                <span>25 Kamar</span>
+                <span>60 Kamar</span>
+              </div>
+            </div>
+
+            <!-- Slider 2: Harga Sewa -->
+            <div>
+              <div class="flex justify-between items-center text-sm mb-2">
+                <span class="text-body font-semibold">Harga Sewa Kamar / Bulan:</span>
+                <span id="labelHarga" class="text-mint font-extrabold text-base font-mono">Rp 3.100.000</span>
+              </div>
+              <input type="range" id="inputHarga" min="800000" max="4000000" value="3100000" step="100000"
+                     class="w-full h-2.5 rounded-lg appearance-none cursor-pointer bg-slate-700 accent-emerald-400"
+                     oninput="updateCalculator()">
+              <div class="flex justify-between text-[10px] text-muted mt-1">
+                <span>Rp 800rb</span>
+                <span>Rp 2.0jt</span>
+                <span>Rp 4.0jt</span>
+              </div>
+            </div>
+
+            <!-- Slider 3: Tingkat Okupansi Riil -->
+            <div>
+              <div class="flex justify-between items-center text-sm mb-2">
+                <div>
+                  <span class="text-body font-semibold">Tingkat Okupansi (Keterisian Riil):</span>
+                  <span class="text-[11px] text-muted block" id="labelKamarTerisi">~38 dari 45 kamar terisi</span>
+                </div>
+                <span id="labelOkupansi" class="text-heading font-bold text-sm font-mono">85%</span>
+              </div>
+              <input type="range" id="inputOkupansi" min="60" max="100" value="85" step="5"
+                     class="w-full h-2 rounded-lg appearance-none cursor-pointer bg-slate-700 accent-emerald-400"
+                     oninput="updateCalculator()">
+            </div>
+
+            <!-- Advanced Parameters Toggle -->
+            <div class="pt-2">
+              <details class="text-xs text-muted group">
+                <summary class="cursor-pointer font-semibold text-mint hover:underline flex items-center gap-1.5">
+                  <span>⚙️ Pengaturan Lanjutan (Persentase Kanal & Iklan)</span>
+                </summary>
+                <div class="mt-3 p-4 rounded-xl bg-[var(--bg-subcard)] border border-[var(--border-main)] space-y-4">
+                  <div>
+                    <div class="flex justify-between mb-1">
+                      <span class="text-body">Kamar dari Kanal Berkomisi OTA:</span>
+                      <strong id="labelPorsiOta" class="text-heading font-mono">35%</strong>
+                    </div>
+                    <input type="range" id="inputPorsiOta" min="15" max="70" value="35" step="5"
+                           class="w-full h-1.5 rounded-lg appearance-none cursor-pointer bg-slate-700 accent-emerald-400"
+                           oninput="updateCalculator()">
+                    <span class="text-[10px] text-muted block mt-0.5">Persentase kamar yang didapat via aplikasi berbayar/booking OTA.</span>
+                  </div>
+                  <div>
+                    <div class="flex justify-between mb-1">
+                      <span class="text-body">Biaya Iklan / Paket Listing Bulanan:</span>
+                      <strong id="labelBiayaIklan" class="text-heading font-mono">Rp 350.000</strong>
+                    </div>
+                    <input type="range" id="inputBiayaIklan" min="0" max="1000000" value="350000" step="50000"
+                           class="w-full h-1.5 rounded-lg appearance-none cursor-pointer bg-slate-700 accent-emerald-400"
+                           oninput="updateCalculator()">
+                  </div>
+                </div>
+              </details>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Right: Calculation Result Card -->
+        <div class="lg:col-span-6">
+          <div class="card card-featured-glow p-6 sm:p-8 space-y-6">
+            
+            <!-- Result Top Header -->
+            <div class="flex items-center justify-between pb-4 border-b border-[var(--border-main)]">
+              <div>
+                <span class="text-[10px] text-muted uppercase tracking-wider font-bold block">Simulasi Omset Properti Riil</span>
+                <strong class="text-lg font-bold text-heading font-mono" id="resOmsetRiil">
+                  Rp 117.800.000 / bln
+                </strong>
+              </div>
+              <span class="badge badge-mint text-[10px]" id="resTeranivoTierLabel">
+                Paket Juragan Besar
+              </span>
+            </div>
+
+            <!-- Visual Bar Comparison -->
+            <div class="space-y-3">
+              <span class="text-xs font-bold text-muted uppercase tracking-wider block">Perbandingan Beban Biaya Bulanan:</span>
+              
+              <!-- Bar 1: Competitor Fees -->
+              <div class="space-y-1">
+                <div class="flex justify-between text-xs">
+                  <span class="text-rose-500 font-semibold" id="resCompLabel">Platform Lain / Agregator</span>
+                  <strong class="text-rose-500 font-mono font-bold" id="resCompCostMonthly">Rp 3.224.000 / bln</strong>
+                </div>
+                <div class="w-full h-3 bg-slate-800 rounded-full overflow-hidden">
+                  <div id="barComp" class="h-full bg-rose-500 rounded-full transition-all duration-500" style="width: 100%;"></div>
+                </div>
+              </div>
+
+              <!-- Bar 2: Teranivo Cost -->
+              <div class="space-y-1">
+                <div class="flex justify-between text-xs">
+                  <span class="text-mint font-semibold">Teranivo Kos (Flat Mandiri)</span>
+                  <strong class="text-mint font-mono font-bold" id="resTeranivoCostMonthly">Rp 99.000 / bln</strong>
+                </div>
+                <div class="w-full h-3 bg-slate-800 rounded-full overflow-hidden">
+                  <div id="barTeranivo" class="h-full bg-mint rounded-full transition-all duration-500" style="width: 3.5%;"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Breakdown Detail Box -->
+            <div class="p-4 rounded-xl border border-[var(--border-main)] bg-[var(--bg-subcard)] text-xs space-y-2">
+              <span class="text-[10px] text-muted uppercase font-bold block">Rincian Komponen Biaya:</span>
+              
+              <div class="flex justify-between text-body">
+                <span id="detailCompItem1">Potongan Komisi Booking (~35% kamar × 7%):</span>
+                <span class="font-mono text-rose-400" id="detailCompVal1">Rp 2.874.000</span>
+              </div>
+              <div class="flex justify-between text-body">
+                <span id="detailCompItem2">Biaya Paket Listing / Promosi Saldo:</span>
+                <span class="font-mono text-rose-400" id="detailCompVal2">Rp 350.000</span>
+              </div>
+              <div class="flex justify-between text-body pt-1 border-t border-[var(--border-main)]">
+                <span>Biaya Langganan Teranivo (Sesuai 45 Kamar):</span>
+                <span class="font-mono text-mint" id="detailTeranivoVal">Rp 99.000</span>
+              </div>
+            </div>
+
+            <!-- Big Savings Announcement -->
+            <div class="p-5 rounded-2xl bg-gradient-to-br from-emerald-500/10 to-teal-500/5 border border-mint text-center space-y-1.5 shadow-lg">
+              <span class="text-[11px] text-muted uppercase tracking-widest font-extrabold block">
+                Estimasi Penghematan Bersih Anda:
+              </span>
+              <div id="resHematTahun" class="text-3xl sm:text-4xl font-extrabold text-mint font-mono tracking-tight">
+                Rp 37.500.000 / tahun!
+              </div>
+              <p class="text-xs text-body" id="resHematNote">
+                Setara dengan <strong>Rp 3.125.000</strong> uang tambahan yang tetap tinggal di rekening Anda setiap bulan.
+              </p>
+            </div>
+
+            <!-- CTA Button -->
+            <div class="pt-1">
+              <a href="dashboard.html" class="btn-primary w-full justify-center py-3.5 text-sm shadow-xl">
+                <span>Kelola 45 Kamar Mandiri dengan Teranivo →</span>
+              </a>
+              <span class="text-[10px] text-muted text-center block mt-2">
+                Perhitungan berbasis data riil industri properti kos Indonesia. Tanpa kontrak mengikat.
+              </span>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================================= -->
+  <!-- 5. TABEL KOMPARASI TERANIVO VS OTA -->
+  <!-- ========================================================================= -->
+  <section id="komparasi" class="py-24 border-b border-[rgba(255,255,255,0.08)]">
+    <div class="container">
+      <div class="text-center max-w-2xl mx-auto mb-16">
+        <span class="eyebrow justify-center mb-2"><span class="dot"></span> 03 / Perbandingan Terbuka</span>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-heading">Mengapa Pindah ke Teranivo?</h2>
+        <p class="text-sm text-body mt-3">
+          Perbandingan langsung antara aplikasi agregator kos konvensional dengan sistem mandiri Teranivo.
+        </p>
+      </div>
+
+      <div class="max-w-4xl mx-auto overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="border-b border-[rgba(255,255,255,0.1)] text-xs uppercase tracking-wider text-muted">
+              <th class="py-4 px-6 font-semibold">Fitur & Kebijakan</th>
+              <th class="py-4 px-6 font-semibold text-rose-500">Aplikasi Agregator OTA</th>
+              <th class="py-4 px-6 font-semibold text-mint bg-[rgba(173,247,216,0.08)] rounded-t-xl">Teranivo Kos</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-[rgba(255,255,255,0.05)] text-sm">
+            <tr>
+              <td class="py-4 px-6 font-semibold text-heading">Komisi Tiap Transaksi</td>
+              <td class="py-4 px-6 text-rose-500 font-medium">5% – 10% (Memotong omset)</td>
+              <td class="py-4 px-6 font-bold text-mint bg-[rgba(173,247,216,0.08)]">0% (Gratis transaksi sewa)</td>
+            </tr>
+            <tr>
+              <td class="py-4 px-6 font-semibold text-heading">Pencairan Uang Sewa</td>
+              <td class="py-4 px-6 text-body">Ditahan 3 hingga 7 hari kerja</td>
+              <td class="py-4 px-6 font-bold text-mint bg-[rgba(173,247,216,0.08)]">Instan langsung ke rekening Anda</td>
+            </tr>
+            <tr>
+              <td class="py-4 px-6 font-semibold text-heading">Nama di Rekening Pembayaran</td>
+              <td class="py-4 px-6 text-body">Atas nama PT / Aplikasi OTA</td>
+              <td class="py-4 px-6 font-bold text-mint bg-[rgba(173,247,216,0.08)]">Atas nama Kos / Rekening Juragan</td>
+            </tr>
+            <tr>
+              <td class="py-4 px-6 font-semibold text-heading">Pengingat Tagihan WhatsApp</td>
+              <td class="py-4 px-6 text-body">Manual / Terbatas notifikasi app</td>
+              <td class="py-4 px-6 font-bold text-mint bg-[rgba(173,247,216,0.08)]">Otomatis 1-Klik dengan link QRIS</td>
+            </tr>
+            <tr>
+              <td class="py-4 px-6 font-semibold text-heading">Kalkulasi Listrik Sub-meter</td>
+              <td class="py-4 px-6 text-body">Tidak ada (Harus hitung manual)</td>
+              <td class="py-4 px-6 font-bold text-mint bg-[rgba(173,247,216,0.08)]">Terintegrasi otomatis di invoice</td>
+            </tr>
+            <tr>
+              <td class="py-4 px-6 font-semibold text-heading">Kemudahan untuk Orang Tua</td>
+              <td class="py-4 px-6 text-body">Rumit, banyak menu tidak perlu</td>
+              <td class="py-4 px-6 font-bold text-mint bg-[rgba(173,247,216,0.08)] rounded-b-xl">Mode Ramah Lansia (Teks Besar)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================================= -->
+  <!-- 6. ATRACTIVE PROMO & PRICING SECTION (DITINGKATKAN SESUAI SCREENSHOT USER) -->
+  <!-- ========================================================================= -->
+  <section id="harga" class="py-24 bg-[var(--bg-subcard)] border-t border-[rgba(255,255,255,0.08)] relative overflow-hidden">
+    
+    <!-- Decorative background glow -->
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[350px] bg-emerald-500/10 blur-[130px] pointer-events-none rounded-full"></div>
+
+    <div class="container relative z-10">
+      
+      <!-- Section Title -->
+      <div class="text-center max-w-2xl mx-auto mb-10">
+        <span class="eyebrow justify-center mb-2"><span class="dot"></span> 04 / BIAYA LANGGANAN</span>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-heading">Tarif Jelas, Tanpa Biaya Tersembunyi</h2>
+        <p class="text-sm text-body mt-2">
+          Pilih paket yang sesuai dengan jumlah kamar properti Anda. Batalkan kapan saja tanpa ikatan.
+        </p>
+      </div>
+
+      <!-- ===================================================================== -->
+      <!-- FLASH SALE / PROMO BANNER ATRAKTIF -->
+      <!-- ===================================================================== -->
+      <div class="promo-banner-glow rounded-2xl p-5 sm:p-6 max-w-4xl mx-auto mb-12 flex flex-col md:flex-row items-center justify-between gap-6">
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 rounded-xl bg-mint flex items-center justify-center text-2xl shadow-md text-[#08141F]">
+            ⚡
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="badge badge-mint text-[9px] font-extrabold tracking-wider">EARLY BIRD JURAGAN</span>
+              <span class="text-xs font-bold text-rose-500">Sisa 14 Kuota</span>
+            </div>
+            <h3 class="text-base sm:text-lg font-bold text-heading mt-0.5">
+              Promo Peluncuran: Diskon 50% Langganan Selamanya
+            </h3>
+            <p class="text-xs text-body">
+              Gunakan kode promo <code class="bg-[rgba(0,0,0,0.2)] px-2 py-0.5 rounded text-mint font-bold">JURAGANMANDIRI</code> saat pendaftaran.
+            </p>
+          </div>
+        </div>
+
+        <!-- Live Countdown Timer -->
+        <div class="flex items-center gap-2 text-center">
+          <div class="bg-[var(--bg-card)] px-3 py-2 rounded-xl border border-[rgba(255,255,255,0.1)] shadow-sm">
+            <span id="timerHours" class="text-base font-extrabold text-heading font-mono">04</span>
+            <span class="text-[9px] text-muted block uppercase">Jam</span>
+          </div>
+          <span class="font-bold text-mint">:</span>
+          <div class="bg-[var(--bg-card)] px-3 py-2 rounded-xl border border-[rgba(255,255,255,0.1)] shadow-sm">
+            <span id="timerMinutes" class="text-base font-extrabold text-heading font-mono">18</span>
+            <span class="text-[9px] text-muted block uppercase">Mnt</span>
+          </div>
+          <span class="font-bold text-mint">:</span>
+          <div class="bg-[var(--bg-card)] px-3 py-2 rounded-xl border border-[rgba(255,255,255,0.1)] shadow-sm">
+            <span id="timerSeconds" class="text-base font-extrabold text-heading font-mono">42</span>
+            <span class="text-[9px] text-muted block uppercase">Dtk</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================================================================== -->
+      <!-- BILLING TOGGLE (BULANAN VS TAHUNAN) -->
+      <!-- ===================================================================== -->
+      <div class="flex items-center justify-center gap-3 mb-12">
+        <span class="text-xs sm:text-sm font-semibold text-body" id="lblMonthly">Bayar Bulanan</span>
+        <button onclick="toggleBillingCycle()" id="btnBillingToggle"
+                class="w-14 h-8 rounded-full bg-[#122435] border border-[rgba(255,255,255,0.2)] relative p-1 transition flex items-center"
+                aria-label="Ubah periode tagihan">
+          <div id="billingToggleKnob" class="w-6 h-6 rounded-full bg-mint shadow-md transform transition translate-x-0"></div>
+        </button>
+        <div class="flex items-center gap-2">
+          <span class="text-xs sm:text-sm font-semibold text-body" id="lblAnnual">Bayar Tahunan</span>
+          <span class="badge badge-mint text-[9px] font-extrabold">HEMAT 20% + 2 BULAN GRATIS</span>
+        </div>
+      </div>
+
+      <!-- ===================================================================== -->
+      <!-- 3 PRICING CARDS WITH HOVER GLOW ANIMATIONS -->
+      <!-- ===================================================================== -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-6xl mx-auto items-stretch">
+        
+        <!-- PLAN 1: JURAGAN PEMULA -->
+        <div class="card card-glow flex flex-col justify-between space-y-6">
+          <div class="space-y-4">
+            <div>
+              <h3 class="text-xl font-bold text-heading">Juragan Pemula</h3>
+              <p class="text-xs text-muted mt-1">Cocok untuk pemilik kos kecil hingga 10 kamar</p>
+            </div>
+            
+            <div class="pt-2">
+              <span class="text-xs text-muted line-through block" id="origPrice1">Rp 49.000</span>
+              <div class="flex items-baseline gap-1">
+                <span class="text-3xl sm:text-4xl font-extrabold text-heading" id="price1">Rp 25.000</span>
+                <span class="text-xs text-muted" id="period1">/bulan</span>
+              </div>
+            </div>
+
+            <ul class="text-xs text-body space-y-3 pt-3 border-t border-[rgba(255,255,255,0.06)]">
+              <li class="flex items-center gap-2.5"><span class="text-mint font-bold">✓</span> Maksimal 10 Kamar Kos</li>
+              <li class="flex items-center gap-2.5"><span class="text-mint font-bold">✓</span> Tagihan WhatsApp 1-Klik Otomatis</li>
+              <li class="flex items-center gap-2.5"><span class="text-mint font-bold">✓</span> QRIS Dinamis Instan Auto-Lunas</li>
+              <li class="flex items-center gap-2.5"><span class="text-mint font-bold">✓</span> 0% Komisi Transaksi Sewa</li>
+              <li class="flex items-center gap-2.5 text-muted"><span class="text-slate-500">✕</span> Kalkulator Listrik Sub-meter</li>
+            </ul>
+          </div>
+
+          <div class="pt-6 border-t border-[rgba(255,255,255,0.06)]">
+            <a href="dashboard.html" class="btn-secondary w-full justify-center text-xs py-3">
+              Coba Sekarang →
+            </a>
+          </div>
+        </div>
+
+        <!-- PLAN 2: JURAGAN PRO MULTI-KOS (FEATURED & GLOWING BADGE) -->
+        <div class="card card-featured-glow flex flex-col justify-between space-y-6 relative rounded-2xl transform lg:-translate-y-3 overflow-visible">
+          
+          <!-- ATRACTIVE POPULAR BADGE (SOLID OPAQUE & CENTERED) -->
+          <div class="popular-badge-pill">
+            <span>⭐</span>
+            <span>Paling Direkomendasikan</span>
+          </div>
+
+          <div class="space-y-4 pt-3">
+            <div>
+              <div class="flex items-center justify-between">
+                <span class="badge badge-mint text-[10px]">Paket Pro</span>
+                <span class="text-xs text-mint font-semibold">Multi-Cabang</span>
+              </div>
+              <h3 class="text-xl font-bold text-heading mt-1">Juragan Pro Multi-Kos</h3>
+              <p class="text-xs text-muted mt-1">Solusi komplit juragan yang punya beberapa cabang kos & ingin otomatisasi penuh.</p>
+            </div>
+            
+            <div class="pt-2">
+              <span class="text-xs text-muted line-through block" id="origPrice2">Rp 99.000</span>
+              <div class="flex items-baseline gap-1">
+                <span class="text-3xl sm:text-4xl font-extrabold text-mint" id="price2">Rp 49.000</span>
+                <span class="text-xs text-muted" id="period2">/bulan</span>
+              </div>
+            </div>
+
+            <ul class="text-xs text-body space-y-3 pt-3 border-t border-[rgba(255,255,255,0.06)]">
+              <li class="flex items-center gap-2.5"><span class="text-mint font-bold">✓</span> <strong>Multi-Tempat Kos (Hingga 5 Cabang)</strong></li>
+              <li class="flex items-center gap-2.5"><span class="text-mint font-bold">✓</span> Fitur Search & Filter per Lokasi Kos</li>
+              <li class="flex items-center gap-2.5"><span class="text-mint font-bold">✓</span> <strong>Tombol Tagih Masal Sekaligus (WhatsApp)</strong></li>
+              <li class="flex items-center gap-2.5"><span class="text-mint font-bold">✓</span> QRIS Dinamis Instan Auto-Lunas</li>
+              <li class="flex items-center gap-2.5"><span class="text-mint font-bold">✓</span> Kalkulator Listrik Sub-meter (kWh)</li>
+              <li class="flex items-center gap-2.5"><span class="text-mint font-bold">✓</span> Cetak PDF Laporan Resmi & Stempel Digital</li>
+            </ul>
+          </div>
+
+          <div class="pt-6 border-t border-[rgba(255,255,255,0.06)] space-y-2">
+            <a href="dashboard.html" class="btn-primary w-full justify-center text-xs py-3.5 shadow-xl">
+              <span>Pilih Paket Ini (Aktifkan Demo) →</span>
+            </a>
+            <div class="text-center text-[10px] text-muted">
+              Garansi Uang Kembali 30 Hari · Bebas Batal Kapan Saja
+            </div>
+          </div>
+        </div>
+
+        <!-- PLAN 3: JURAGAN KORPORASI ENTERPRISE -->
+        <div class="card card-glow flex flex-col justify-between space-y-6">
+          <div class="space-y-4">
+            <div>
+              <div class="flex items-center justify-between">
+                <span class="badge text-[10px] bg-[var(--bg-subcard)] text-muted">Enterprise</span>
+                <span class="text-xs text-muted">>100 Kamar</span>
+              </div>
+              <h3 class="text-xl font-bold text-heading mt-1">Juragan Korporasi Enterprise</h3>
+              <p class="text-xs text-muted mt-1">Untuk pemilik kos skala besar, kostel, atau asrama dengan tim pengelola.</p>
+            </div>
+            
+            <div class="pt-2">
+              <span class="text-xs text-muted line-through block" id="origPrice3">Rp 179.000</span>
+              <div class="flex items-baseline gap-1">
+                <span class="text-3xl sm:text-4xl font-extrabold text-heading" id="price3">Rp 99.000</span>
+                <span class="text-xs text-muted" id="period3">/bulan</span>
+              </div>
+            </div>
+
+            <ul class="text-xs text-body space-y-3 pt-3 border-t border-[rgba(255,255,255,0.06)]">
+              <li class="flex items-center gap-2.5"><span class="text-mint font-bold">✓</span> Cabang & Kamar Kos Tanpa Batas</li>
+              <li class="flex items-center gap-2.5"><span class="text-mint font-bold">✓</span> Akun Multi-Admin & Manajer Operasional</li>
+              <li class="flex items-center gap-2.5"><span class="text-mint font-bold">✓</span> Direct Webhook Bank (BCA, Mandiri, BRI)</li>
+              <li class="flex items-center gap-2.5"><span class="text-mint font-bold">✓</span> Export Jurnal Akuntansi Excel & Laporan Pajak</li>
+              <li class="flex items-center gap-2.5"><span class="text-mint font-bold">✓</span> Prioritas Pendampingan Setup WhatsApp & Migrasi Gratis</li>
+            </ul>
+          </div>
+
+          <div class="pt-6 border-t border-[rgba(255,255,255,0.06)]">
+            <a href="account.html" class="btn-secondary w-full justify-center text-xs py-3">
+              Hubungi Tim Enterprise →
+            </a>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Trust Badges Under Pricing -->
+      <div class="mt-14 pt-8 border-t border-[rgba(255,255,255,0.08)] flex flex-wrap items-center justify-center gap-8 text-xs text-muted">
+        <div class="flex items-center gap-2">
+          <span class="text-mint font-bold text-base">🛡️</span>
+          <span>Keamanan Data Bank Terenkripsi</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-mint font-bold text-base">⚡</span>
+          <span>Setup Cepat Kurang dari 5 Menit</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-mint font-bold text-base">💬</span>
+          <span>Bantuan Customer Support via WhatsApp</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========================================================================= -->
+  <!-- FOOTER -->
+  <!-- ========================================================================= -->
+  <footer class="border-t border-[rgba(255,255,255,0.08)] py-12 bg-[var(--bg-card)] text-xs text-muted">
+    <div class="container flex flex-col md:flex-row items-center justify-between gap-6">
+      <div class="flex items-center gap-3">
+        <img src="assets/logo.svg" alt="Teranivo" class="h-6 w-auto opacity-80">
+        <span>© 2026 PT Teranivo Teknologi Indonesia. All rights reserved.</span>
+      </div>
+
+      <div class="flex items-center gap-6">
+        <a href="index.html" class="hover:text-heading">Beranda</a>
+        <a href="dashboard.html" class="hover:text-heading">Dasbor Juragan</a>
+        <a href="tenant.html?room=102" class="hover:text-heading">Portal Anak Kos</a>
+        <a href="https://teranivo.app" target="_blank" class="hover:text-mint">Teranivo.app ↗</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ========================================================================= -->
+  <!-- JAVASCRIPT: THEME TOGGLE, COUNTDOWN, BILLING CYCLE, CALCULATOR -->
+  <!-- ========================================================================= -->
+  <script>
+    // 1. THEME SWITCHER (SIANG / MALAM)
+    function initTheme() {
+      const storedTheme = localStorage.getItem('teranivo_theme');
+      if (storedTheme === 'light') {
+        document.body.classList.add('light-mode');
+        updateThemeButton(true);
+      } else {
+        document.body.classList.remove('light-mode');
+        updateThemeButton(false);
+      }
+    }
+
+    function toggleTheme() {
+      const isLight = document.body.classList.toggle('light-mode');
+      localStorage.setItem('teranivo_theme', isLight ? 'light' : 'dark');
+      updateThemeButton(isLight);
+    }
+
+    function updateThemeButton(isLight) {
+      const icon = document.getElementById('themeIcon');
+      const label = document.getElementById('themeLabel');
+      if (isLight) {
+        icon.innerText = '🌙';
+        label.innerText = 'Mode Malam';
+      } else {
+        icon.innerText = '☀️';
+        label.innerText = 'Mode Siang';
+      }
+    }
+
+    // 2. LIVE COUNTDOWN TIMER PROMO
+    function startPromoCountdown() {
+      let totalSeconds = 4 * 3600 + 18 * 60 + 42;
+      setInterval(() => {
+        totalSeconds--;
+        if (totalSeconds <= 0) totalSeconds = 24 * 3600;
+        const h = Math.floor(totalSeconds / 3600);
+        const m = Math.floor((totalSeconds % 3600) / 60);
+        const s = totalSeconds % 60;
+        document.getElementById('timerHours').innerText = String(h).padStart(2, '0');
+        document.getElementById('timerMinutes').innerText = String(m).padStart(2, '0');
+        document.getElementById('timerSeconds').innerText = String(s).padStart(2, '0');
+      }, 1000);
+    }
+
+    // 3. BILLING CYCLE SWITCHER (BULANAN VS TAHUNAN)
+    let isAnnual = false;
+    function toggleBillingCycle() {
+      isAnnual = !isAnnual;
+      const knob = document.getElementById('billingToggleKnob');
+      
+      if (isAnnual) {
+        knob.classList.add('translate-x-6');
+        knob.classList.remove('translate-x-0');
+        // Annual prices (Hemat 20%)
+        document.getElementById('origPrice1').innerText = "Rp 300.000 / thn";
+        document.getElementById('price1').innerText = "Rp 240.000";
+        document.getElementById('period1').innerText = "/tahun (Rp 20rb/bln)";
+
+        document.getElementById('origPrice2').innerText = "Rp 588.000 / thn";
+        document.getElementById('price2').innerText = "Rp 468.000";
+        document.getElementById('period2').innerText = "/tahun (Rp 39rb/bln)";
+
+        document.getElementById('origPrice3').innerText = "Rp 1.188.000 / thn";
+        document.getElementById('price3').innerText = "Rp 948.000";
+        document.getElementById('period3').innerText = "/tahun (Rp 79rb/bln)";
+      } else {
+        knob.classList.remove('translate-x-6');
+        knob.classList.add('translate-x-0');
+        // Monthly prices
+        document.getElementById('origPrice1').innerText = "Rp 49.000";
+        document.getElementById('price1').innerText = "Rp 25.000";
+        document.getElementById('period1').innerText = "/bulan";
+
+        document.getElementById('origPrice2').innerText = "Rp 99.000";
+        document.getElementById('price2').innerText = "Rp 49.000";
+        document.getElementById('period2').innerText = "/bulan";
+
+        document.getElementById('origPrice3').innerText = "Rp 179.000";
+        document.getElementById('price3').innerText = "Rp 99.000";
+        document.getElementById('period3').innerText = "/bulan";
+      }
+    }
+
+    // 4. REALISTIC ROI & COMPETITOR CALCULATOR LOGIC
+    let currentCalcModel = 'ota'; // 'ota' | 'mgmt' | 'manual'
+
+    function switchCalcModel(model) {
+      currentCalcModel = model;
+
+      const tabs = [
+        { id: 'tabModelOta', active: model === 'ota' },
+        { id: 'tabModelMgmt', active: model === 'mgmt' },
+        { id: 'tabModelManual', active: model === 'manual' }
+      ];
+
+      tabs.forEach(t => {
+        const el = document.getElementById(t.id);
+        if (t.active) {
+          el.className = "flex-1 py-2.5 px-4 rounded-xl text-xs font-bold bg-mint text-[var(--text-inverted)] transition shadow-sm";
+        } else {
+          el.className = "flex-1 py-2.5 px-4 rounded-xl text-xs font-bold text-body hover:text-heading transition";
+        }
+      });
+
+      const badge = document.getElementById('calcModelBadge');
+      if (model === 'ota') badge.innerText = "Model: Agregator OTA & Listing";
+      else if (model === 'mgmt') badge.innerText = "Model: Operator Bagi Hasil 15%";
+      else badge.innerText = "Model: Kelola Manual Excel & WhatsApp";
+
+      updateCalculator();
+    }
+
+    function updateCalculator() {
+      const kamar = parseInt(document.getElementById('inputKamar').value) || 45;
+      const harga = parseInt(document.getElementById('inputHarga').value) || 3100000;
+      const okupansi = parseInt(document.getElementById('inputOkupansi').value) || 85;
+      const porsiOta = (document.getElementById('inputPorsiOta') ? parseInt(document.getElementById('inputPorsiOta').value) : 35) || 35;
+      const biayaIklan = (document.getElementById('inputBiayaIklan') ? parseInt(document.getElementById('inputBiayaIklan').value) : 350000) || 350000;
+
+      // Update Labels
+      document.getElementById('labelKamar').innerText = kamar + " Kamar";
+      document.getElementById('labelHarga').innerText = "Rp " + harga.toLocaleString('id-ID');
+      document.getElementById('labelOkupansi').innerText = okupansi + "%";
+      
+      const kamarTerisi = Math.max(1, Math.round(kamar * (okupansi / 100)));
+      document.getElementById('labelKamarTerisi').innerText = `~${kamarTerisi} dari ${kamar} kamar terisi`;
+      
+      if (document.getElementById('labelPorsiOta')) {
+        document.getElementById('labelPorsiOta').innerText = porsiOta + "%";
+      }
+      if (document.getElementById('labelBiayaIklan')) {
+        document.getElementById('labelBiayaIklan').innerText = "Rp " + biayaIklan.toLocaleString('id-ID');
+      }
+
+      // 1. Omset Riil
+      const omsetRiilBulanan = kamarTerisi * harga;
+      document.getElementById('resOmsetRiil').innerText = "Rp " + omsetRiilBulanan.toLocaleString('id-ID') + " / bln";
+
+      // 2. Teranivo Tier & Cost based on room count
+      let teranivoMonthly = 49000;
+      let teranivoTierName = "Paket Juragan Menengah";
+      if (kamar <= 10) {
+        teranivoMonthly = 25000;
+        teranivoTierName = "Paket Juragan Pemula";
+      } else if (kamar <= 25) {
+        teranivoMonthly = 49000;
+        teranivoTierName = "Paket Juragan Menengah";
+      } else {
+        teranivoMonthly = 99000;
+        teranivoTierName = "Paket Juragan Besar";
+      }
+      document.getElementById('resTeranivoTierLabel').innerText = teranivoTierName;
+      document.getElementById('resTeranivoCostMonthly').innerText = "Rp " + teranivoMonthly.toLocaleString('id-ID') + " / bln";
+      document.getElementById('detailTeranivoVal').innerText = "Rp " + teranivoMonthly.toLocaleString('id-ID');
+
+      // 3. Competitor Cost based on Model
+      let compMonthlyCost = 0;
+      let compLabel = "Platform Lain / Agregator";
+      let compItem1 = "";
+      let compVal1 = 0;
+      let compItem2 = "";
+      let compVal2 = 0;
+
+      if (currentCalcModel === 'ota') {
+        compLabel = "Agregator OTA & Listing Iklan";
+        const kamarViaOta = Math.max(1, Math.round(kamarTerisi * (porsiOta / 100)));
+        // Komisi 7% dari transaksi sewa kamar via OTA
+        compVal1 = Math.round(kamarViaOta * harga * 0.07);
+        compItem1 = `Potongan Komisi Booking (~${porsiOta}% kamar × 7%):`;
+        
+        compVal2 = biayaIklan;
+        compItem2 = `Biaya Paket Iklan / Listing Bulanan:`;
+        
+        compMonthlyCost = compVal1 + compVal2;
+      } else if (currentCalcModel === 'mgmt') {
+        compLabel = "Operator Full Management (15%)";
+        compVal1 = Math.round(omsetRiilBulanan * 0.15);
+        compItem1 = `Bagi Hasil Omset Kotor (15% Revenue Share):`;
+        
+        compVal2 = Math.round(kamarTerisi * 30000); // Biaya pemeliharaan manajemen
+        compItem2 = `Biaya Administrasi & Fee Operasional:`;
+        
+        compMonthlyCost = compVal1 + compVal2;
+      } else {
+        compLabel = "Kelola Manual (Admin & Risiko Kebocoran)";
+        // Gaji admin part-time / waktu juragan
+        compVal1 = kamar <= 15 ? 1200000 : (kamar <= 30 ? 1800000 : 2500000);
+        compItem1 = `Biaya Waktu / Gaji Admin Penagihan Manual:`;
+        
+        // Kebocoran listrik & selisih tagihan (rata2 Rp 35rb/kamar/bln)
+        compVal2 = Math.round(kamarTerisi * 35000);
+        compItem2 = `Estimasi Kebocoran Listrik Sub-meter & Bad Debt:`;
+        
+        compMonthlyCost = compVal1 + compVal2;
+      }
+
+      document.getElementById('resCompLabel').innerText = compLabel;
+      document.getElementById('resCompCostMonthly').innerText = "Rp " + compMonthlyCost.toLocaleString('id-ID') + " / bln";
+      document.getElementById('detailCompItem1').innerText = compItem1;
+      document.getElementById('detailCompVal1').innerText = "Rp " + compVal1.toLocaleString('id-ID');
+      document.getElementById('detailCompItem2').innerText = compItem2;
+      document.getElementById('detailCompVal2').innerText = "Rp " + compVal2.toLocaleString('id-ID');
+
+      // 4. Net Savings & ROI
+      const hematBulan = Math.max(0, compMonthlyCost - teranivoMonthly);
+      const hematTahun = hematBulan * 12;
+
+      document.getElementById('resHematTahun').innerText = "Rp " + hematTahun.toLocaleString('id-ID') + " / tahun!";
+      document.getElementById('resHematNote').innerHTML = `Setara dengan <strong class="text-mint">Rp ${hematBulan.toLocaleString('id-ID')}</strong> penghematan bersih yang tetap tinggal di rekening Anda setiap bulan.`;
+
+      // 5. Visual Bar Comparison Percentages
+      const maxVal = Math.max(compMonthlyCost, teranivoMonthly);
+      const percentComp = Math.min(100, Math.round((compMonthlyCost / maxVal) * 100));
+      const percentTeranivo = Math.max(3, Math.min(100, Math.round((teranivoMonthly / maxVal) * 100)));
+
+      document.getElementById('barComp').style.width = percentComp + '%';
+      document.getElementById('barTeranivo').style.width = percentTeranivo + '%';
+    }
+
+    // INIT
+    window.addEventListener('DOMContentLoaded', () => {
+      initTheme();
+      startPromoCountdown();
+      updateCalculator();
+    });
+  </script>
+
+</body>
+</html>
